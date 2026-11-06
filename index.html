@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="noche">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" id="colorTema" content="#0D0D0D">
+<!-- Aplica el tema guardado antes de pintar, para que no parpadee. Sin preferencia guardada: noche. -->
+<script>try{if(localStorage.getItem("agrio-tema")==="dia")document.documentElement.dataset.tema="dia"}catch(e){}
+/* La carga aparece siempre que se abre la página, salvo si el sistema pide reducir el movimiento */
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("cargando");addEventListener("pageshow",e=>{if(e.persisted)location.reload()})}</script>
+<meta name="robots" content="noindex"><!-- Prototipo en revisión: quitar esta línea al lanzar para que aparezca en buscadores -->
+<title>Agrio Art — Galería de Agrio, artista en Bogotá</title>
+<meta name="description" content="Agrio Art: cuadros e ilustración de Agrio, Nicolás González, artista en Bogotá.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* Colores registrados para poder animarlos en el cambio de tema */
+@property --wall{syntax:"<color>";inherits:true;initial-value:#0D0D0D}
+@property --paper{syntax:"<color>";inherits:true;initial-value:#181818}
+@property --ink{syntax:"<color>";inherits:true;initial-value:#F1F1EE}
+@property --ink-2{syntax:"<color>";inherits:true;initial-value:#A8A8A3}
+@property --line{syntax:"<color>";inherits:true;initial-value:#2D2D2D}
+@property --inv-bg{syntax:"<color>";inherits:true;initial-value:#F1F1EE}
+@property --inv-fg{syntax:"<color>";inherits:true;initial-value:#111111}
+@property --inv-2{syntax:"<color>";inherits:true;initial-value:#5C5C58}
+@property --tarjeta{syntax:"<color>";inherits:true;initial-value:#171717}
+@property --bloque{syntax:"<color>";inherits:true;initial-value:#202020}
+:root{
+  --wall:#0D0D0D; --paper:#181818; --ink:#F1F1EE; --ink-2:#A8A8A3; --line:#2D2D2D;
+  --inv-bg:#F1F1EE; --inv-fg:#111111; --inv-2:#5C5C58;
+  --tarjeta:#171717; --tarjeta-fg:#F4F3EE; --stage:#242424; --bloque:#202020;
+  --acento:#C8202C; --acento-hover:#A91A25; --on-acento:#FFFFFF;
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --pad:12px; --radius:8px; --cap:62px; --cap-compra:76px; --bar:64px; --velo:clamp(96px,17vh,180px);
+  color-scheme:dark;
+}
+[data-tema="dia"]{
+  --wall:#E6E5E1; --paper:#FFFFFF; --ink:#131312; --ink-2:#5D5C57; --line:#D3D2CC;
+  --inv-bg:#131312; --inv-fg:#FFFFFF; --inv-2:#C9C8C2;
+  --tarjeta:#131312; --tarjeta-fg:#F4F3EE; --stage:#E6E5E1; --bloque:#D9D8D2;
+  color-scheme:light;
+}
+@media (max-width:639px){:root{--pad:8px;--radius:6px;--cap:56px}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+html.lock{overflow:hidden}
+body{background:var(--wall);color:var(--ink);font:400 16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+/* El foco del teclado va en rojo: en blanco se confunde con un borde */
+:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+svg{display:block;width:100%;height:100%}
+
+/* Barra superior: en celular la primera fila se va con el scroll y los filtros quedan fijos */
+.top{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;height:var(--bar);padding:0 var(--pad) 0 calc(var(--pad) + 6px);background:var(--wall)}
+.logo{font-weight:800;font-size:27px;letter-spacing:-.04em;line-height:1;text-decoration:none}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:40px;padding:0 14px;background:var(--paper);border-radius:6px;font-size:14px;font-weight:500;color:var(--ink);transition:background-color .15s}
+.chip:hover{background:var(--line)}
+.chip[aria-pressed="true"]{background:var(--inv-bg);color:var(--inv-fg)}
+.chip small{font-size:11.5px;font-weight:400;margin-left:5px;color:var(--ink-2)}
+.chip[aria-pressed="true"] small{color:var(--inv-2)}
+.der{display:flex;align-items:center;gap:8px}
+.der .ic{background:var(--paper)}
+.der .ic:hover{background:var(--line)}
+[data-tema="noche"] .i-luna,[data-tema="dia"] .i-sol{display:none}
+.talk{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:6px;background:#fff;color:#111;font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap;transition:background-color .15s}
+.talk:hover{background:#D9D8D2}
+.encargo :focus-visible{outline-color:#131312}
+@media (max-width:899px){
+  :root{--bar:108px}
+  .top{top:-58px;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:58px 50px;gap:0 10px;align-items:center}
+  .chips{grid-column:1/-1;grid-row:2;margin:0 calc(var(--pad) * -1) 0 -6px;padding:4px var(--pad) 6px 6px}
+  .chips{gap:5px}
+  .chip{min-height:38px;padding:0 11px;font-size:13.5px}
+  .chip small{margin-left:4px}
+  .talk{padding:0 14px;font-size:14px}
+  .der{gap:6px}
+}
+
+/* Tablero */
+main{padding:0 var(--pad) var(--pad)}
+#board{position:relative;list-style:none;min-height:60vh}
+.t{position:absolute;left:0;top:0;border-radius:var(--radius);overflow:hidden;container-type:inline-size;color:var(--ink)}
+/* Aparición con el scroll: usa `translate`, independiente del `transform` que ubica la teja en el bento,
+   así la card sube hasta su lugar exacto y el acomodo no se altera. */
+.t.espera{opacity:0;translate:0 72px}
+.t.espera.arriba{translate:0 -72px}
+.t.sube{transition:translate 1.1s cubic-bezier(.33,1,.68,1),opacity .85s cubic-bezier(.33,1,.68,1),var(--tv);will-change:translate,opacity}
+/* Desenfoque progresivo en el borde inferior: cuatro capas cada vez más intensas hacia abajo */
+.velo{position:fixed;left:0;right:0;bottom:0;height:var(--velo);z-index:5;pointer-events:none;opacity:var(--velo-o,1)}
+.velo i{position:absolute;inset:0}
+.velo i:nth-child(1){-webkit-backdrop-filter:blur(1px);backdrop-filter:blur(1px);-webkit-mask-image:linear-gradient(to top,#000 50%,transparent 100%);mask-image:linear-gradient(to top,#000 50%,transparent 100%)}
+.velo i:nth-child(2){-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);-webkit-mask-image:linear-gradient(to top,#000 32%,transparent 72%);mask-image:linear-gradient(to top,#000 32%,transparent 72%)}
+.velo i:nth-child(3){-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);-webkit-mask-image:linear-gradient(to top,#000 14%,transparent 48%);mask-image:linear-gradient(to top,#000 14%,transparent 48%)}
+.velo i:nth-child(4){-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(to top,#000 0%,transparent 26%);mask-image:linear-gradient(to top,#000 0%,transparent 26%)}
+.velo::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--wall),transparent 70%);opacity:.72}
+@media (prefers-reduced-transparency:reduce){.velo i{display:none}}
+.obra{background:var(--paper);outline:1px solid var(--line);outline-offset:-1px}
+.ver{display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit;border-radius:inherit}
+.ver:focus-visible{outline-offset:-3px}
+.art{position:relative;flex:none;height:var(--art-h);overflow:hidden;background:var(--line)}
+.art img{display:block;width:100%;height:100%;object-fit:cover}
+.ver:hover .art::after{opacity:1}
+.art::after{content:"Ver obra";position:absolute;right:8px;bottom:8px;padding:5px 11px;border-radius:4px;background:#111;color:#fff;font-size:13px;font-weight:500;opacity:0;transition:opacity .15s;pointer-events:none}
+@media (hover:none){.art::after{display:none}}
+.cap{flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;padding:0 12px;line-height:1.25}
+.cap b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap .row{display:flex;justify-content:space-between;gap:8px;margin-top:3px;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cap .kind{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis}
+.cap .tec{display:none;margin-top:6px;font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roomy .cap .tec{display:block}
+@container (max-width:215px){.cap .kind{display:none}.cap{padding:0 10px}.cap b{font-size:14px}.cap .row{font-size:13px}}
+.sold .art>svg,.sold .art>img{opacity:.42}
+.sold .art{background:var(--paper)}
+.stamp{position:absolute;left:8px;top:8px;padding:4px 9px;border-radius:3px;background:var(--acento);color:var(--on-acento);font-size:12.5px;font-weight:600;z-index:1}
+.stamp.res{background:var(--paper);color:var(--ink)}
+.sold .price{color:var(--ink-2)}
+
+.nota{display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:18px}
+.intro{background:var(--tarjeta);color:var(--tarjeta-fg)}
+.logo,.intro h1{filter:url(#tinta)}
+.intro h1{font-weight:800;font-size:clamp(58px,25cqw,168px);line-height:.82;letter-spacing:-.055em;margin-left:-.03em}
+.intro p{font-size:clamp(16px,4.6cqw,20px);line-height:1.3;max-width:46ch}
+.intro strong{font-weight:700}
+.intro .n{display:block;margin-top:10px;font-size:14px;color:#B9B8B1}
+.encargo{background:var(--acento);color:var(--on-acento)}
+.encargo h2{font-weight:800;font-size:clamp(23px,12.5cqw,33px);line-height:1;letter-spacing:-.03em}
+.encargo p{font-size:15px;line-height:1.3;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:6px;font-weight:600;font-size:16px;text-decoration:none;text-align:center;cursor:pointer}
+.btn.ink{background:#131312;color:#fff}
+.btn.ink:hover{background:#34332F}
+.btn.line{background:var(--line);color:var(--ink);transition:background-color .15s,color .15s}
+.btn.line:hover{background:var(--inv-bg);color:var(--inv-fg)}
+/* Comprar: botón primario compacto, en la misma fila del precio */
+.btn.comprar{position:absolute;right:10px;bottom:10px;min-height:32px;padding:0 12px;border-radius:5px;background:var(--inv-bg);color:var(--inv-fg);font-size:13px;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.btn.comprar:hover{opacity:.82}
+.compra .cap{justify-content:flex-end;padding-bottom:10px}
+.compra .cap .row{order:2;min-height:32px;align-items:center;margin-top:4px;padding-right:80px}
+@container (max-width:299px){.compra .cap .kind{display:none}}
+@container (max-width:170px){.btn.comprar{right:7px;padding:0 7px;font-size:11.5px}.compra .cap{padding-left:8px;padding-right:7px}.compra .cap .row{padding-right:60px;font-size:12px}}
+.encargo .btn{width:100%;padding:0 8px;white-space:nowrap}
+.relleno{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:16px;overflow:hidden}
+.relleno p{font-weight:600;font-size:clamp(16px,6.2cqw,26px);line-height:1.12;letter-spacing:-.02em;max-width:24ch}
+.relleno a{font-weight:600;font-size:15px;align-self:flex-start;text-underline-offset:3px}
+.relleno.r0,.relleno.r2{background:var(--line)}
+.relleno.r1{background:var(--tarjeta);color:var(--tarjeta-fg)}
+.relleno.r1 a:focus-visible{outline-color:var(--tarjeta-fg)}
+.relleno.r3{background:var(--bloque)}
+.vacio{padding:60px 20px;text-align:center;color:var(--ink-2)}
+
+@media (prefers-reduced-motion:no-preference){
+  .ver{transition:transform .18s cubic-bezier(.2,.8,.3,1)}
+  .ver:hover{transform:scale(.985)}
+}
+footer{margin-top:28px;padding:26px calc(var(--pad) + 6px) 30px;border-top:1px solid var(--line)}
+.pie-fila{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.pie-marca{display:block;font-weight:800;font-size:clamp(34px,5vw,56px);line-height:1;letter-spacing:-.045em;text-decoration:none;filter:url(#tinta)}
+.pie-lugar{margin-top:6px;font-size:14px;color:var(--ink-2)}
+.pie-redes{display:flex;flex-wrap:wrap;gap:4px 18px}
+.pie-red{display:inline-flex;align-items:center;gap:7px;min-height:32px;font-weight:500;font-size:13.5px;text-decoration:none}
+.pie-red:hover{text-decoration:underline;text-underline-offset:4px}
+.pie-red svg{flex:none;width:18px;height:18px}
+.pie-base{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;margin-top:22px;font-size:13.5px;color:var(--ink-2)}
+.pie-credito{display:inline-flex;align-items:center;gap:9px;color:var(--ink-2);text-decoration:none}
+.pie-credito svg{display:block;width:auto;height:30px;color:#EEE9E6}
+[data-tema="dia"] .pie-credito svg{color:#17121D}
+
+/* Detalle: panel completo en celular, dos columnas en escritorio */
+dialog{border:0;background:var(--paper);color:var(--ink);overflow:visible;margin:auto;width:min(1240px,calc(100vw - 2 * clamp(16px,7vw,110px)));height:min(840px,calc(100dvh - 32px));max-width:none;max-height:none;border-radius:12px}
+dialog[open]{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(320px,1fr);grid-template-rows:minmax(0,1fr) auto}
+dialog[open] .stage{grid-column:1;grid-row:1/-1}
+dialog[open] .info{grid-column:2;grid-row:1}
+dialog[open] .buy{grid-column:2;grid-row:2}
+dialog::backdrop{background:rgba(8,8,7,.62)}
+[data-tema="dia"] dialog::backdrop{background:rgba(230,229,225,.66)}
+.stage{position:relative;z-index:1;background:var(--stage);padding:32px;min-height:0;border-radius:12px 0 0 12px}
+.stage-in{width:100%;height:100%;container-type:size;display:grid;place-items:center}
+.frame{width:min(100cqw,calc(100cqh * var(--r)));aspect-ratio:var(--r);overflow:hidden;background:#fff;box-shadow:0 22px 40px -14px rgba(0,0,0,.42)}
+.frame.black{outline:7px solid #141312}
+.frame.mat{box-shadow:0 0 0 13px #fff,0 0 0 19px #141312,0 30px 44px -10px rgba(0,0,0,.42)}
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.info{display:flex;flex-direction:column;min-height:0}
+.info-top{display:flex;justify-content:flex-end;gap:6px;padding:12px 12px 0}
+.ic{display:grid;place-items:center;width:44px;height:44px;border-radius:6px;background:var(--wall)}
+.ic:hover{background:var(--line)}
+.ic svg{width:20px;height:20px}
+.scroll{flex:1;overflow-y:auto;padding:6px 26px 22px;min-height:0}
+.scroll h2{font-weight:800;font-size:clamp(30px,3.4vw,44px);line-height:1;letter-spacing:-.035em}
+.sub{margin-top:8px;color:var(--ink-2);font-size:15px}
+.desc{margin-top:16px;font-size:17px;line-height:1.45}
+.fic{margin-top:18px;border-top:1px solid var(--line)}
+.fic div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.35}
+.fic dt{color:var(--ink-2)}
+.escala{margin-top:18px}
+.escala svg{height:124px;width:auto;max-width:100%}
+.escala p{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
+.buy{flex:none;padding:14px 26px 18px;border-top:1px solid var(--line);background:var(--paper);border-radius:0 0 12px 0}
+.price-l{font-weight:800;font-size:27px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.buy .acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:10px}
+.buy .acts .solo{grid-column:1/-1}
+.btn.acento{background:var(--acento);color:var(--on-acento)}
+.btn.acento:hover{background:var(--acento-hover)}
+.trust{margin-top:9px;font-size:13px;line-height:1.35;color:var(--ink-2)}
+@media (max-width:759px){
+  dialog{width:100vw;height:100dvh;border-radius:0}
+  dialog[open]{display:flex;flex-direction:column;overflow:hidden}
+  dialog[open].vuela,.vuela .wrapm{overflow:visible}
+  .info{display:contents}
+  .wrapm{flex:1;overflow-y:auto;min-height:0}
+  .stage{height:52dvh;padding:70px 30px 30px;border-radius:0}
+  .info-top{position:absolute;top:0;right:0;z-index:2}
+  .ic{background:var(--paper)}
+  .scroll{overflow:visible;padding:18px 16px 20px;flex:none}
+  .buy{padding:10px 14px calc(12px + env(safe-area-inset-bottom));border-radius:0}
+  .buy .acts{margin-top:8px}
+  .price-l{font-size:23px}
+  .trust{display:none}
+  .btn{padding:0 12px;font-size:15px}
+}
+@media (min-width:760px){.wrapm{display:contents}}
+.toast{position:fixed;left:50%;bottom:20px;translate:-50% 0;z-index:30;width:max-content;max-width:calc(100vw - 24px);padding:11px 18px;border-radius:12px;background:var(--inv-bg);color:var(--inv-fg);font-size:14.5px;line-height:1.3;opacity:0;pointer-events:none;transition:opacity .18s}
+.toast.on{opacity:1}
+/* Cambio de día a noche: un círculo del color nuevo sale del botón y crece por detrás de todo.
+   Cada elemento cambia de tono cuando el círculo le pasa por detrás; --d es ese retraso y lo calcula cambiarTema(). */
+.logo,.chip,.ic,.t,footer,.velo{
+  --tv:--wall .28s linear var(--d,0s),--paper .28s linear var(--d,0s),--ink .28s linear var(--d,0s),--ink-2 .28s linear var(--d,0s),--line .28s linear var(--d,0s),--inv-bg .28s linear var(--d,0s),--inv-fg .28s linear var(--d,0s),--inv-2 .28s linear var(--d,0s),--tarjeta .28s linear var(--d,0s),--bloque .28s linear var(--d,0s);
+  transition:var(--tv)
+}
+.logo,.chip,.ic,footer{color:var(--ink)}
+main,footer{position:relative;z-index:1}
+.sabana{display:none;position:fixed;z-index:0;border-radius:50%;background:var(--wall);will-change:transform;pointer-events:none}
+/* La barra superior es opaca: lleva su propia copia del círculo para que también se vea pasar por detrás de ella */
+.sabana-barra{display:none;position:absolute;z-index:-1;border-radius:50%;background:var(--wall);will-change:transform;pointer-events:none}
+html.tono .sabana,html.tono .sabana-barra{display:block}
+html.tono body{background:var(--wall-vieja)}
+html.tono .top{background:var(--wall-vieja);overflow:hidden}
+/* Pantalla de carga */
+#carga{display:none;position:fixed;inset:0;z-index:100;background:#fff;transition:opacity .45s cubic-bezier(.4,0,.3,1)}
+/* Sin canal de scrollbar mientras carga, para que el dibujo cubra todo el ancho */
+html.cargando{overflow:hidden;background:#fff;scrollbar-gutter:auto}
+html.cargando #carga,#carga.sale{display:block}
+#carga.sale{opacity:0;pointer-events:none}
+#carga canvas{position:absolute;inset:0;width:100%;height:100%}
+.carga-txt{position:absolute;left:50%;bottom:clamp(20px,5vh,44px);translate:-50% 0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 16px 9px;color:#1b1b1e;pointer-events:none}
+.carga-txt b{font-weight:800;font-size:clamp(30px,3.4vw,42px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.carga-txt span{font-weight:800;font-size:14px;line-height:1.2;letter-spacing:-.02em;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0"><filter id="tinta" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></svg>
+
+<div id="carga" role="progressbar" aria-label="Cargando Agrio Art" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <canvas id="cargaLienzo" aria-hidden="true"></canvas>
+  <div class="carga-txt" aria-hidden="true"><b id="cargaN">0</b><span>Agrio Art</span></div>
+</div>
+<script>
+/* Carga: la pantalla en blanco se va dibujando a grafito hasta formar un remolino.
+   Cada línea es un arco que crece de forma continua sobre su órbita, con suavidad al arrancar y al terminar.
+   El tono se deposita sobre el grano del papel: poco grafito solo toca los relieves y mucho los llena.
+   Todo se calcula en la tarjeta gráfica en cada cuadro, sin acumular trazos, por eso el avance no da saltos.
+   Va aparte del código de la galería para arrancar antes y para que un error allá no deje la pantalla bloqueada. */
+(function(){
+  const raiz = document.documentElement;
+  if (!raiz.classList.contains("cargando")) return;
+  const caja = document.getElementById("carga"), lienzo = document.getElementById("cargaLienzo"), num = document.getElementById("cargaN");
+  /* 2,5 s de dibujo + 0,05 s en 100 + 0,45 s de salida = 3 s */
+  const DUR = 2500, PAUSA = 50;
+  const FRAG = `precision highp float;
+  uniform vec2 R;uniform float P,E,S,L;
+  float h(vec2 p){p=fract(p*vec2(.1031,.1030));p+=dot(p,p.yx+33.33);return fract((p.x+p.y)*p.x);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+  void main(){
+    vec2 px=gl_FragCoord.xy/E;
+    vec2 q=(px-vec2(R.x*.49,R.y*.53)/E)/S;
+    q=mat2(.971,.238,-.238,.971)*q;
+    q*=vec2(.9,1.09);
+    float keep=1.;
+    /* Pasadas superpuestas, como un dibujo real: primero un boceto de líneas finas y después sombreado más ancho */
+    for(int i=0;i<8;i++){
+      float k=float(i);
+      vec2 a=q+(vec2(h(vec2(k,1.7)),h(vec2(k,2.9)))-.5)*.05;
+      float r=length(a),th=atan(a.y,a.x)+3.14159;
+      vec2 giro=vec2(cos(th),sin(th));
+      /* Órbita imperfecta, como una mano: el ruido se muestrea en círculo para que no haya costura */
+      float v=r*(1.+(n(giro*1.3+k*5.1)-.5)*.2)+(n(giro*3.1+k*9.3)-.5)*.012;
+      float filas=82.-k*7.;
+      float c=v*filas,id=floor(c),f=fract(c);
+      float rr=id/filas,cerca=1.-smoothstep(.02,.62,rr);
+      if(h(vec2(id,k+11.))>mix(.5,.98,cerca))continue;
+      /* Cada arco tiene su momento: primero líneas sueltas y al final el centro se va cerrando */
+      float d=k*.052+h(vec2(id,k+3.))*.3+cerca*.1*step(2.,k);
+      float t=clamp((P-d)/mix(.2,.36,h(vec2(id,k+5.))),0.,1.);
+      if(t<=0.)continue;
+      t=t*t*(3.-2.*t);
+      float largo=mix(1.8,6.1,h(vec2(id,k+7.)));
+      float da=mod(th-h(vec2(id,k+9.))*6.283,6.283);
+      float frente=largo*t;
+      /* El arco crece con la punta suave y se desvanece en ambos extremos */
+      float mascara=(1.-smoothstep(frente-.42,frente+.001,da))*smoothstep(0.,.5,da)*(1.-smoothstep(largo-.7,largo,da));
+      if(mascara<=0.)continue;
+      float perfil=smoothstep(.02,.42,f)*(1.-smoothstep(.58,.98,f));
+      float fibra=.58+.62*n(vec2(c*3.4,k*3.)+giro*1.6);
+      float presion=mix(.42,.9,cerca)*mix(.72,1.08,h(vec2(id,k+13.)));
+      keep*=1.-clamp(perfil*mascara*fibra*presion,0.,.94);
+    }
+    /* Difuminado: el grafito se frota alrededor del centro a medida que avanza */
+    float rc=length(q);
+    float frote=smoothstep(.42,1.,P)*(1.-smoothstep(.03,.78,rc))*.56;
+    float dep=1.-keep*(1.-frote);
+    /* Zona borrada alrededor del número, con el borde que deja un borrador sobre el grafito */
+    dep*=smoothstep(.5,1.2,length((px-vec2(R.x*.5/E,L))/vec2(92.,50.)));
+    /* Diente del papel */
+    float diente=.55*n(px*.62)+.3*n(px*1.45+7.)+.15*n(px*.16+3.);
+    float g=max(smoothstep(diente-.38,diente+.12,dep*1.42)*smoothstep(0.,.05,dep),frote*.42);
+    g*=mix(.8,1.,dep);
+    /* Grafito: gris oscuro con un leve brillo donde se acumula, nunca negro puro */
+    vec3 grafito=vec3(.145,.145,.16)-vec3(.05)*smoothstep(.55,1.,dep);
+    gl_FragColor=vec4(mix(vec3(1.),grafito,g),1.);
+  }`;
+  let gl = null, uP;
+  try {
+    gl = lienzo.getContext("webgl", { alpha: false, antialias: false, powerPreference: "high-performance" });
+    if (gl) {
+      const sh = (tipo, src) => { const o = gl.createShader(tipo); gl.shaderSource(o, src); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+      const pr = gl.createProgram();
+      gl.attachShader(pr, sh(gl.VERTEX_SHADER, "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}"));
+      gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FRAG));
+      gl.bindAttribLocation(pr, 0, "a");
+      gl.linkProgram(pr);
+      if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error("programa");
+      gl.useProgram(pr);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      uP = gl.getUniformLocation(pr, "P");
+      const medir = () => {
+        const W = innerWidth, H = innerHeight;
+        /* Tope de píxeles para mantener el ritmo en pantallas grandes y en celulares */
+        const e = Math.min(devicePixelRatio || 1, 2, Math.sqrt(1.5e6 / (W * H)));
+        lienzo.width = Math.round(W * e); lienzo.height = Math.round(H * e);
+        gl.viewport(0, 0, lienzo.width, lienzo.height);
+        gl.uniform2f(gl.getUniformLocation(pr, "R"), lienzo.width, lienzo.height);
+        gl.uniform1f(gl.getUniformLocation(pr, "E"), e);
+        gl.uniform1f(gl.getUniformLocation(pr, "S"), Math.hypot(W, H) * .62);
+        const et = document.querySelector(".carga-txt").getBoundingClientRect();
+        gl.uniform1f(gl.getUniformLocation(pr, "L"), H - (et.top + et.height / 2));
+      };
+      medir();
+      addEventListener("resize", medir);
+    }
+  } catch (e) { gl = null; }
+  /* Sin WebGL queda la pantalla en blanco con el contador */
+  if (!gl) lienzo.style.display = "none";
+
+  /* El contador no llega a 100 hasta que la página esté lista. Si algo tarda, sigue a los 3 s de más. */
+  let lista = false;
+  const marcar = () => { lista = true; };
+  const fuentes = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  const cargada = new Promise(ok => document.readyState === "complete" ? ok() : addEventListener("load", ok, { once: true }));
+  Promise.all([fuentes, cargada]).then(marcar);
+  setTimeout(marcar, DUR + 3000);
+
+  let t0 = 0, previo = 0, avance = 0, mostrado = -1;
+  function cuadro(ahora){
+    if (!t0) { t0 = previo = ahora; }
+    const dt = ahora - previo; previo = ahora;
+    const x = Math.min(1, (ahora - t0) / DUR), meta = lista ? x : Math.min(x, .92);
+    avance = meta === 1 ? 1 : avance + (meta - avance) * (1 - Math.exp(-dt / 50));
+    const n = Math.round(avance * 100);
+    if (n !== mostrado) { mostrado = n; num.textContent = n; caja.setAttribute("aria-valuenow", n); }
+    if (gl) { gl.uniform1f(uP, avance); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+    if (avance < 1) requestAnimationFrame(cuadro); else setTimeout(terminar, PAUSA);
+  }
+  function terminar(){
+    caja.classList.add("sale");
+    raiz.classList.remove("cargando");
+    document.dispatchEvent(new Event("agrio:lista"));
+    let hecho = false;
+    const quitar = () => {
+      if (hecho) return; hecho = true;
+      caja.remove();
+      if (gl) { const x = gl.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); }
+    };
+    caja.addEventListener("transitionend", ev => { if (ev.target === caja) quitar(); });
+    setTimeout(quitar, 650);
+  }
+  requestAnimationFrame(cuadro);
+})();
+</script>
+
+<header class="top">
+  <i class="sabana-barra" id="sabanaBarra" aria-hidden="true"></i>
+  <a class="logo" href="#" aria-label="Agrio Art, inicio">agrio art</a>
+  <div class="chips" id="chips" role="group" aria-label="Filtrar obras"></div>
+  <div class="der">
+    <button class="ic" id="tema" type="button" aria-label="Cambiar a modo día">
+      <svg class="i-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="talk" href="#" data-wa="Hola Agrio, vi tu galería y quiero hablar contigo.">Hablemos</a>
+  </div>
+</header>
+
+<main>
+  <ul id="board" aria-label="Tablero de obras"></ul>
+  <p class="vacio" id="vacio" hidden>No hay obras en este tablero por ahora.</p>
+</main>
+<footer>
+  <div class="pie-fila">
+    <div><a class="pie-marca" href="#" aria-label="Agrio Art, volver al inicio">Agrio Art</a><p class="pie-lugar">Bogotá, Colombia</p></div>
+    <nav class="pie-redes" aria-label="Redes de Agrio">
+      <a class="pie-red" href="https://www.instagram.com/agrioink/" target="_blank" rel="noopener" aria-label="Instagram: @agrioink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>@agrioink</a>
+      <a class="pie-red" href="#" data-wa="Hola Agrio, vi tu galería y quiero hablar contigo." aria-label="WhatsApp: Agrioart">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Agrioart</a>
+    </nav>
+  </div>
+  <div class="pie-base"><p>Prototipo: las ilustraciones, los títulos y los precios son de muestra. No son obras de Agrio.</p><!-- Pendiente: agregar href con la página de Rem Design cuando esté definida --><a class="pie-credito">Diseñado por <svg viewBox="0 0 965 252" role="img" aria-label="Rem Design"><g transform="translate(0,0) scale(0.75) translate(-16,-64)"><mask id="remMascara"><rect x="0" y="0" width="400" height="400" fill="#fff"/><circle cx="312" cy="116" r="62" fill="#000"/><path d="M150,214 Q200,175 250,214 Q200,253 150,214 Z" fill="#000"/><circle cx="200" cy="214" r="17" fill="#fff"/></mask><path fill="currentColor" mask="url(#remMascara)" d="M200,318 C268,318 326,280 326,214 C326,150 272,104 202,104 C140,104 100,146 104,200 C72,210 58,240 66,268 C74,298 100,318 132,318 Z"/><circle cx="322" cy="104" r="17" fill="currentColor"/><circle cx="72" cy="344" r="16" fill="currentColor"/><circle cx="42" cy="372" r="9" fill="currentColor"/></g><g transform="translate(300,163)"><path fill="currentColor" d="M5.612 0.0V-74.52H23.46Q31.003999999999998 -74.52 36.202 -72.726Q41.4 -70.932 44.114 -66.608Q46.827999999999996 -62.284 46.827999999999996 -54.832Q46.827999999999996 -50.324 46.0 -46.736Q45.172 -43.147999999999996 43.194 -40.617999999999995Q41.216 -38.088 37.72 -36.708L48.116 0.0H34.5L25.483999999999998 -34.132H19.227999999999998V0.0ZM19.227999999999998 -42.688H23.46Q27.416 -42.688 29.762 -43.838Q32.108 -44.988 33.12 -47.518Q34.132 -50.048 34.132 -54.004Q34.132 -59.616 32.062 -62.422Q29.992 -65.228 24.195999999999998 -65.228H19.227999999999998ZM79.304 0.0V-74.52H110.584V-64.952H92.92V-43.516H106.81200000000001V-34.04H92.92V-9.384H110.768V0.0ZM140.576 0.0 141.864 -74.52H155.94L166.51999999999998 -22.908L177.56 -74.52H191.176L192.55599999999998 0.0H182.43599999999998L181.332 -51.796L170.752 0.0H162.564L151.8 -51.98L150.788 0.0ZM270.112 0.0V-74.52H287.684Q296.79200000000003 -74.52 301.898 -72.036Q307.004 -69.55199999999999 309.166 -64.39999999999999Q311.328 -59.248 311.328 -51.336V-24.104Q311.328 -16.008 309.166 -10.626Q307.004 -5.244 301.99 -2.622Q296.976 0.0 288.236 0.0ZM283.728 -9.475999999999999H287.868Q292.56 -9.475999999999999 294.584 -11.132Q296.608 -12.788 297.068 -15.962Q297.528 -19.136 297.528 -23.736V-52.256Q297.528 -56.763999999999996 296.884 -59.524Q296.24 -62.284 294.216 -63.572Q292.192 -64.86 287.684 -64.86H283.728ZM343.43600000000004 0.0V-74.52H374.716V-64.952H357.052V-43.516H370.944V-34.04H357.052V-9.384H374.90000000000003V0.0ZM423.66 1.012Q416.944 1.012 412.43600000000004 -1.61Q407.92800000000005 -4.232 405.62800000000004 -9.292Q403.32800000000003 -14.352 403.052 -21.712L414.73600000000005 -24.012Q414.92 -19.688 415.794 -16.375999999999998Q416.668 -13.064 418.462 -11.27Q420.25600000000003 -9.475999999999999 423.20000000000005 -9.475999999999999Q426.51200000000006 -9.475999999999999 427.89200000000005 -11.454Q429.27200000000005 -13.432 429.27200000000005 -16.468Q429.27200000000005 -21.344 427.0640000000001 -24.472Q424.85600000000005 -27.599999999999998 421.17600000000004 -30.727999999999998L411.79200000000003 -39.008Q407.836 -42.412 405.49 -46.598Q403.144 -50.784 403.144 -56.948Q403.144 -65.78 408.29600000000005 -70.564Q413.44800000000004 -75.348 422.372 -75.348Q427.61600000000004 -75.348 431.1120000000001 -73.738Q434.60800000000006 -72.128 436.67800000000005 -69.276Q438.74800000000005 -66.42399999999999 439.76000000000005 -62.78999999999999Q440.77200000000005 -59.156 441.048 -55.108L429.456 -53.083999999999996Q429.27200000000005 -56.58 428.67400000000004 -59.34Q428.076 -62.1 426.558 -63.664Q425.04 -65.228 422.096 -65.228Q419.06000000000006 -65.228 417.45000000000005 -63.25Q415.84000000000003 -61.272 415.84000000000003 -58.327999999999996Q415.84000000000003 -54.556 417.404 -52.117999999999995Q418.968 -49.68 421.91200000000003 -47.104L431.204 -38.916Q435.80400000000003 -35.052 439.07000000000005 -29.854Q442.336 -24.656 442.336 -17.296Q442.336 -11.959999999999999 439.99 -7.819999999999999Q437.644 -3.6799999999999997 433.458 -1.3339999999999999Q429.27200000000005 1.012 423.66 1.012ZM472.788 0.0V-74.52H486.21999999999997V0.0ZM538.476 1.012Q531.116 1.012 526.7919999999999 -2.1159999999999997Q522.468 -5.244 520.582 -10.994Q518.696 -16.744 518.696 -24.564V-49.588Q518.696 -57.592 520.5360000000001 -63.388Q522.376 -69.184 527.0219999999999 -72.26599999999999Q531.668 -75.348 539.856 -75.348Q547.492 -75.348 552.0 -72.77199999999999Q556.508 -70.196 558.486 -65.366Q560.4639999999999 -60.536 560.4639999999999 -53.635999999999996V-49.772H547.492V-54.004Q547.492 -57.592 546.986 -60.168Q546.48 -62.744 544.962 -64.078Q543.444 -65.41199999999999 540.04 -65.41199999999999Q536.452 -65.41199999999999 534.842 -63.663999999999994Q533.232 -61.916 532.818 -59.06399999999999Q532.404 -56.211999999999996 532.404 -52.808V-21.62Q532.404 -17.756 533.048 -14.904Q533.692 -12.052 535.44 -10.533999999999999Q537.188 -9.016 540.408 -9.016Q543.72 -9.016 545.4680000000001 -10.672Q547.216 -12.328 547.906 -15.272Q548.596 -18.216 548.596 -22.264V-29.256H540.592V-37.812H560.832V0.0H552.092L551.0799999999999 -7.359999999999999Q549.608 -3.6799999999999997 546.6179999999999 -1.3339999999999999Q543.6279999999999 1.012 538.476 1.012ZM593.308 0.0V-74.52H602.784L620.908 -32.016V-74.52H632.1320000000001V0.0H623.116L604.9 -44.528V0.0Z"/></g></svg></a></div>
+</footer>
+<div class="sabana" id="sabana" aria-hidden="true"></div>
+<div class="velo" id="velo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<dialog id="sheet" aria-labelledby="dTitle">
+  <div class="wrapm">
+    <div class="stage"><div class="stage-in"><div class="frame" id="dFrame"></div></div></div>
+    <div class="info">
+      <div class="info-top">
+        <button class="ic" id="dPrev" aria-label="Obra anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button class="ic" id="dNext" aria-label="Obra siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="ic" id="dClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="scroll" id="dBody"></div>
+    </div>
+  </div>
+  <div class="buy" id="dBuy"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* Número tomado de la biografía de @agrioink. Falta que Nicolás lo confirme. */
+const WHATSAPP = "573028510223";
+const waURL = m => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}`;
+const waAttrs = m => `href="${waURL(m)}" target="_blank" rel="noopener"`;
+document.querySelectorAll("a[data-wa]").forEach(a => { a.href = waURL(a.dataset.wa); a.target = "_blank"; a.rel = "noopener"; });
+
+/* ---------- Ilustraciones de muestra ----------
+   Dibujos originales hechos para este prototipo: ocupan el lugar de las fotos reales.
+   No reproducen obras de Agrio; solo prueban cómo se ve el tablero con blanco, negro y rojo. */
+const rng = s => () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const K = "#0B0B0B", B = "#EDEBE4", G = "#4A4A47", R = "#C8202C";
+const svg = (w, h, bg, inner) => `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="${w}" height="${h}" fill="${bg}"/>${inner}</svg>`;
+const pol = (cx, cy, r, d) => [cx + r * Math.cos(d * Math.PI / 180), cy + r * Math.sin(d * Math.PI / 180)].map(v => v.toFixed(2)).join(" ");
+/* Puntillismo en un solo trazo: muchos puntos con poco costo para el navegador */
+const puntos = (a, cx, cy, rx, ry, n, col, sw, borde = true) => {
+  let d = "";
+  for (let i = 0; i < n; i++) { const t = a() * 6.283, u = borde ? 1 - a() * a() : Math.sqrt(a()); d += `M${(cx + Math.cos(t) * rx * u).toFixed(1)} ${(cy + Math.sin(t) * ry * u).toFixed(1)}h.01`; }
+  return `<path d="${d}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>`;
+};
+const ojo = (a, cx, cy, r, mira = 0) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${B}" stroke="${K}" stroke-width="${(r * .11).toFixed(2)}"/>${puntos(a, cx, cy, r * .92, r * .92, Math.round(r * 16), K, (r * .035).toFixed(2))}<circle cx="${cx + mira}" cy="${cy}" r="${(r * .52).toFixed(2)}" fill="${K}"/><circle cx="${cx + mira - r * .17}" cy="${cy - r * .2}" r="${(r * .15).toFixed(2)}" fill="${B}"/>`;
+const dientes = (x, y, w, n, h, sw = .8, col = B) => {
+  let d = `M${x} ${y}`;
+  for (let i = 0; i < n; i++) d += ` L${(x + (i + .5) * w / n).toFixed(1)} ${y + h} L${(x + (i + 1) * w / n).toFixed(1)} ${y}`;
+  return `<path d="${d}Z" fill="${col}" stroke="${K}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+};
+const gota = (x, y, s, col = R) => `<path d="M${x} ${y} C${x - s * .2} ${y + s * .6} ${x - s * .55} ${y + s * .85} ${x - s * .55} ${y + s * 1.25} A${s * .55} ${s * .55} 0 0 0 ${x + s * .55} ${y + s * 1.25} C${x + s * .55} ${y + s * .85} ${x + s * .2} ${y + s * .6} ${x} ${y}Z" fill="${col}"/>`;
+const hongo = (a, x, y, s, cap = K) => `<path d="M${x - s * .2} ${y} C${x - s * .12} ${y - s * .4} ${x - s * .2} ${y - s * .6} ${x - s * .16} ${y - s * .8} L${x + s * .16} ${y - s * .8} C${x + s * .2} ${y - s * .6} ${x + s * .12} ${y - s * .4} ${x + s * .22} ${y}Z" fill="${B}" stroke="${K}" stroke-width="${(s * .07).toFixed(2)}"/><path d="M${x - s} ${y - s * .68} Q${x} ${y - s * 1.9} ${x + s} ${y - s * .68} Q${x} ${y - s * .38} ${x - s} ${y - s * .68}Z" fill="${cap}" stroke="${K}" stroke-width="${(s * .07).toFixed(2)}"/><circle cx="${x - s * .42}" cy="${y - s * .95}" r="${s * .15}" fill="${B}"/><circle cx="${x + s * .08}" cy="${y - s * 1.2}" r="${s * .19}" fill="${B}"/><circle cx="${x + s * .52}" cy="${y - s * .92}" r="${s * .11}" fill="${B}"/>`;
+const flor = (a, cx, cy, r) => {
+  let s = "";
+  for (let i = 0; i < 6; i++) s += `<ellipse cx="${pol(cx, cy, r * .62, i * 60).split(" ")[0]}" cy="${pol(cx, cy, r * .62, i * 60).split(" ")[1]}" rx="${r * .46}" ry="${r * .34}" transform="rotate(${i * 60} ${pol(cx, cy, r * .62, i * 60)})" fill="${B}" stroke="${K}" stroke-width="${(r * .08).toFixed(2)}"/>`;
+  return s + `<circle cx="${cx}" cy="${cy}" r="${r * .34}" fill="${K}"/>` + puntos(a, cx, cy, r * .28, r * .28, 16, B, (r * .05).toFixed(2), false);
+};
+const espiral = (x, y, r, vueltas, col, sw) => {
+  let d = "";
+  const pasos = vueltas * 18;
+  for (let i = 0; i <= pasos; i++) { const t = i / pasos, ang = t * vueltas * 6.283, q = r * (1 - t); d += `${i ? "L" : "M"}${(x + Math.cos(ang) * q).toFixed(1)} ${(y + Math.sin(ang) * q).toFixed(1)}`; }
+  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/>`;
+};
+const calavera = (a, x, y, s, fondoOjo = K) => `<path d="M${x - s} ${y - s * .1} C${x - s} ${y - s * 1.2} ${x + s} ${y - s * 1.2} ${x + s} ${y - s * .1} C${x + s} ${y + s * .35} ${x + s * .62} ${y + s * .45} ${x + s * .6} ${y + s * .8} L${x - s * .6} ${y + s * .8} C${x - s * .62} ${y + s * .45} ${x - s} ${y + s * .35} ${x - s} ${y - s * .1}Z" fill="${B}" stroke="${K}" stroke-width="${(s * .07).toFixed(2)}"/>${puntos(a, x, y - s * .15, s * .9, s * .85, Math.round(s * 12), K, (s * .028).toFixed(2))}<circle cx="${x - s * .42}" cy="${y}" r="${s * .3}" fill="${fondoOjo}"/><circle cx="${x + s * .42}" cy="${y}" r="${s * .3}" fill="${fondoOjo}"/><path d="M${x} ${y + s * .22} L${x - s * .13} ${y + s * .46} L${x + s * .13} ${y + s * .46}Z" fill="${K}"/><path d="M${x - s * .4} ${y + s * .8} V${y + s * 1.15} H${x + s * .4} V${y + s * .8}" fill="${B}" stroke="${K}" stroke-width="${(s * .07).toFixed(2)}"/><path d="M${x - s * .2} ${y + s * .8} V${y + s * 1.15} M${x} ${y + s * .8} V${y + s * 1.15} M${x + s * .2} ${y + s * .8} V${y + s * 1.15}" stroke="${K}" stroke-width="${(s * .05).toFixed(2)}"/>`;
+const daga = (x, y, h, cuerpo = B, guarda = R) => `<path d="M${x - h * .05} ${y + h * .3} L${x + h * .05} ${y + h * .3} L${x + h * .035} ${y + h * .85} L${x} ${y + h} L${x - h * .035} ${y + h * .85}Z" fill="${cuerpo}" stroke="${K}" stroke-width="${(h * .008).toFixed(2)}"/><line x1="${x}" y1="${y + h * .31}" x2="${x}" y2="${y + h * .92}" stroke="${K}" stroke-width="${(h * .006).toFixed(2)}"/><rect x="${x - h * .13}" y="${y + h * .26}" width="${h * .26}" height="${h * .04}" rx="${h * .012}" fill="${guarda}" stroke="${K}" stroke-width="${(h * .006).toFixed(2)}"/><rect x="${x - h * .03}" y="${y + h * .08}" width="${h * .06}" height="${h * .18}" fill="${cuerpo}" stroke="${K}" stroke-width="${(h * .006).toFixed(2)}"/><circle cx="${x}" cy="${y + h * .05}" r="${h * .04}" fill="${guarda}" stroke="${K}" stroke-width="${(h * .006).toFixed(2)}"/>`;
+
+const ARTE = {
+  sapo(){
+    const a = rng(11), c = "M8 98 C2 62 20 50 32 52 C30 28 72 24 72 50 C88 48 100 70 93 102 C84 134 18 132 8 98Z";
+    return svg(100, 140, K, `<defs><clipPath id="cSapo"><path d="${c}"/></clipPath></defs>
+      ${hongo(a, 18, 54, 12)}${hongo(a, 84, 54, 9, R)}
+      <path d="${c}" fill="${B}"/><g clip-path="url(#cSapo)">${puntos(a, 50, 82, 48, 48, 900, K, .55)}</g>
+      <circle cx="26" cy="74" r="2.6" fill="${K}"/><circle cx="82" cy="78" r="3.4" fill="${K}"/><circle cx="74" cy="70" r="1.6" fill="${K}"/><circle cx="22" cy="86" r="1.5" fill="${K}"/>
+      ${ojo(a, 51, 54, 24, 2)}
+      <path d="M12 94 Q51 84 90 94 Q84 128 51 128 Q18 128 12 94Z" fill="${K}"/>
+      ${dientes(16, 93, 70, 9, 10, .7)}
+      <path d="M36 128 Q50 104 66 128Z" fill="${R}"/>${gota(70, 124, 5)}`);
+  },
+  mordida(){
+    const a = rng(3);
+    return svg(200, 70, B, `${puntos(a, 100, 35, 104, 38, 500, K, .45)}<rect y="9" width="200" height="52" fill="${K}"/>
+      ${dientes(0, 9, 200, 17, 15, .6)}<g transform="translate(0 61) scale(1 -1)">${dientes(0, 0, 200, 21, 12, .6)}</g>
+      ${ojo(a, 72, 34, 9.5, 1.5)}${ojo(a, 128, 34, 9.5, -1.5)}<ellipse cx="100" cy="51" rx="24" ry="6.5" fill="${R}"/>`);
+  },
+  espinas(){
+    const a = rng(5);
+    let d = "M20 0", th = "";
+    for (let y = 8; y <= 120; y += 8) {
+      const x = 20 + Math.sin(y * .1) * 8; d += ` L${x.toFixed(1)} ${y}`;
+      const s = (y / 8) % 2 ? 1 : -1;
+      th += `<path d="M${(x - 1.4).toFixed(1)} ${y - 2} L${(x + s * 8).toFixed(1)} ${y - 5} L${(x + 1.4).toFixed(1)} ${y + 2}Z" fill="${K}"/>`;
+    }
+    return svg(40, 120, B, `${puntos(a, 20, 60, 21, 62, 240, K, .3)}<path d="${d}" fill="none" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>${th}${flor(a, 13, 26, 8.5)}${flor(a, 27, 66, 9.5)}${flor(a, 13, 100, 7.5)}${gota(29, 94, 3.4)}`);
+  },
+  bicho(){
+    const a = rng(8);
+    return svg(60, 60, R, `<path d="M9 34 C7 12 21 6 30 13 C39 6 53 12 51 34 C50 52 10 52 9 34Z" fill="${K}"/><path d="M15 12 L11 3 L22 9Z M45 12 L49 3 L38 9Z" fill="${K}"/>${puntos(a, 30, 30, 21, 20, 160, B, .3)}${ojo(a, 21, 25, 6, .8)}${ojo(a, 39, 25, 6, -.8)}${ojo(a, 30, 16, 3.4)}
+      <path d="M16 36 Q30 32 44 36 Q41 49 30 49 Q19 49 16 36Z" fill="${B}"/>${dientes(17, 36, 26, 7, 5, .4, K)}`);
+  },
+  gusano(){
+    const a = rng(14), p = "M6 60 C22 16 44 18 58 42 S90 72 108 42 S136 20 146 34";
+    return svg(160, 80, "#1C1C1C", `${puntos(a, 80, 40, 82, 42, 420, "#55554F", .5)}<path d="${p}" fill="none" stroke="${B}" stroke-width="17" stroke-linecap="round"/><path d="${p}" fill="none" stroke="${K}" stroke-width="13.5" stroke-linecap="round"/><path d="${p}" fill="none" stroke="${B}" stroke-width="9" stroke-dasharray="1.6 3.6"/>
+      <circle cx="146" cy="33" r="12" fill="${K}" stroke="${B}" stroke-width="1.2"/>${ojo(a, 146, 28, 6)}<path d="M136 38 Q146 35 156 38 Q152 44 146 44 Q140 44 136 38Z" fill="${R}"/>${dientes(137, 37.5, 18, 6, 2.6, .25)}`);
+  },
+  curita(){
+    const a = rng(21);
+    const cur = (x, y, ang, w = 12) => `<g transform="rotate(${ang} ${x} ${y})"><rect x="${x - w / 2}" y="${y - 2}" width="${w}" height="4" rx="1.6" fill="#F5D9C8" stroke="${K}" stroke-width=".4"/><rect x="${x - w / 7}" y="${y - 2}" width="${w / 3.5}" height="4" fill="#E9B9A4" stroke="${K}" stroke-width=".3"/></g>`;
+    return svg(50, 70, "#2B2B2B", `${puntos(a, 25, 35, 27, 37, 260, "#6B6B66", .35)}
+      <path d="M8 44 C2 16 17 6 26 7 C38 6 49 20 42 48 C40 58 38 60 36 60 L14 60 C12 60 9 56 8 44Z" fill="${K}"/>
+      <path d="M13 34 C12 20 18 17 25 19 C32 17 38 20 37 34 C37 47 31 53 25 53 C19 53 13 47 13 34Z" fill="${B}"/>${puntos(a, 25, 35, 12, 18, 130, K, .25)}
+      <path d="M13 28 C17 18 22 16 26 20 C30 16 35 19 37 28 C33 22 29 22 25 23 C21 22 17 23 13 28Z" fill="${K}"/>
+      <circle cx="19" cy="34" r="4.6" fill="${B}" stroke="${K}" stroke-width=".7"/><circle cx="19.2" cy="34.6" r="2.7" fill="${K}"/><circle cx="18.4" cy="33.6" r=".8" fill="${B}"/>
+      <circle cx="31" cy="34" r="4.6" fill="${B}" stroke="${K}" stroke-width=".7"/><circle cx="30.8" cy="34.6" r="2.7" fill="${K}"/><circle cx="30" cy="33.6" r=".8" fill="${B}"/>
+      <path d="M15.2 29 L22 30.6 M34.8 29 L28 30.6" stroke="${K}" stroke-width=".8" stroke-linecap="round"/>
+      <path d="M21.5 46 Q25 43.6 28.5 46" fill="none" stroke="${K}" stroke-width=".8" stroke-linecap="round"/><path d="M25 39 L24 41.2 L25.6 41.2" fill="none" stroke="${K}" stroke-width=".45"/>
+      ${gota(19, 39, 2.2)}${gota(31, 39.5, 1.8)}${cur(30, 43, -28, 11)}${cur(21, 21.6, 16, 10)}
+      <path d="M0 70 C10 58 18 60 25 62 C32 60 40 58 50 70Z" fill="${K}"/>${flor(a, 10, 63, 5)}${flor(a, 40, 64, 5.5)}`);
+  },
+  luna(){
+    const a = rng(2);
+    return svg(30, 30, K, `${puntos(a, 15, 15, 15, 15, 40, "#55554F", .22, false)}<path d="M19 4.6 A10.8 10.8 0 1 0 19 25.4 A8.4 8.4 0 1 1 19 4.6Z" fill="${R}"/><path d="M12.4 8 L15.4 9.4 L11.4 11 L14.2 13 L10.6 14 L13.6 16 L10.8 17.8 L14.4 19.4 L12 21.6 L15.6 21.8" fill="none" stroke="${B}" stroke-width=".7" stroke-linejoin="round"/><path d="M23 8.4 l.5 1.4 1.4.5 -1.4.5 -.5 1.4 -.5-1.4 -1.4-.5 1.4-.5z" fill="${B}"/>`);
+  },
+  craneo(){
+    const a = rng(31);
+    return svg(120, 160, "#232323", `${puntos(a, 60, 80, 62, 82, 620, "#62625C", .55)}${espiral(22, 42, 15, 2.5, B, 2.2)}${espiral(100, 34, 13, 2.5, B, 2)}
+      ${hongo(a, 40, 54, 16)}${hongo(a, 74, 48, 21, R)}${hongo(a, 96, 62, 11)}
+      ${calavera(a, 60, 94, 39)}${gota(43, 104, 3.8)}<path d="M0 160 V142 Q22 130 42 142 T82 140 T120 146 V160Z" fill="${K}"/>${flor(a, 20, 142, 10)}${flor(a, 100, 144, 9)}`);
+  },
+  polilla(){
+    const a = rng(17);
+    const ala = `<path d="M50 34 C36 8 12 3 5 13 C1 28 15 39 34 41 C18 45 10 60 18 71 C30 74 44 60 50 47Z" fill="${K}"/>`;
+    const r = rng(18);
+    return svg(100, 80, B, `${puntos(a, 50, 40, 52, 42, 340, K, .35)}${ala}<g transform="translate(100 0) scale(-1 1)">${ala}</g>${puntos(r, 28, 26, 19, 16, 170, B, .34)}${puntos(r, 72, 26, 19, 16, 170, B, .34)}${ojo(a, 20, 20, 7, .8)}${ojo(a, 80, 20, 7, -.8)}${ojo(a, 26, 58, 4.4)}${ojo(a, 74, 58, 4.4)}
+      <ellipse cx="50" cy="48" rx="4" ry="15" fill="${K}"/><path d="M47 25 C44 15 39 12 34 12 M53 25 C56 15 61 12 66 12" fill="none" stroke="${K}" stroke-width="1"/>${calavera(a, 50, 33, 6.4)}${gota(50, 62, 3)}`);
+  },
+  dagaLarga(){
+    const a = rng(9);
+    return svg(45, 110, K, `${puntos(a, 22, 55, 23, 56, 170, "#5A5A55", .3)}${daga(22.5, 6, 94)}${gota(22.5, 100, 2.4)}${gota(14, 74, 1.8)}${gota(31, 84, 1.5)}`);
+  },
+  humo(){
+    const a = rng(44);
+    return svg(70, 100, G, `${puntos(a, 35, 50, 37, 52, 300, K, .55)}${espiral(25, 28, 19, 3, B, 3.2)}${espiral(50, 62, 17, 3, B, 3)}${espiral(17, 78, 12, 2.5, B, 2.4)}<path d="M36 100 C28 90 44 80 37 66" fill="none" stroke="${B}" stroke-width="3"/>${ojo(a, 49, 25, 10)}${gota(28, 54, 3)}`);
+  },
+  hongos(){
+    const a = rng(6);
+    const cara = (x, y, s) => `<circle cx="${x - s * .32}" cy="${y}" r="${s * .2}" fill="${K}"/><circle cx="${x + s * .32}" cy="${y}" r="${s * .2}" fill="${K}"/><path d="M${x - s * .4} ${y + s * .34} H${x + s * .4}" stroke="${K}" stroke-width=".7"/>${dientes(x - s * .4, y + s * .34, s * .8, 5, s * .16, .35, B)}`;
+    return svg(150, 90, B, `${puntos(a, 75, 45, 78, 47, 520, K, .42)}<path d="M0 90 V74 Q38 66 75 74 T150 72 V90Z" fill="${K}"/>${hongo(a, 30, 76, 26)}${hongo(a, 75, 78, 32, R)}${hongo(a, 122, 76, 24)}${cara(30, 62, 11)}${cara(75, 61, 13)}${cara(122, 63, 10)}`);
+  },
+  ojoSeco(){
+    const a = rng(12);
+    let pestanas = "";
+    for (let i = 0; i < 15; i++) { const t = .08 + i * .06, x = (1 - t) ** 2 * 6 + 2 * (1 - t) * t * 40 + t * t * 74, y = (1 - t) ** 2 * 40 + 2 * (1 - t) * t * 2 + t * t * 40; pestanas += `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x + (x - 40) * .2).toFixed(1)}" y2="${(y - 10).toFixed(1)}" stroke="${K}" stroke-width="1.2" stroke-linecap="round"/>`; }
+    return svg(80, 80, B, `${puntos(a, 40, 40, 42, 42, 320, K, .36)}${pestanas}<path d="M6 40 Q40 2 74 40 Q40 66 6 40Z" fill="${B}" stroke="${K}" stroke-width="2.4"/><circle cx="40" cy="36" r="14" fill="${K}"/>${puntos(a, 40, 36, 13, 13, 90, B, .4)}<circle cx="40" cy="36" r="6" fill="${K}"/><circle cx="36.5" cy="32" r="2" fill="${B}"/>${gota(46, 56, 4.6, K)}${gota(33, 60, 3.2, K)}`);
+  },
+  flash(){
+    const a = rng(27);
+    const cel = (i) => [9 + (i % 2) * 24, 19 + Math.floor(i / 2) * 14.5];
+    return svg(42, 59, B, `<text x="21" y="8" text-anchor="middle" font-family="Bricolage Grotesque,Arial Black,sans-serif" font-weight="800" font-size="5" fill="${K}">FLASH</text><line x1="4" y1="10.5" x2="38" y2="10.5" stroke="${K}" stroke-width=".4"/>
+      ${ojo(a, cel(0)[0], cel(0)[1], 5.2, .6)}${calavera(a, cel(1)[0], cel(1)[1] - 1, 5)}${hongo(a, cel(2)[0], cel(2)[1] + 4.6, 6.2)}${gota(cel(3)[0], cel(3)[1] - 6, 5.2)}${daga(cel(4)[0], cel(4)[1] - 7, 15)}${dientes(cel(5)[0] - 6, cel(5)[1] - 2, 12, 4, 5, .4)}`);
+  },
+  florDientes(){
+    const a = rng(35);
+    let pet = "";
+    for (let i = 0; i < 9; i++) { const q = pol(30, 30, 16, i * 40); pet += `<ellipse cx="${q.split(" ")[0]}" cy="${q.split(" ")[1]}" rx="11" ry="6.4" transform="rotate(${i * 40} ${q})" fill="${B}" stroke="${K}" stroke-width=".8"/>`; }
+    return svg(60, 80, "#1A1A1A", `${puntos(a, 30, 40, 31, 42, 240, "#5C5C57", .4)}<path d="M30 42 C26 58 36 64 30 80" fill="none" stroke="${B}" stroke-width="3.4"/><path d="M29 55 L17 50 L29 60Z M32 66 L45 60 L33 71Z" fill="${B}"/>${pet}${puntos(a, 30, 30, 25, 25, 190, K, .3)}<circle cx="30" cy="30" r="12.5" fill="${K}"/><path d="M21 37 Q30 25 39 37 Q34 41 30 41 Q26 41 21 37Z" fill="${R}"/>${dientes(19.5, 25.5, 21, 6, 6, .35)}`);
+  },
+  milOjos(){
+    const a = rng(52);
+    let s = "";
+    for (let f = 0; f < 5; f++) for (let c = 0; c < 7; c++) {
+      const r = 5 + a() * 3.6;
+      s += ojo(a, Math.round(9 + c * 17 + (f % 2) * 8 + a() * 3), Math.round(9 + f * 18 + a() * 3), +r.toFixed(1), +(a() * 2 - 1).toFixed(1));
+    }
+    return svg(120, 90, K, s + gota(62, 74, 4));
+  }
+};
+const muestra = key => ARTE[key]();
+
+/* Mismos campos que la tabla artworks de Supabase, para conectarlo después sin cambiar el diseño. */
+const NOTA = "Ilustración de muestra para probar el tablero. Aquí irá la foto y el texto de una obra real de Nicolás.";
+const ej = (slug, title, year, technique, materials, frame_style, kind, edition_size, stock, width_cm, height_cm, price_cop, art_key, on_hold = false) =>
+  ({ slug, title, year, technique, materials, frame: { none: "Sin marco", black: "Negro", mat: "Negro, con paspartú" }[frame_style], frame_style, kind, edition_size, stock, width_cm, height_cm, price_cop, art_key, description: NOTA, on_hold, image_path: null });
+const OBRAS = [
+  ej("mordida","Mordida",2026,"Ilustración digital, giclée","Giclée sobre papel de algodón 308 g","black","edicion",25,11,200,70,1200000,"mordida"),
+  ej("sapo-de-un-ojo","Sapo de un ojo",2025,"Grafito y tinta sobre papel","Grafito y tinta china sobre papel de algodón","mat","original",null,1,100,140,4800000,"sapo"),
+  ej("espinas","Espinas",2025,"Grafito sobre papel","Grafito sobre papel de algodón","mat","original",null,1,40,120,2400000,"espinas"),
+  ej("bicho","Bicho",2026,"Serigrafía a dos tintas","Serigrafía sobre Fabriano 250 g","black","edicion",40,9,60,60,650000,"bicho",true),
+  ej("gusano","Gusano",2025,"Tinta sobre papel","Tinta china sobre papel de algodón","none","original",null,1,160,80,3900000,"gusano"),
+  ej("curita","Curita",2026,"Ilustración digital, giclée","Giclée sobre papel de algodón 308 g, firmada y numerada","black","edicion",20,13,50,70,450000,"curita"),
+  ej("luna-mordida","Luna mordida",2026,"Acrílico sobre madera","Acrílico sobre tabla de madera","none","original",null,1,30,30,650000,"luna"),
+  ej("craneo-con-hongos","Cráneo con hongos",2025,"Grafito y carboncillo, gran formato","Grafito y carboncillo prensado sobre papel","mat","original",null,1,120,160,9500000,"craneo"),
+  ej("polilla","Polilla",2026,"Grafito y tinta","Grafito y tinta china sobre papel","mat","original",null,1,100,80,3600000,"polilla"),
+  ej("daga-larga","Daga larga",2026,"Ilustración digital, giclée","Giclée sobre papel de algodón 308 g","black","edicion",15,15,45,110,520000,"dagaLarga"),
+  ej("humo","Humo",2026,"Técnica mixta","Tinta y acrílico sobre papel","none","original",null,1,70,100,3200000,"humo"),
+  ej("tres-hongos","Tres hongos",2026,"Serigrafía a tres tintas","Serigrafía sobre Fabriano 250 g","black","edicion",30,4,150,90,980000,"hongos"),
+  ej("ojo-seco","Ojo seco",2024,"Grafito sobre papel","Grafito sobre papel Canson 250 g","mat","original",null,0,80,80,2900000,"ojoSeco"),
+  ej("flash-03","Flash 03",2026,"Ilustración digital, giclée A2","Giclée sobre papel de algodón 308 g","black","edicion",30,22,42,59,380000,"flash"),
+  ej("flor-con-dientes","Flor con dientes",2026,"Técnica mixta","Tinta y acrílico sobre papel","none","original",null,1,60,80,1900000,"florDientes"),
+  ej("mil-ojos","Mil ojos",2025,"Ilustración digital, giclée","Giclée sobre papel de algodón 308 g","black","edicion",10,0,120,90,1400000,"milOjos")
+];
+
+const estado = a => a.stock <= 0 ? "sold" : a.on_hold ? "reserved" : "available";
+const cop = n => "$" + n.toLocaleString("es-CO", { maximumFractionDigits: 0 });
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const tipo = a => a.kind === "edicion" ? `Edición de ${a.edition_size}` : "";
+const msgCompra = a => `Hola Agrio, quiero comprar “${a.title}” (${cop(a.price_cop)}). ¿Sigue disponible?\n${location.origin}${location.pathname}#obra/${a.slug}`;
+const lamina = a => a.image_path ? `<img src="${esc(a.image_path)}" alt="" loading="lazy">` : muestra(a.art_key);
+
+/* ---------- Filtros ---------- */
+const FILTROS = [
+  ["todo", "Todo", () => true],
+  ["disponibles", "Disponibles", a => estado(a) === "available"],
+  ["digitales", "Digitales", a => /digital/i.test(a.technique)],
+  ["manuales", "Técnicas manuales", a => !/digital/i.test(a.technique)]
+];
+let filtro = "todo", visibles = [];
+const chips = document.getElementById("chips");
+chips.innerHTML = FILTROS.map(([k, n, f]) => `<button class="chip" data-f="${k}" aria-pressed="${k === filtro}">${n}<small>${OBRAS.filter(f).length}</small></button>`).join("");
+chips.addEventListener("click", e => {
+  const b = e.target.closest("[data-f]");
+  if (!b || b.dataset.f === filtro) return;
+  filtro = b.dataset.f;
+  chips.querySelectorAll("[data-f]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  disponer(true);
+});
+
+/* ---------- Tejas ---------- */
+const board = document.getElementById("board");
+const tejas = new Map();
+OBRAS.forEach(a => {
+  const li = document.createElement("li");
+  const st = estado(a);
+  li.className = "t obra" + (st === "sold" ? " sold" : "") + (st === "available" ? " compra" : "");
+  const sello = st === "sold" ? `<span class="stamp">Vendida</span>` : st === "reserved" ? `<span class="stamp res">Reservada</span>` : "";
+  li.innerHTML = `<a class="ver" href="#obra/${esc(a.slug)}" aria-label="${esc(a.title)}, ${st === "sold" ? "vendida" : cop(a.price_cop)}. Ver obra">
+    <div class="art">${sello}${lamina(a)}</div>
+    <div class="cap"><b>${esc(a.title)}</b><div class="row"><span class="price">${st === "sold" ? "Vendida" : cop(a.price_cop)}</span>${tipo(a) ? `<span class="kind">${tipo(a)}</span>` : ""}</div><span class="tec">${esc(a.technique)}</span></div></a>${st === "available" ? `<a class="btn comprar" ${waAttrs(msgCompra(a))} aria-label="Comprar ${esc(a.title)} por WhatsApp">Comprar</a>` : ""}`;
+  tejas.set(a.slug, li);
+});
+const intro = document.createElement("li");
+intro.className = "t nota intro";
+intro.innerHTML = `<h1>Agrio</h1><div><p>Hola, soy Nicolás, todo lo que veas acá es mi interpretación del mundo, a veces incómodo, a veces raro, siempre agrio. <strong>Cada cuadro es único, no se repite.</strong></p><span class="n" id="cuenta"></span></div>`;
+const encargo = document.createElement("li");
+encargo.className = "t nota encargo";
+encargo.innerHTML = `<div><h2>¿Quieres algo hecho para ti?</h2><p>Cuéntale a Agrio tu idea y el espacio donde irá.</p></div><a class="btn ink" ${waAttrs("Hola Agrio, quiero pedirte una obra por encargo.")}>Pedir encargo</a>`;
+
+/* ---------- Distribución ----------
+   Cada obra toma su forma de sus medidas reales: ancho_cm / alto_cm. Nunca se recorta.
+   - Muy panorámica: 3 columnas. Horizontal: 2. Gran formato vertical: 2. El resto: 1.
+   - El orden lo decide el encaje: entre las siguientes obras se elige la que menos hueco deja.
+   - Los huecos pequeños se absorben alargando el pie de la teja de arriba. */
+const span = (a, cols) => {
+  const r = a.width_cm / a.height_cm;
+  if (r >= 2.2) return cols >= 4 ? 3 : cols;
+  if (r >= 1.2) return 2;
+  if (Math.max(a.width_cm, a.height_cm) >= 130 && cols >= 4) return 2;
+  return 1;
+};
+const INTENTOS = 300, ALTO_MAX_HUECO = 340;
+function colsPara(W, gap){
+  return Math.max(2, Math.min(7, Math.round((W + gap) / (W < 900 ? 200 : 285))));
+}
+function calcular(obras, W){
+  const css = getComputedStyle(document.documentElement);
+  const gap = parseFloat(css.getPropertyValue("--pad")), cap = parseFloat(css.getPropertyValue("--cap")), capCompra = parseFloat(css.getPropertyValue("--cap-compra"));
+  const cols = colsPara(W, gap), cw = (W - gap * (cols - 1)) / cols;
+  const ancho = s => cw * s + gap * (s - 1);
+  const alto = (el, w) => { el.style.width = w + "px"; el.style.height = "auto"; if (!el.isConnected) board.append(el); return el.offsetHeight; };
+
+  /* Se mide una sola vez; después solo se prueban acomodos, sin tocar la página */
+  const sI = cols >= 4 ? 2 : cols, sE = cols >= 6 ? 2 : 1;
+  const tIntro = { kind: "intro", el: intro, s0: sI, h: Math.max(alto(intro, ancho(sI)), cols >= 4 ? 300 : 0) };
+  const tEncargo = { kind: "encargo", el: encargo, s0: Math.min(sE, cols), h: alto(encargo, ancho(sE)) };
+  const tObras = obras.map(a => { const s = Math.min(span(a, cols), cols), w = ancho(s), art = w * a.height_cm / a.width_cm, pie = estado(a) === "available" ? capCompra : cap; return { kind: "obra", el: tejas.get(a.slug), a, s0: s, art, h: art + pie }; });
+
+  function intento(lista){
+    const y = Array(cols).fill(0), ult = Array(cols).fill(null), out = [], rellenos = [];
+    let estirado = 0;
+    const colocar = (it, c, s, top) => {
+      const p = { ...it, c, s, x: c * (cw + gap), y: top, w: ancho(s), extra: 0 };
+      out.push(p);
+      for (let i = c; i < c + s; i++) { y[i] = top + p.h + gap; ult[i] = p; }
+    };
+    /* Devuelve la teja de arriba si puede alargarse sin pisar nada */
+    const estirable = c => { const t = ult[c]; if (!t) return null; for (let i = t.c; i < t.c + t.s; i++) if (ult[i] !== t) return null; return t; };
+    const estirar = (t, d) => { t.h += d; t.extra += d; estirado += d * t.w; for (let i = t.c; i < t.c + t.s; i++) y[i] += d; };
+    const hueco = (c, w, top, h) => { if (h > 6) rellenos.push({ x: c * (cw + gap), y: top, w, h }); };
+    const limite = t => Math.max(84, t.h * .2);
+
+    colocar(tIntro, 0, tIntro.s0, 0);
+    const pend = lista.slice();
+    while (pend.length) {
+      let mejor = null;
+      pend.slice(0, 6).forEach((it, idx) => {
+        for (let c = 0; c + it.s0 <= cols; c++) {
+          const top = Math.max(...y.slice(c, c + it.s0));
+          let desperdicio = 0, malo = 0;
+          for (let i = c; i < c + it.s0; i++) {
+            const d = top - y[i]; desperdicio += d;
+            if (d > 1) { const t = estirable(i); if (!t || d > limite(t)) malo += 1; }
+          }
+          const score = top + desperdicio * 1.4 + idx * 14 + malo * 1e5;
+          if (!mejor || score < mejor.score) mejor = { score, it, c, top };
+        }
+      });
+      const { it, c, top } = mejor, s = it.s0;
+      for (let i = c; i < c + s; i++) {
+        const d = top - y[i];
+        if (d > 1) {
+          const t = estirable(i);
+          if (t && d <= limite(t)) estirar(t, d);
+          else { hueco(i, cw, y[i], d - gap); y[i] = top; ult[i] = null; }
+        }
+      }
+      pend.splice(pend.indexOf(it), 1);
+      colocar(it, c, s, top);
+    }
+
+    /* Pie del tablero: si falta poco, alarga la última teja; si falta algo más, pone una tarjeta.
+       Si el hueco es muy alto se deja abierto, como el borde irregular de Pinterest. */
+    const fondo = Math.max(...y);
+    let abierto = 0;
+    for (let guard = 0; guard < cols * 3; guard++) {
+      const low = Math.min(...y);
+      if (fondo - low < 2) break;
+      const c0 = y.indexOf(low);
+      let c1 = c0; while (c1 + 1 < cols && Math.abs(y[c1 + 1] - low) < 1) c1++;
+      const techo = Math.min(fondo, ...[y[c0 - 1], y[c1 + 1]].filter(v => v !== undefined && v > low));
+      const d = techo - low, n = c1 - c0 + 1;
+      const t = n === 1 ? estirable(c0) : null;
+      if (t && t.s === 1 && d <= 72) { estirar(t, d); continue; }
+      if (d - gap <= ALTO_MAX_HUECO) hueco(c0, ancho(n), low, d - gap);
+      else abierto += d * ancho(n);
+      for (let i = c0; i <= c1; i++) { y[i] = techo; ult[i] = null; }
+    }
+    const vacio = rellenos.reduce((sum, r) => sum + r.w * r.h, 0);
+    /* Menos área vacía y menos bloques sueltos es mejor; estirar pesa menos que dejar un hueco */
+    const costo = vacio + abierto + estirado * .5 + rellenos.length * cw * 30;
+    return { out, rellenos, alto: Math.max(0, fondo - gap), costo };
+  }
+
+  /* No hay orden fijo: se prueban acomodos y se queda el que menos espacio pierde.
+     La semilla depende de las columnas y las obras, así el tablero no salta entre recargas. */
+  const conEncargo = l => { const c = l.slice(); c.splice(Math.min(5, c.length), 0, tEncargo); return c; };
+  let mejor = intento(conEncargo(tObras));
+  const azar = rng(cols * 97 + obras.length * 31);
+  for (let n = 0; n < INTENTOS; n++) {
+    const l = tObras.slice();
+    for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(azar() * (i + 1)); [l[i], l[j]] = [l[j], l[i]]; }
+    const r = intento(conEncargo(l));
+    if (r.costo < mejor.costo) mejor = r;
+  }
+  mejor.out.sort((p, q) => (p.y - q.y) || (p.x - q.x));
+  return mejor;
+}
+
+/* ---------- Dibujo con transición suave entre filtros ---------- */
+const calma = matchMedia("(prefers-reduced-motion: reduce)");
+const PISTAS = [
+  `<p>Compra sin crear cuenta. Paga con PSE, tarjeta o Nequi.</p>`,
+  `<p>¿Tienes dudas sobre una obra?</p><a ${waAttrs("Hola Agrio, tengo una pregunta sobre una de tus obras.")}>Pregúntale a Agrio</a>`
+];
+
+/* ---------- Aparición con el scroll ----------
+   Lo que ya se ve al cargar aparece de una vez. Después, cada vez que una card entra a la pantalla
+   se anima según la dirección del scroll: sube si bajas por la página y baja si subes por ella.
+   Al salir por completo queda lista para animarse de nuevo. La posición en el bento no cambia. */
+const pendientes = new Set(), velo = document.getElementById("velo"), barra = document.querySelector(".top");
+let scrollPrevio = scrollY, haciaArriba = false;
+function programar(el, animar){
+  if (calma.matches || el.dataset.visto || pendientes.has(el)) return;
+  const y = board.getBoundingClientRect().top + el._y;
+  if (!animar && y < innerHeight && y + el._h > 0) { el.dataset.visto = "1"; return; }
+  el.classList.add("espera");
+  pendientes.add(el);
+}
+function barrer(){
+  if (scrollY !== scrollPrevio) { haciaArriba = scrollY < scrollPrevio; scrollPrevio = scrollY; }
+  const top = board.getBoundingClientRect().top, techo = barra.getBoundingClientRect().bottom;
+  /* Las que salieron del todo vuelven a quedar listas, sin transición y sin que se note */
+  for (const el of board.children) {
+    if (!el.dataset.visto) continue;
+    const y = top + el._y;
+    if (y >= innerHeight || y + el._h <= techo) {
+      clearTimeout(el._fin);
+      el.classList.remove("sube");
+      el.style.transitionDelay = "";
+      delete el.dataset.visto;
+      el.classList.add("espera");
+      pendientes.add(el);
+    }
+  }
+  /* El margen de 24 px evita que una card en el borde se oculte y aparezca una y otra vez */
+  const limAbajo = innerHeight - 24, limArriba = techo + 24;
+  /* La card que entra se revela primero; las demás la siguen desde ese mismo borde */
+  const lote = [...pendientes]
+    .filter(el => el.isConnected && top + el._y < limAbajo && top + el._y + el._h > limArriba)
+    .sort((a, b) => (haciaArriba ? b._y - a._y : a._y - b._y) || (a._x - b._x));
+  let turno = 0;
+  lote.forEach(el => {
+    pendientes.delete(el);
+    el.dataset.visto = "1";
+    if (haciaArriba) el.classList.add("arriba");
+    void el.offsetWidth; /* Fija el estado inicial para que la transición siempre arranque */
+    const retraso = Math.min(turno++ * 80, 320);
+    el.style.transitionDelay = retraso + "ms";
+    el.classList.add("sube");
+    el.classList.remove("espera", "arriba");
+    el._fin = setTimeout(() => { el.classList.remove("sube"); el.style.transitionDelay = ""; }, retraso + 1200);
+  });
+  /* El velo se retira al llegar al final para que las últimas cards queden nítidas */
+  const resta = document.documentElement.scrollHeight - (scrollY + innerHeight);
+  velo.style.setProperty("--velo-o", Math.max(0, Math.min(1, resta / 120)).toFixed(3));
+}
+addEventListener("scroll", barrer, { passive: true });
+addEventListener("resize", barrer, { passive: true });
+
+function disponer(animar){
+  const W = board.clientWidth;
+  if (!W) return;
+  const fn = FILTROS.find(f => f[0] === filtro)[2];
+  visibles = OBRAS.filter(fn);
+  const disp = visibles.filter(a => estado(a) === "available").length;
+  intro.querySelector("#cuenta").textContent =`${visibles.length} ${visibles.length === 1 ? "obra" : "obras"}, ${disp} ${disp === 1 ? "disponible" : "disponibles"}`;
+  document.getElementById("vacio").hidden = visibles.length > 0;
+
+  const antes = new Map();
+  if (animar && !calma.matches) board.querySelectorAll(".t").forEach(el => antes.set(el, el.style.transform));
+  const foco = document.activeElement;
+
+  const { out, rellenos, alto } = calcular(visibles, W);
+  board.querySelectorAll(".relleno").forEach(n => n.remove());
+  const vivos = new Set(out.map(p => p.el));
+  [...board.children].forEach(n => { if (!vivos.has(n)) n.remove(); });
+
+  out.forEach(p => {
+    const el = p.el;
+    el.style.width = p.w + "px";
+    el.style.height = p.h + "px";
+    el.style.transform = `translate(${p.x}px,${p.y}px)`;
+    if (p.kind === "obra") {
+      el.style.setProperty("--art-h", p.art + "px");
+      el.classList.toggle("roomy", p.extra >= 22);
+    }
+    board.append(el); /* Orden del DOM = orden visual, para teclado y lectores de pantalla */
+    el._y = p.y; el._x = p.x; el._h = p.h;
+    if (animar && !calma.matches) {
+      const de = antes.get(el), a = el.style.transform;
+      if (de && de !== a) el.animate([{ transform: de }, { transform: a }], { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)" });
+      /* Una obra que vuelve a entrar por un filtro también se anima */
+      else if (!de) delete el.dataset.visto;
+    }
+    programar(el, animar);
+  });
+
+  /* Los huecos grandes se vuelven tarjetas útiles; los pequeños, un bloque de color */
+  let util = 0;
+  rellenos.forEach((r, i) => {
+    const d = document.createElement("li");
+    const cabe = r.h >= 104 && r.w >= 150 && util < PISTAS.length;
+    d.className = `t relleno r${cabe ? util % 2 : (i % 2) + 2}`;
+    d.style.cssText = `width:${r.w}px;height:${r.h}px;transform:translate(${r.x}px,${r.y}px)`;
+    if (cabe) d.innerHTML = PISTAS[util++];
+    else d.setAttribute("aria-hidden", "true");
+    board.append(d);
+    d._y = r.y; d._x = r.x; d._h = r.h;
+    programar(d, animar);
+  });
+  board.style.height = alto + "px";
+  if (foco && foco !== document.body && foco.isConnected && foco !== document.activeElement) foco.focus({ preventScroll: true });
+  pendientes.forEach(el => { if (!el.isConnected) pendientes.delete(el); });
+  barrer();
+}
+let ancho0 = 0;
+new ResizeObserver(() => { const w = board.clientWidth; if (w !== ancho0) { ancho0 = w; disponer(false); } }).observe(board);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => disponer(false));
+
+/* ---------- Avisos ---------- */
+const toast = document.getElementById("toast"), sheet = document.getElementById("sheet");
+let tt;
+function avisar(m){
+  (sheet.open ? sheet : document.body).append(toast);
+  toast.textContent = m; toast.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(() => toast.classList.remove("on"), 3400);
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-buy]")) { e.preventDefault(); avisar("Prototipo: aquí sigue el pago con Wompi."); return; }
+  const l = e.target.closest('a[href="#"]');
+  if (l) { e.preventDefault(); scrollTo({ top: 0, behavior: calma.matches ? "auto" : "smooth" }); return; }
+  if (e.target.closest(".ver")) desdeTablero = true;
+});
+
+/* ---------- Detalle de una obra. Cada obra tiene un enlace propio para compartir ---------- */
+let desdeTablero = false;
+const $ = id => document.getElementById(id);
+function escala(a){
+  const pad = 26, per = 170, w = a.width_cm, h = a.height_cm;
+  const suelo = Math.max(190, 150 + h / 2 + 10), W = pad + 46 + 34 + w + 8, y0 = suelo - 150 - h / 2;
+  return `<svg viewBox="0 0 ${W} ${suelo + 2}" role="img" aria-label="La obra mide ${w} por ${h} centímetros, junto a una persona de 1,70 metros">
+    <g fill="#A9A8A1"><circle cx="${pad}" cy="${suelo - per + 13}" r="12"/><rect x="${pad - 19}" y="${suelo - per + 28}" width="38" height="66" rx="17"/><rect x="${pad - 15}" y="${suelo - per + 80}" width="13" height="90" rx="6"/><rect x="${pad + 2}" y="${suelo - per + 80}" width="13" height="90" rx="6"/></g>
+    <rect x="${pad + 46 + 34}" y="${y0}" width="${w}" height="${h}" style="fill:var(--ink)"/>
+    <line x1="0" y1="${suelo}" x2="${W}" y2="${suelo}" stroke-width="1.6" style="stroke:var(--ink)"/></svg>`;
+}
+function pintar(a){
+  const st = estado(a);
+  const fr = $("dFrame");
+  fr.className = "frame " + (a.frame_style === "none" ? "" : a.frame_style);
+  fr.style.setProperty("--r", a.width_cm / a.height_cm);
+  fr.innerHTML = a.image_path ? `<img src="${esc(a.image_path)}" alt="${esc(a.title)}">` : muestra(a.art_key);
+  const quedan = a.kind === "edicion" && st === "available" ? `, quedan ${a.stock}` : "";
+  $("dBody").innerHTML = `<h2 id="dTitle">${esc(a.title)}</h2>
+    <p class="sub">${[tipo(a) + quedan, a.year].filter(Boolean).join(" · ")}</p>
+    <p class="desc">${esc(a.description)}</p>
+    <dl class="fic">
+      <div><dt>Técnica</dt><dd>${esc(a.technique)}</dd></div>
+      <div><dt>Materiales</dt><dd>${esc(a.materials)}</dd></div>
+      <div><dt>Medidas</dt><dd>${a.width_cm} × ${a.height_cm} cm</dd></div>
+      <div><dt>Marco</dt><dd>${esc(a.frame)}</dd></div>
+    </dl>
+    <div class="escala">${escala(a)}<p>Tamaño junto a una persona de 1,70 m</p></div>`;
+  $("dBody").scrollTop = 0;
+  const pre = `Hola Agrio, me interesa “${a.title}”`;
+  $("dBuy").innerHTML = st === "available"
+    ? `<p class="price-l">${cop(a.price_cop)}</p><div class="acts"><a class="btn acento" href="#" data-buy>Comprar</a><a class="btn line" ${waAttrs(`${pre}. ¿Me cuentas más?`)}>Preguntar</a></div><p class="trust">Paga con PSE, tarjeta o Nequi, sin crear cuenta.</p>`
+    : st === "reserved"
+    ? `<p class="price-l">Reservada por ahora</p><div class="acts"><a class="btn acento solo" ${waAttrs(`${pre}. Avísame si vuelve a estar disponible.`)}>Avísame si se libera</a></div>`
+    : `<p class="price-l">Ya tiene dueño</p><div class="acts"><a class="btn acento solo" ${waAttrs(`${pre}, que ya se vendió. ¿Podrías hacer algo parecido?`)}>Pedir algo parecido</a></div>`;
+  document.title = `${a.title} — Agrio Art`;
+}
+const slugActual = () => { const m = location.hash.match(/^#obra\/(.+)$/); return m ? decodeURIComponent(m[1]) : null; };
+function ruta(){
+  if (raiz.classList.contains("cargando")) return; /* El enlace a una obra se abre al terminar la carga */
+  const s = slugActual(), a = s && OBRAS.find(o => o.slug === s);
+  if (a) {
+    if (cerrando) terminarCierre();
+    pintar(a);
+    const yaAbierta = sheet.open;
+    abierta = a;
+    if (yaAbierta) cambiarObra(a); else abrir(a);
+  } else if (sheet.open && !cerrando) salir();
+}
+function alCerrar(){ if (sheet.open) return; raiz.classList.remove("lock"); document.title = "Agrio Art — Galería de Agrio, artista en Bogotá"; document.body.append(toast); }
+sheet.addEventListener("close", alCerrar);
+function cerrar(){
+  if (desdeTablero) { desdeTablero = false; history.back(); }
+  else { history.replaceState(null, "", location.pathname + location.search); ruta(); }
+}
+function mover(d){
+  const lista = [...board.querySelectorAll(".ver")].map(n => n.getAttribute("href"));
+  const i = lista.indexOf("#obra/" + slugActual());
+  if (lista.length) location.replace(lista[(i + d + lista.length) % lista.length]);
+}
+$("dClose").addEventListener("click", cerrar);
+$("dPrev").addEventListener("click", () => mover(-1));
+$("dNext").addEventListener("click", () => mover(1));
+sheet.addEventListener("cancel", e => { e.preventDefault(); cerrar(); });
+sheet.addEventListener("click", e => { if (e.target === sheet) cerrar(); });
+sheet.addEventListener("keydown", e => { if (e.key === "ArrowLeft") mover(-1); if (e.key === "ArrowRight") mover(1); });
+addEventListener("hashchange", ruta);
+
+/* ---------- Abrir una obra: viaja desde su card al centro y aparta las demás hacia los lados ---------- */
+const VUELO = 640, CURVA = "cubic-bezier(.22,1,.36,1)";
+const dFrame = $("dFrame"), partesDetalle = [$("dBody"), sheet.querySelector(".info-top"), $("dBuy")];
+let abierta = null, cerrando = false, apartadas = [], efectos = [];
+const artDe = a => { const t = a && tejas.get(a.slug); return t && t.isConnected ? t.querySelector(".art") : null; };
+const enVista = r => r.width > 0 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
+const seguir = an => { efectos.push(an); return an; };
+function vueloDesde(r0, r1){
+  return `translate(${(r0.left + r0.width / 2) - (r1.left + r1.width / 2)}px,${(r0.top + r0.height / 2) - (r1.top + r1.height / 2)}px) scale(${r0.width / r1.width})`;
+}
+function apartar(duracion){
+  /* Todas las cards de un lado se corren lo mismo: así no se pisan entre ellas y conservan sus espacios */
+  const panel = sheet.getBoundingClientRect(), medio = panel.left + panel.width / 2, grupos = [];
+  const propia = abierta && tejas.get(abierta.slug);
+  for (const el of board.children) {
+    const r = el.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < innerHeight) grupos.push({ el, r, izq: r.left + r.width / 2 < medio });
+  }
+  const resto = grupos.filter(g => g.el !== propia);
+  const dI = Math.max(0, ...resto.filter(g => g.izq).map(g => g.r.right - panel.left + 12));
+  const dD = Math.max(0, ...resto.filter(g => !g.izq).map(g => panel.right + 12 - g.r.left));
+  apartadas = grupos.map(g => {
+    const dx = g.izq ? -dI : dD;
+    return { el: g.el, dx, an: g.el.animate([{ translate: "0 0" }, { translate: `${dx}px 0` }], { duration: duracion, easing: CURVA, fill: "forwards" }) };
+  });
+}
+function soltarApartadas(){ apartadas.forEach(x => x.an.cancel()); apartadas = []; }
+function esconderTeja(a){
+  board.querySelectorAll(".obra").forEach(t => { t.style.visibility = ""; });
+  const t = a && tejas.get(a.slug);
+  if (t) t.style.visibility = "hidden";
+}
+function aparecerPartes(){
+  partesDetalle.forEach((n, i) => seguir(n.animate(
+    [{ opacity: 0, translate: "18px 0" }, { opacity: 1, translate: "0 0" }],
+    { duration: 420, delay: 200 + i * 50, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" }
+  )));
+}
+function abrir(a){
+  const art = artDe(a), r0 = art && art.getBoundingClientRect();
+  raiz.classList.add("lock");
+  sheet.showModal();
+  if (calma.matches) return;
+  efectos.forEach(x => x.cancel()); efectos = [];
+  sheet.classList.add("vuela");
+  apartar(VUELO);
+  const r1 = dFrame.getBoundingClientRect();
+  if (r0 && enVista(r0)) {
+    esconderTeja(a);
+    seguir(dFrame.animate([{ transform: vueloDesde(r0, r1) }, { transform: "none" }], { duration: VUELO, easing: CURVA })).onfinish = () => sheet.classList.remove("vuela");
+  } else {
+    seguir(dFrame.animate([{ transform: "scale(.88)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: VUELO, easing: CURVA })).onfinish = () => sheet.classList.remove("vuela");
+  }
+  const color = n => getComputedStyle(n).backgroundColor;
+  seguir(sheet.animate({ backgroundColor: ["transparent", color(sheet)] }, { duration: VUELO * .7, easing: "ease-out" }));
+  const stage = sheet.querySelector(".stage");
+  seguir(stage.animate({ backgroundColor: ["transparent", color(stage)] }, { duration: VUELO * .7, easing: "ease-out" }));
+  seguir(sheet.animate({ opacity: [0, 1] }, { duration: VUELO * .7, easing: "ease-out", pseudoElement: "::backdrop" }));
+  aparecerPartes();
+}
+function cambiarObra(a){
+  esconderTeja(a);
+  if (!calma.matches) {
+    seguir(dFrame.animate([{ opacity: 0, transform: "scale(.97)" }, { opacity: 1, transform: "none" }], { duration: 320, easing: "ease-out" }));
+    seguir($("dBody").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: "ease-out" }));
+  }
+}
+function salir(){
+  if (calma.matches) { terminarCierre(); return; }
+  cerrando = true;
+  efectos.forEach(x => x.cancel()); efectos = [];
+  sheet.classList.add("vuela");
+  /* El destino es la posición de la card sin el corrimiento que tiene ahora */
+  const art = artDe(abierta), r1 = dFrame.getBoundingClientRect(), RAPIDO = 520;
+  const corrida = art && apartadas.find(x => x.el === art.closest(".t"));
+  let r0 = art && art.getBoundingClientRect();
+  if (r0 && corrida) r0 = { left: r0.left - corrida.dx, top: r0.top, width: r0.width, height: r0.height, right: r0.right - corrida.dx, bottom: r0.bottom };
+  const salida = r0 && enVista(r0)
+    ? [{ transform: "none" }, { transform: vueloDesde(r0, r1) }]
+    : [{ transform: "none", opacity: 1 }, { transform: "scale(.9)", opacity: 0 }];
+  apartadas.forEach(x => { x.an.reverse(); x.an.playbackRate = VUELO / RAPIDO * x.an.playbackRate; });
+  const color = n => getComputedStyle(n).backgroundColor, stage = sheet.querySelector(".stage");
+  seguir(sheet.animate({ backgroundColor: [color(sheet), "transparent"] }, { duration: RAPIDO * .7, easing: "ease-in", fill: "forwards" }));
+  seguir(stage.animate({ backgroundColor: [color(stage), "transparent"] }, { duration: RAPIDO * .7, easing: "ease-in", fill: "forwards" }));
+  seguir(sheet.animate({ opacity: [1, 0] }, { duration: RAPIDO, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" }));
+  partesDetalle.forEach(n => seguir(n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 170, easing: "ease-out", fill: "forwards" })));
+  seguir(dFrame.animate(salida, { duration: RAPIDO, easing: CURVA, fill: "forwards" })).onfinish = terminarCierre;
+}
+function terminarCierre(){
+  cerrando = false;
+  /* La card vuelve a verse en el mismo cuadro en que se cierra el detalle, sin parpadeo */
+  esconderTeja(null);
+  soltarApartadas();
+  sheet.classList.remove("vuela");
+  if (sheet.open) sheet.close();
+  efectos.forEach(x => x.cancel()); efectos = [];
+  abierta = null;
+  alCerrar();
+}
+addEventListener("resize", () => { if (sheet.open && !cerrando) { soltarApartadas(); apartar(0); } }, { passive: true });
+
+/* ---------- Tema: noche por defecto; la elección de cada visitante se recuerda ---------- */
+const botonTema = $("tema"), raiz = document.documentElement;
+function aplicarTema(t, guardar){
+  raiz.dataset.tema = t;
+  botonTema.setAttribute("aria-label", t === "noche" ? "Cambiar a modo día" : "Cambiar a modo noche");
+  $("colorTema").content = t === "noche" ? "#0D0D0D" : "#E6E5E1";
+  if (guardar) { try { localStorage.setItem("agrio-tema", t); } catch (e) {} }
+}
+aplicarTema(raiz.dataset.tema, false);
+const sabana = $("sabana"), sabanaBarra = $("sabanaBarra"), T_SABANA = 900;
+let pasosSabana = [];
+const finSabana = () => { pasosSabana = []; raiz.classList.remove("tono"); };
+function cambiarTema(sigue){
+  if (calma.matches) { aplicarTema(sigue, true); return; }
+  if (pasosSabana.length) { pasosSabana.forEach(x => { x.onfinish = null; x.cancel(); }); finSabana(); }
+  raiz.style.setProperty("--wall-vieja", getComputedStyle(raiz).getPropertyValue("--wall"));
+  /* El círculo nace en el centro del botón y crece hasta cubrir la esquina más lejana */
+  const b = botonTema.getBoundingClientRect(), cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+  const R = Math.ceil(Math.max(Math.hypot(cx, cy), Math.hypot(innerWidth - cx, cy), Math.hypot(cx, innerHeight - cy), Math.hypot(innerWidth - cx, innerHeight - cy)));
+  [...chips.children, $("tema"), document.querySelector(".logo"), velo, document.querySelector("footer"), ...board.children].forEach(el => {
+    const r = el.getBoundingClientRect(), d = Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy);
+    el.style.setProperty("--d", Math.round(Math.min(1, d / R) * T_SABANA * .86) + "ms");
+  });
+  const tb = barra.getBoundingClientRect();
+  sabana.style.cssText = `left:${cx - R}px;top:${cy - R}px;width:${R * 2}px;height:${R * 2}px`;
+  sabanaBarra.style.cssText = `left:${cx - R - tb.left}px;top:${cy - R - tb.top}px;width:${R * 2}px;height:${R * 2}px`;
+  raiz.classList.add("tono");
+  aplicarTema(sigue, true);
+  const crecer = [{ transform: "scale(0)" }, { transform: "scale(1)" }], tiempo = { duration: T_SABANA, easing: "cubic-bezier(.3,.3,.6,.85)", fill: "both" };
+  pasosSabana = [sabana.animate(crecer, tiempo), sabanaBarra.animate(crecer, tiempo)];
+  pasosSabana[0].onfinish = finSabana;
+}
+botonTema.addEventListener("click", () => cambiarTema(raiz.dataset.tema === "noche" ? "dia" : "noche"));
+
+/* Al terminar la carga, las cards a la vista entran con la misma animación del scroll */
+if (raiz.classList.contains("cargando")) {
+  const fondo = [".top", "main", "footer"].map(s => document.querySelector(s));
+  fondo.forEach(n => { n.inert = true; });
+  document.addEventListener("agrio:lista", () => {
+    fondo.forEach(n => { n.inert = false; });
+    [...board.children].forEach(el => { delete el.dataset.visto; programar(el, true); });
+    barrer();
+    ruta();
+  }, { once: true });
+}
+
+disponer(false);
+ruta();
+})();
+</script>
+</body>
+</html>
