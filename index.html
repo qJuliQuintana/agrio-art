@@ -9,7 +9,7 @@
 <meta name="description" content="Galería de ilustraciones y arte de Agrio, tattoo artist e ilustrador en Bogotá, Colombia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@500;600;800;900&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@500;600;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script>
 document.documentElement.classList.add("cargando");
@@ -30,15 +30,15 @@ document.documentElement.classList.add("cargando");
 :root{
   --fondo:#222223;--negro:#222223;--carbon:#53565A;--gris:#97999B;--claro:#D9D9D6;--papel:#F2F0EB;
   --acento:#D6718C;--superficie:#2C2C2E;--linea:rgba(242,240,235,.12);--linea-osc:rgba(34,34,35,.16);
-  --titulo:"Fira Sans","Source Sans 3",system-ui,sans-serif;
-  --texto:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --titulo:"Fira Sans Extra Condensed",system-ui,sans-serif;
+  --texto:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --pad:clamp(16px,3.4vw,44px);
   --banda:clamp(150px,27vh,260px);
   --grano:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   --grano-osc:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
-:root{--blanco5:#C3C2BE;--mono:"Space Mono",ui-monospace,monospace;--cond:"Fira Sans Extra Condensed","Fira Sans",sans-serif;--gris5:#8F8D88}
+:root{--blanco5:#C3C2BE;--mono:"Instrument Sans",system-ui,sans-serif;--cond:"Fira Sans Extra Condensed",sans-serif;--gris5:#8F8D88}
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--blanco5);color-scheme:light;-webkit-text-size-adjust:100%}
 html.cargando,html.fijo{overflow:hidden}
@@ -835,7 +835,7 @@ function pintarVisor(){
   const b = $("#vAccion"), en = carrito.includes(o.id);
   b.className = "accion" + (disp ? (en ? " en-carrito" : "") : " separar");
   b.textContent = disp ? (en ? t("en_carrito") : t("comprar")) : t("separar");
-  vImg.alt = o.t[LANG]; vImg.style.filter = disp ? "" : "grayscale(1)";
+  vImg.alt = o.t[LANG]; vImg.style.filter = "";
 }
 function quitarZoom(){ vZoom = false; visor.classList.remove("zoom"); }
 function mostrarObra(i, dir){
@@ -1087,7 +1087,7 @@ async function cargarImagenes(){
 }
 
 /* ---------- Impresión: maqueta en "lu" (1000 lu = ancho de la cara) ---------- */
-const FU = {cond:'"Fira Sans Extra Condensed", "Fira Sans", sans-serif', sans:'"Fira Sans", sans-serif', mono:'"Space Mono", monospace', nun:'Nunito, sans-serif'};
+const FU = {cond:'"Fira Sans Extra Condensed", sans-serif', sans:'"Instrument Sans", sans-serif', mono:'"Instrument Sans", sans-serif', nun:'"Instrument Sans", sans-serif'};
 const COL = {gris:"#A9A7A2", grisB:"#7d7b77", salmon:"#C6647E", papel:"#EDEBE6", tinta:"#1b1b1d"};
 const ESTRELLA = new Path2D("M8 0C8.6 5.4 10.6 7.4 16 8 10.6 8.6 8.6 10.6 8 16 7.4 10.6 5.4 8.6 0 8 5.4 7.4 7.4 5.4 8 0z");
 const FLECHAS = new Path2D("M5 26V10H0L8 0l8 10h-5v16zM23 26V10h-5l8-10 8 10h-5v16z");
@@ -1171,7 +1171,7 @@ function caraTandas(x, dib, cel){
   y += 150;
   p.txt(t("k_tandas_m").toUpperCase(), 500, y, `400 ${21 * fs}px ${FU.mono}`, COL.gris, "center"); y += 70;
   // texto largo justificado de lado a lado; donde queda un hueco grande va un ícono, como en bpco.kr
-  const PT = cel ? 54 : 62, fT = `500 ${PT}px ${FU.sans}`, palabras = t("k_tandas").toUpperCase().split(" "), hl = t("k_tandas_hl").toUpperCase().split(" ");
+  const PT = cel ? 46 : 52, fT = `500 ${PT}px ${FU.sans}`, palabras = t("k_tandas").toUpperCase().split(" "), hl = t("k_tandas_hl").toUpperCase().split(" ");
   // la frase resaltada va como una sola pieza, con espacios normales y aire a los lados para el óvalo
   let ini = -1; for (let i = 0; i + hl.length <= palabras.length; i++) if (hl.every((h, k) => palabras[i + k].replace(/[.,;:]/g, "") === h)){ ini = i; break; }
   const piezas = [];
@@ -1245,19 +1245,30 @@ function caraIlus(x, dib, cel){
     const obras = OBRAS.slice(i0, i0 + COLS);
     let x0 = 500 - (obras.length * cw + (obras.length - 1) * G2) / 2, fondo = y;
     obras.forEach(o => {
-      const disp = o.stock > 0, en = carrito.includes(o.id), im = disp ? IMG[o.id] : IMG_BN[o.id];
+      const disp = o.stock > 0, en = carrito.includes(o.id), im = IMG[o.id];
       p.rect(x0, y, cw, fh, "#28282a");
       if (im){ const pad = 16, iw = im.width, ih = im.height, k = Math.min((cw - 2 * pad) / iw, (fh - 2 * pad) / ih), w = iw * k, h = ih * k; p.img(im, x0 + (cw - w) / 2, y + (fh - h) / 2, w, h); }
       zonas.push({tipo:"ver", id:o.id, x:x0, y, w:cw, h:fh, etq:t("ver_grande") + ": " + o.t[LANG]});
-      // etiqueta: cuadrito, estado y número, juntos y con el mismo margen a los dos lados
+      // disponible: etiqueta con cuadrito, estado y número; agotada: banda gris carbón translúcida cruzada, sin etiqueta
       const est = (disp ? t("k_disp") : t("k_agot")).toUpperCase(), num = (disp ? o.stock : 0) + "/" + TANDA;
+      if (!disp && dib){
+        x.save(); x.beginPath(); x.rect(x0, y, cw, fh); x.clip();
+        x.translate(x0 + cw / 2, y + fh / 2); x.rotate(rad(-14));
+        const bH = 56 * f2, bf = `900 ${30 * f2}px ${FU.cond}`;
+        x.fillStyle = "rgba(83,86,90,.86)"; x.fillRect(-cw, -bH / 2, cw * 2, bH);
+        x.font = bf; x.fillStyle = "#E2E0DB"; x.textAlign = "center"; x.textBaseline = "middle"; if ("letterSpacing" in x) x.letterSpacing = 3 * f2 + "px";
+        x.fillText([est, est, est, est].join("  ·  "), 0, 2 * f2); if ("letterSpacing" in x) x.letterSpacing = "0px";
+        x.restore();
+      }
       let ef = 15 * f2; const eW = () => 12 + 9 + 8 + p.ancho(est, `700 ${ef}px ${FU.mono}`) + 10 + p.ancho(num, `700 ${ef}px ${FU.mono}`) + 12;
       while (ef > 9 && eW() > cw - 24) ef -= .5;
       const ex = x0 + 12, ey = y + 12, eh = ef * 2.2, ew = eW(), fe = `700 ${ef}px ${FU.mono}`;
-      p.rect(ex, ey, ew, eh, COL.papel); p.marco(ex, ey, ew, eh, COL.tinta, 2);
-      p.rect(ex + 12, ey + eh / 2 - 4.5, 9, 9, disp ? COL.salmon : COL.grisB);
-      const tw = p.txt(est, ex + 29, ey + eh / 2 - ef * .62, fe, COL.tinta);
-      p.txt(num, ex + 29 + tw + 10, ey + eh / 2 - ef * .62, fe, COL.tinta);
+      if (disp){
+        p.rect(ex, ey, ew, eh, COL.papel); p.marco(ex, ey, ew, eh, COL.tinta, 2);
+        p.rect(ex + 12, ey + eh / 2 - 4.5, 9, 9, COL.salmon);
+        const tw = p.txt(est, ex + 29, ey + eh / 2 - ef * .62, fe, COL.tinta);
+        p.txt(num, ex + 29 + tw + 10, ey + eh / 2 - ef * .62, fe, COL.tinta);
+      }
       let yc = y + fh + 18;
       // título con menos peso
       const tit = o.t[LANG].toUpperCase(); let tz = 36 * f2; while (tz > 18 && p.ancho(tit, `600 ${tz}px ${FU.cond}`) > cw) tz -= .5;
@@ -1275,8 +1286,8 @@ function caraIlus(x, dib, cel){
       const wc = p.txt(cifra, x0, yc + bh / 2 - pz * .6, `700 ${pz}px ${FU.sans}`, COL.papel);
       p.txt("COP", x0 + wc + 6, yc + bh / 2 - pz * .6 + pz * .42, `700 ${pz * .45}px ${FU.mono}`, COL.gris);
       if (disp && !en) p.rect(bx, yc, bw, bh, COL.salmon); else if (disp) p.rect(bx, yc, bw, bh, COL.gris); else p.marco(bx, yc, bw, bh, COL.gris, 4);
-      let fb = 17 * f2; while (fb > 9 && p.ancho(lab, `800 ${fb}px ${FU.nun}`, 1) > bw - 18) fb -= .5;   // el texto siempre cabe en el botón
-      p.txt(lab, bx + bw / 2, yc + bh / 2 - fb * .58, `800 ${fb}px ${FU.nun}`, disp ? COL.tinta : COL.gris, "center", 1);
+      let fb = 17 * f2; while (fb > 9 && p.ancho(lab, `700 ${fb}px ${FU.nun}`, 1) > bw - 18) fb -= .5;   // el texto siempre cabe en el botón
+      p.txt(lab, bx + bw / 2, yc + bh / 2 - fb * .58, `700 ${fb}px ${FU.nun}`, disp ? COL.tinta : COL.gris, "center", 1);
       zonas.push({tipo:"comprar", id:o.id, x:bx, y:yc, w:bw, h:bh, etq:lab + ": " + o.t[LANG]});
       fondo = Math.max(fondo, yc + bh);
       x0 += cw + G2;
@@ -1469,8 +1480,8 @@ let rsT;
 addEventListener("resize", () => { clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel) construir(); resolver(); }, 150); });
 async function iniciar(){
   await Promise.all([
-    document.fonts.load(`900 100px "Fira Sans Extra Condensed"`), document.fonts.load(`600 100px "Fira Sans Extra Condensed"`), document.fonts.load(`700 40px "Fira Sans"`), document.fonts.load(`400 40px "Fira Sans"`), document.fonts.load(`600 40px "Fira Sans"`), document.fonts.load(`500 40px "Fira Sans"`),
-    document.fonts.load(`400 20px "Space Mono"`), document.fonts.load(`700 20px "Space Mono"`), document.fonts.load(`800 20px Nunito`)
+    document.fonts.load(`900 100px "Fira Sans Extra Condensed"`), document.fonts.load(`600 100px "Fira Sans Extra Condensed"`),
+    document.fonts.load(`400 40px "Instrument Sans"`), document.fonts.load(`500 40px "Instrument Sans"`), document.fonts.load(`600 40px "Instrument Sans"`), document.fonts.load(`700 40px "Instrument Sans"`)
   ].map(p => Promise.race([p, new Promise(r => setTimeout(r, 4000))])));
   await cargarImagenes();
   medirLienzo(); construir(); resolver();
