@@ -186,7 +186,25 @@ html.no3d .ilustraciones{display:grid;background:#1C1C1D;color:var(--papel)}
 .visor-pie .accion.separar{background:transparent;color:var(--papel);box-shadow:inset 0 0 0 2px var(--papel)}
 .visor-pie .accion.separar:hover{background:var(--papel);color:var(--negro)}
 
-/* ---------- Comisiones: modal a la derecha ---------- */
+/* ---------- Comisiones: franja impresa en la caja; los campos del formulario son controles reales encima de lo impreso ---------- */
+.zona.campo{margin:0;border:0;border-radius:6px;padding:0 .75em;background:transparent;color:#E6E4DF;font-family:var(--texto);line-height:1.3;outline:none;-webkit-appearance:none;appearance:none}
+textarea.zona.campo{padding:.6em .75em;resize:none}
+select.zona.campo{cursor:pointer}
+select.zona.campo option{color:#1C1C1D;background:#F2F0EB}
+.zona.campo::placeholder{color:rgba(230,228,223,.42)}
+.zona.campo:hover{box-shadow:none;background:transparent}
+.zona.campo:focus{box-shadow:0 0 0 2px #E68AA1}
+.zona.campo.falta{box-shadow:0 0 0 2px #ff8fa6}
+.zona.campo.falta::placeholder{color:#ff9db1}
+.zona.opcion[aria-pressed="true"]{box-shadow:0 0 0 2px #E68AA1;background:rgba(230,138,161,.16)}
+.hz-avance{position:fixed;left:clamp(14px,2.2vw,32px);top:72px;z-index:81;display:flex;align-items:center;gap:12px;padding:9px 14px;border-radius:999px;background:rgba(244,242,237,.74);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);box-shadow:0 8px 24px -10px rgba(0,0,0,.35);font:700 11px/1 var(--texto);letter-spacing:.14em;color:#2a2a2b;opacity:0;pointer-events:none;transition:opacity .3s}
+.hz-avance i{display:block;width:110px;height:2px;background:rgba(28,28,29,.18)}
+.hz-avance b{display:block;height:100%;width:0;background:#1C1C1D}
+html.en-com .hz-avance{opacity:1}
+html.en-com .com-fijo{opacity:0;pointer-events:none;translate:0 14px}
+.com-fijo{transition:translate .25s,box-shadow .2s,opacity .25s}
+@media (max-width:760px){ .hz-avance{top:66px;left:10px} }
+/* ---------- (estilos que venían del modal, aún usados por las tarjetas y el formulario) ---------- */
 .modal{position:fixed;inset:0 0 0 auto;width:min(620px,100vw);height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#1D1D1F;color:var(--papel);overflow:auto;overscroll-behavior:contain}
 .modal[open]{animation:entra .45s cubic-bezier(.2,.9,.25,1)}
 .modal::backdrop{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -305,11 +323,11 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
   .lado{position:static}
 }
 @media (max-width:760px){
-  .cab{grid-template-columns:1fr auto;padding:14px 14px}
+  .cab{grid-template-columns:1fr auto;gap:6px;padding:14px 10px}
   .cab .izq{display:none}
-  .pildora a{padding:7px 9px;font-size:10px}
-  .cab .der{gap:8px;font-size:11px}
-  .cab .der .chip{padding:9px 12px}
+  .pildora a{padding:7px 6px;font-size:9.5px;letter-spacing:.02em}
+  .cab .der{gap:5px;font-size:11px}
+  .cab .der .chip{padding:9px 9px}
   .ca-btn .ocultar{display:none}
   .texto-top{font-size:13px;top:80px}
   .repisas{top:178px;gap:8px}
@@ -338,6 +356,7 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
     <span class="burbuja" id="burbujaNav" aria-hidden="true"></span>
     <a href="#inicio" data-s="inicio" data-t="nav_ini">Inicio</a>
     <a href="#ilustraciones" data-s="ilustraciones" data-t="nav_ilu">Ilustraciones</a>
+    <a href="#comisiones" data-s="comisiones" data-t="nav_com">Comisiones</a>
   </nav>
   <div class="der">
     <button class="idioma chip" id="idioma" type="button"><span data-lang="es" lang="es">ES</span> / <span data-lang="en" lang="en">EN</span></button>
@@ -345,6 +364,7 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
   </div>
 </header>
 
+<div class="hz-avance" id="hzAvance" aria-hidden="true"><span id="hzN">01</span><i><b id="hzB"></b></i><span id="hzT">06</span></div>
 <a class="com-fijo" href="#comisiones"><span data-t="nav_com">Comisiones</span> <i aria-hidden="true">→</i></a>
 
 <!-- ficha de la esquina, como la de bpco.kr -->
@@ -375,6 +395,8 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
   <div class="bento" id="bento" aria-label="Ilustraciones" data-t-aria="obras"></div>
 </section>
   </div>
+
+</section>
 </main>
 
 <footer id="logoRem" hidden>
@@ -382,79 +404,7 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
   <a class="pie-credito"><span data-t="pie_diseno">Diseñado por</span> <svg viewBox="0 0 965 252" role="img" aria-label="Rem Design"><g transform="translate(0,0) scale(0.75) translate(-16,-64)"><mask id="remMascara"><rect x="0" y="0" width="400" height="400" fill="#fff"/><circle cx="312" cy="116" r="62" fill="#000"/><path d="M150,214 Q200,175 250,214 Q200,253 150,214 Z" fill="#000"/><circle cx="200" cy="214" r="17" fill="#fff"/></mask><path fill="currentColor" mask="url(#remMascara)" d="M200,318 C268,318 326,280 326,214 C326,150 272,104 202,104 C140,104 100,146 104,200 C72,210 58,240 66,268 C74,298 100,318 132,318 Z"/><circle cx="322" cy="104" r="17" fill="currentColor"/><circle cx="72" cy="344" r="16" fill="currentColor"/><circle cx="42" cy="372" r="9" fill="currentColor"/></g><g transform="translate(300,163)"><path fill="currentColor" d="M5.612 0.0V-74.52H23.46Q31.003999999999998 -74.52 36.202 -72.726Q41.4 -70.932 44.114 -66.608Q46.827999999999996 -62.284 46.827999999999996 -54.832Q46.827999999999996 -50.324 46.0 -46.736Q45.172 -43.147999999999996 43.194 -40.617999999999995Q41.216 -38.088 37.72 -36.708L48.116 0.0H34.5L25.483999999999998 -34.132H19.227999999999998V0.0ZM19.227999999999998 -42.688H23.46Q27.416 -42.688 29.762 -43.838Q32.108 -44.988 33.12 -47.518Q34.132 -50.048 34.132 -54.004Q34.132 -59.616 32.062 -62.422Q29.992 -65.228 24.195999999999998 -65.228H19.227999999999998ZM79.304 0.0V-74.52H110.584V-64.952H92.92V-43.516H106.81200000000001V-34.04H92.92V-9.384H110.768V0.0ZM140.576 0.0 141.864 -74.52H155.94L166.51999999999998 -22.908L177.56 -74.52H191.176L192.55599999999998 0.0H182.43599999999998L181.332 -51.796L170.752 0.0H162.564L151.8 -51.98L150.788 0.0ZM270.112 0.0V-74.52H287.684Q296.79200000000003 -74.52 301.898 -72.036Q307.004 -69.55199999999999 309.166 -64.39999999999999Q311.328 -59.248 311.328 -51.336V-24.104Q311.328 -16.008 309.166 -10.626Q307.004 -5.244 301.99 -2.622Q296.976 0.0 288.236 0.0ZM283.728 -9.475999999999999H287.868Q292.56 -9.475999999999999 294.584 -11.132Q296.608 -12.788 297.068 -15.962Q297.528 -19.136 297.528 -23.736V-52.256Q297.528 -56.763999999999996 296.884 -59.524Q296.24 -62.284 294.216 -63.572Q292.192 -64.86 287.684 -64.86H283.728ZM343.43600000000004 0.0V-74.52H374.716V-64.952H357.052V-43.516H370.944V-34.04H357.052V-9.384H374.90000000000003V0.0ZM423.66 1.012Q416.944 1.012 412.43600000000004 -1.61Q407.92800000000005 -4.232 405.62800000000004 -9.292Q403.32800000000003 -14.352 403.052 -21.712L414.73600000000005 -24.012Q414.92 -19.688 415.794 -16.375999999999998Q416.668 -13.064 418.462 -11.27Q420.25600000000003 -9.475999999999999 423.20000000000005 -9.475999999999999Q426.51200000000006 -9.475999999999999 427.89200000000005 -11.454Q429.27200000000005 -13.432 429.27200000000005 -16.468Q429.27200000000005 -21.344 427.0640000000001 -24.472Q424.85600000000005 -27.599999999999998 421.17600000000004 -30.727999999999998L411.79200000000003 -39.008Q407.836 -42.412 405.49 -46.598Q403.144 -50.784 403.144 -56.948Q403.144 -65.78 408.29600000000005 -70.564Q413.44800000000004 -75.348 422.372 -75.348Q427.61600000000004 -75.348 431.1120000000001 -73.738Q434.60800000000006 -72.128 436.67800000000005 -69.276Q438.74800000000005 -66.42399999999999 439.76000000000005 -62.78999999999999Q440.77200000000005 -59.156 441.048 -55.108L429.456 -53.083999999999996Q429.27200000000005 -56.58 428.67400000000004 -59.34Q428.076 -62.1 426.558 -63.664Q425.04 -65.228 422.096 -65.228Q419.06000000000006 -65.228 417.45000000000005 -63.25Q415.84000000000003 -61.272 415.84000000000003 -58.327999999999996Q415.84000000000003 -54.556 417.404 -52.117999999999995Q418.968 -49.68 421.91200000000003 -47.104L431.204 -38.916Q435.80400000000003 -35.052 439.07000000000005 -29.854Q442.336 -24.656 442.336 -17.296Q442.336 -11.959999999999999 439.99 -7.819999999999999Q437.644 -3.6799999999999997 433.458 -1.3339999999999999Q429.27200000000005 1.012 423.66 1.012ZM472.788 0.0V-74.52H486.21999999999997V0.0ZM538.476 1.012Q531.116 1.012 526.7919999999999 -2.1159999999999997Q522.468 -5.244 520.582 -10.994Q518.696 -16.744 518.696 -24.564V-49.588Q518.696 -57.592 520.5360000000001 -63.388Q522.376 -69.184 527.0219999999999 -72.26599999999999Q531.668 -75.348 539.856 -75.348Q547.492 -75.348 552.0 -72.77199999999999Q556.508 -70.196 558.486 -65.366Q560.4639999999999 -60.536 560.4639999999999 -53.635999999999996V-49.772H547.492V-54.004Q547.492 -57.592 546.986 -60.168Q546.48 -62.744 544.962 -64.078Q543.444 -65.41199999999999 540.04 -65.41199999999999Q536.452 -65.41199999999999 534.842 -63.663999999999994Q533.232 -61.916 532.818 -59.06399999999999Q532.404 -56.211999999999996 532.404 -52.808V-21.62Q532.404 -17.756 533.048 -14.904Q533.692 -12.052 535.44 -10.533999999999999Q537.188 -9.016 540.408 -9.016Q543.72 -9.016 545.4680000000001 -10.672Q547.216 -12.328 547.906 -15.272Q548.596 -18.216 548.596 -22.264V-29.256H540.592V-37.812H560.832V0.0H552.092L551.0799999999999 -7.359999999999999Q549.608 -3.6799999999999997 546.6179999999999 -1.3339999999999999Q543.6279999999999 1.012 538.476 1.012ZM593.308 0.0V-74.52H602.784L620.908 -32.016V-74.52H632.1320000000001V0.0H623.116L604.9 -44.528V0.0Z"/></g></svg></a>
 </footer>
 
-<!-- ================= Comisiones: modal a la derecha ================= -->
-<dialog class="modal" id="comisiones" aria-labelledby="tCom">
-  <div class="modal-cab"><p class="pre" data-t="com_pre">Encargos personalizados</p><button class="cerrar" type="button" data-cierra aria-label="Cerrar" data-t-aria="cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <div class="modal-hero">
-    <img src="img/comision-ref8.jpg" alt="" aria-hidden="true">
-    <h2 class="h-grande" id="tCom" data-t="com_t">Comisiones</h2>
-    <p data-t="com_intro">Una ilustración hecha solo para ti, con el trazo de Agrio, en blanco y negro. Elige el tipo de encargo, cuéntame tu idea y la dibujamos juntos.</p>
-  </div>
-  <div class="bloque">
-    <h2 class="h-medio" data-t="cat_t">Elige tu encargo</h2>
-    <p class="sub" data-t="cat_sub">Tres tamaños de historia. Entre más mundo, más tiempo de dibujo.</p>
-    <div class="categorias" id="categorias">
-      <button class="cat" type="button" data-cat="1" aria-pressed="false">
-        <span class="num">01</span><h3 data-t="c1_n">Busto</h3>
-        <p class="que" data-t="c1_q">Retrato de cabeza y hombros con fondo sencillo. Ideal para un avatar, un regalo o tu propio monstruo.</p>
-        <ul><li data-t="c1_a">Una persona o personaje</li><li data-t="c1_b">Fondo plano o con textura</li></ul>
-        <span class="pie"><b data-t="c1_p">Desde $250.000</b><span data-t="c1_d">1 a 2 semanas</span></span>
-      </button>
-      <button class="cat fuerte" type="button" data-cat="2" aria-pressed="true">
-        <span class="sello" data-t="mas_pedido">El más pedido</span>
-        <span class="num">02</span><h3 data-t="c2_n">Cuerpo entero</h3>
-        <p class="que" data-t="c2_q">Un personaje completo, de pies a cabeza, con fondo sencillo. La forma más agria de verte dibujado.</p>
-        <ul><li data-t="c2_a">Personaje completo con su pose</li><li data-t="c2_b">Fondo sencillo y detalles de tu historia</li></ul>
-        <span class="pie"><b data-t="c2_p">Desde $420.000</b><span data-t="c2_d">2 a 3 semanas</span></span>
-      </button>
-      <button class="cat" type="button" data-cat="3" aria-pressed="false">
-        <span class="num">03</span><h3 data-t="c3_n">Mundo agrio</h3>
-        <p class="que" data-t="c3_q">Uno o varios personajes dentro de un escenario completo. Una escena con todo su universo.</p>
-        <ul><li data-t="c3_a">Varios personajes</li><li data-t="c3_b">Escenario con ambiente y detalle</li></ul>
-        <span class="pie"><b data-t="c3_p">Desde $750.000</b><span data-t="c3_d">4 a 6 semanas</span></span>
-      </button>
-    </div>
-  </div>
-  <div class="bloque">
-    <div class="com-grid">
-      <form class="form" id="formulario" novalidate>
-        <h2 class="h-medio" data-t="form_t">Cuéntame tu idea</h2>
-        <p class="sub" data-t="form_sub">Tu solicitud me llega por WhatsApp. Te respondo con el precio final y la fecha de entrega.</p>
-        <div class="dos">
-          <div class="campo"><label for="cNombre" data-t="f_nombre">Tu nombre</label><input id="cNombre" autocomplete="name"><p class="error" id="eNombre" aria-live="polite"></p></div>
-          <div class="campo"><label for="cContacto" data-t="f_contacto">WhatsApp o correo</label><input id="cContacto" autocomplete="email"><p class="error" id="eContacto" aria-live="polite"></p></div>
-        </div>
-        <div class="campo"><label for="cCat" data-t="f_cat">Tipo de encargo</label>
-          <select id="cCat"><option value="1" data-t="c1_n">Busto</option><option value="2" selected data-t="c2_n">Cuerpo entero</option><option value="3" data-t="c3_n">Mundo agrio</option></select></div>
-        <div class="campo"><label for="cIdea" data-t="f_idea">Tu idea</label><textarea id="cIdea" data-t-ph="ph_idea"></textarea><p class="error" id="eIdea" aria-live="polite"></p></div>
-        <div class="campo"><label for="cRef" data-t="f_ref">Referencias (opcional)</label><input id="cRef" data-t-ph="ph_ref"></div>
-        <fieldset class="campo"><legend data-t="f_formato">¿Cómo la quieres?</legend>
-          <div class="tipos">
-            <label><input type="radio" name="formato" value="dig" checked><span data-t="fm_dig">Digital</span></label>
-            <label><input type="radio" name="formato" value="imp"><span data-t="fm_imp">Impresa y firmada</span></label>
-            <label><input type="radio" name="formato" value="amb"><span data-t="fm_amb">Las dos</span></label>
-          </div>
-        </fieldset>
-        
-        <label class="acepto"><input type="checkbox" id="cAcepto"><span data-t="f_acepto">Leí y acepto las condiciones de las comisiones.</span></label>
-        <p class="error" id="eAcepto" aria-live="polite"></p>
-        <button class="btn" type="submit" data-t="f_enviar">Enviar solicitud por WhatsApp</button>
-      </form>
-      <aside class="terminos" id="terminos" aria-labelledby="tTerm">
-        <h3 id="tTerm" data-t="term_t">Condiciones de las comisiones</h3>
-        <ol>
-          <li data-t="term1">Los precios son de referencia y son negociables; pueden ajustarse a los requisitos de la solicitud.</li>
-          <li data-t="term2">No realizo trabajos que sean copias de otras obras.</li>
-          <li data-t="term3">Si un encargo requiere más de dos ajustes, el tercer ajuste tendrá un costo adicional.</li>
-          <li data-t="term4">Me reservo el derecho de rechazar un encargo si el tema no me inspira.</li>
-          <li data-t="term5">Las solicitudes se leen por orden de llegada.</li>
-          <li data-t="term6">Los encargos personalizados no están sujetos a desistimiento una vez empezados.</li>
-        </ol>
-      </aside>
-    </div>
-  </div>
 
-</dialog>
 
 <dialog id="carrito" aria-labelledby="caT">
   <div class="ca-cab"><h2 id="caT" data-t="ca_t">Carrito</h2><button class="cerrar" id="caCerrar" type="button" aria-label="Cerrar el carrito" data-t-aria="ca_cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -514,7 +464,7 @@ const TEC = {es:"Ilustración digital", en:"Digital illustration"};
 
 /* ============ Textos ES / EN ============ */
 const T = {
-es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", ver_grande:"Ver en grande", anterior:"Anterior", siguiente:"Siguiente", visor_pista:"Toca la ilustración para acercar · ← → para pasar", nav_ilu:"Ilustraciones", cerrar:"Cerrar", cta_eti:"Tienda · tandas de 5", cta_t:"Ilustraciones firmadas, en tandas de 5", cta_btn:"Comprar ilustraciones", oficio1:"Tattoo artist", oficio2:"Ilustrador", bajar:"Baja ↓", ley_disp:"Unidades disponibles de la tanda actual", ley_agot:"Agotada: puedes separar la próxima", ver_com:"¿Algo hecho para ti? Comisiones", nav_com:"Comisiones", nav_sob:"Sobre mí",
+es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", ver_grande:"Ver en grande", anterior:"Anterior", siguiente:"Siguiente", visor_pista:"Toca la ilustración para acercar · ← → para pasar", nav_ilu:"Ilustraciones", cerrar:"Cerrar", cta_eti:"Tienda · tandas de 5", cta_t:"Ilustraciones firmadas, en tandas de 5", cta_btn:"Comprar ilustraciones", oficio1:"Tattoo artist", oficio2:"Ilustrador", bajar:"Baja ↓", ley_disp:"Unidades disponibles de la tanda actual", ley_agot:"Agotada: puedes separar la próxima", ver_com:"¿Algo hecho para ti? Comisiones", nav_com:"Comisiones", f_correo:"Tu correo", f_encuadre:"Tipo de encuadre", f_specs:"Especificaciones", ph_specs:"Concepto, referencias y ese toque ácido o retorcido que buscas…", f_formato2:"Formato", fmc_dig:"Digital", fmc_imp:"Impreso", fmc_enm:"Enmarcado", f_enviar2:"Enviar solicitud", form_sub2:"Tu solicitud me llega por WhatsApp; te respondo con el precio final y la fecha de entrega.", e_correo:"Escribe tu correo.", k_elegir:"Elegir este encargo →", nav_sob:"Sobre mí",
  ilu_pre:"Obra disponible", ilu_t:"Ilustraciones",
  ilu_intro:"Cada ilustración no es una edición limitada, realizo impresiones en tandas de 5 unidades. Cuando se agoten las unidades y haya suficientes peticiones, prepararé una nueva tanda. Puedes solicitar o separar una unidad mediante la opción de “separar ilustración”.",
  enc_pre:"Encargos personalizados", enc_t:"¿Quieres una ilustración solo para ti?", enc_txt:"Busto, cuerpo entero o un mundo agrio completo. Cuéntame tu idea y la dibujamos juntos.", enc_btn:"Pide tu comisión", libro:"Libro de ilustraciones", anterior:"Ilustración anterior", siguiente:"Ilustración siguiente", ir_a:"Ir a",
@@ -545,7 +495,7 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  wa_hola:"Hola Agrio, vi tu web y quiero hablar contigo.", wa_separar:"Hola Agrio, quiero separar una unidad de la ilustración «{t}» para la próxima tanda.",
  wa_carrito:"Hola Agrio, quiero comprar estas ilustraciones:",
  wa_com:"Hola Agrio, soy {n} y quiero pedirte una comisión.", wa_cat:"Encargo", wa_idea:"Idea", wa_ref:"Referencias", wa_formato:"Formato", wa_fecha:"Fecha ideal", wa_contacto:"Contacto"},
-en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_grande:"View larger", anterior:"Previous", siguiente:"Next", visor_pista:"Tap the illustration to zoom in · ← → to browse", nav_ilu:"Illustrations", cerrar:"Close", cta_eti:"Shop · batches of 5", cta_t:"Signed illustrations, in batches of 5", cta_btn:"Buy illustrations", oficio1:"Tattoo artist", oficio2:"Illustrator", bajar:"Scroll ↓", ley_disp:"Units available in the current batch", ley_agot:"Sold out: you can reserve the next one", ver_com:"Something made for you? Commissions", nav_com:"Commissions", nav_sob:"About me",
+en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_grande:"View larger", anterior:"Previous", siguiente:"Next", visor_pista:"Tap the illustration to zoom in · ← → to browse", nav_ilu:"Illustrations", cerrar:"Close", cta_eti:"Shop · batches of 5", cta_t:"Signed illustrations, in batches of 5", cta_btn:"Buy illustrations", oficio1:"Tattoo artist", oficio2:"Illustrator", bajar:"Scroll ↓", ley_disp:"Units available in the current batch", ley_agot:"Sold out: you can reserve the next one", ver_com:"Something made for you? Commissions", nav_com:"Commissions", f_correo:"Your email", f_encuadre:"Framing", f_specs:"Specifications", ph_specs:"Concept, references and that sour or twisted touch you're after…", f_formato2:"Format", fmc_dig:"Digital", fmc_imp:"Printed", fmc_enm:"Framed", f_enviar2:"Send request", form_sub2:"Your request reaches me on WhatsApp; I'll reply with the final price and delivery date.", e_correo:"Enter your email.", k_elegir:"Choose this one →", nav_sob:"About me",
  ilu_pre:"Available work", ilu_t:"Illustrations",
  ilu_intro:"Each illustration is not a limited edition: I print in batches of 5 units. When the units run out and there are enough requests, I will prepare a new batch. You can request or reserve a unit with the “reserve illustration” option.",
  enc_pre:"Custom work", enc_t:"Want an illustration made just for you?", enc_txt:"A bust, a full body or a whole sour world. Tell me your idea and we'll draw it together.", enc_btn:"Request a commission", libro:"Illustration book", anterior:"Previous illustration", siguiente:"Next illustration", ir_a:"Go to",
@@ -623,27 +573,6 @@ $("#carrito").addEventListener("click", e => { if (e.target === e.currentTarget)
 $("#caPagar").addEventListener("click", () => avisar(t("av_pagar")));
 
 /* ============ Comisiones ============ */
-function elegirCat(n){
-  document.querySelectorAll(".cat").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === String(n))));
-  $("#cCat").value = String(n);
-}
-$("#categorias").addEventListener("click", e => { const c = e.target.closest(".cat"); if (!c) return; elegirCat(c.dataset.cat); $("#formulario").scrollIntoView({behavior:reducido ? "auto" : "smooth", block:"start"}); });
-$("#cCat").addEventListener("change", () => elegirCat($("#cCat").value));
-$("#formulario").addEventListener("submit", e => {
-  e.preventDefault();
-  const v = id => $(id).value.trim(), n = v("#cNombre"), c = v("#cContacto"), idea = v("#cIdea"), ok = $("#cAcepto").checked;
-  $("#eNombre").textContent = n ? "" : t("e_nombre");
-  $("#eContacto").textContent = c ? "" : t("e_contacto");
-  $("#eIdea").textContent = idea ? "" : t("e_idea");
-  $("#eAcepto").textContent = ok ? "" : t("e_acepto");
-  const malo = !n ? "#cNombre" : !c ? "#cContacto" : !idea ? "#cIdea" : !ok ? "#cAcepto" : null;
-  if (malo){ $(malo).focus(); return; }
-  const cat = t("c" + $("#cCat").value + "_n"), fm = t("fm_" + document.querySelector('input[name="formato"]:checked').value);
-  const msg = [t("wa_com", {n}), `${t("wa_cat")}: ${cat}`, `${t("wa_idea")}: ${idea}`, v("#cRef") ? `${t("wa_ref")}: ${v("#cRef")}` : "", `${t("wa_formato")}: ${fm}`, "", `${t("wa_contacto")}: ${c}`].filter(Boolean).join("\n");
-  window.open(waURL(msg), "_blank", "noopener");
-});
-["#cNombre","#cContacto","#cIdea"].forEach(id => $(id).addEventListener("input", () => $(id.replace("#c", "#e")).textContent = ""));
-$("#cAcepto").addEventListener("change", () => $("#eAcepto").textContent = "");
 
 /* proporción real de cada ilustración (para el bento) */
 const DIM = {oni:[662,1600], humo:[1035,1600], katana:[1165,1600], espinas:[1237,1600], tigre:[685,1600]};
@@ -674,7 +603,7 @@ Object.assign(T.es, {
   
   k_tandas:"Esta es una galería donde lo agrio se vuelve divertido. Explora un universo de ilustraciones 100 % originales del autor o solicita con un encargo personalizado.",
   k_tandas_hl:"lo agrio", k_spec:"Arte digital|y análogo·Impresiones|firmadas·Comisiones|abiertas",
-  k_como:"¿Cómo puedes encargar una comisión?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Comprar", k_b_separar:"Separar", k_b_en:"En carrito", k_c1:"Escoge el formato del caos|Selecciona si quieres solo un retrato, medio cuerpo o una escena completa con contexto.", k_c2:"Suelta tu idea|Dinos qué tienes en mente (entre más rara o específica sea la referencia, mejor).", k_c3:"Dale vida|Revisas el boceto inicial, pulimos detalles y te llevas una obra 100 % original hecha a tu medida.",
+  k_como:"¿Cómo puedes encargar una comisión?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Comprar", k_b_separar:"Separar", k_b_en:"En carrito", k_c1:"Define el encuadre|Elige el nivel de detalle de tu pieza (retrato, plano medio o cuerpo completo con escenario).", k_c2:"Suelta tu idea|Cuéntanos el concepto, añade referencias y especifica ese toque ácido o retorcido que buscas.", k_c3:"Aprueba y recibe|Revisamos juntos el boceto inicial, damos los últimos retoques y te entregamos tu obra 100 % original.", k_compra:"¿Cómo puedes comprar una ilustración?", k_desde:"Desde", k_ref_compra:"* Los precios son de referencia: el valor final depende de las especificaciones de tu pedido (tamaño, acabado y envío).", k_ref_com:"* Los precios son de referencia: el valor final depende de las especificaciones de tu encargo (nivel de detalle, personajes y escenario).", k_p1:"Elige tu obra|Explora la galería y selecciona la ilustración que más conecte con tu lado oscuro.", k_p2:"Configura el acabado|Define el tamaño y elige cómo quieres llevarla: archivo digital, lámina impresa o cuadro enmarcado.", k_p3:"Confirma y coordina|Los pedidos se gestionan por orden de llegada. Si eliges formato físico, te contactaremos por correo para ajustar costos de envío y cuadrar la fecha exacta de entrega según tu ubicación.",
    k_ilu:"Ilustraciones", 
   k_disp:"Disponible", k_agot:"Agotada", k_fragil2:"Frágil", k_arriba2:"Esta cara arriba"
 });
@@ -695,7 +624,7 @@ Object.assign(T.en, {
   
   k_tandas:"This is a gallery where the sour turns fun. Explore a universe of 100 % original illustrations by the artist or request a custom commission.",
   k_tandas_hl:"the sour", k_spec:"Digital and|analog art·Signed|prints·Commissions|open",
-  k_como:"How can you commission a piece?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Buy", k_b_separar:"Reserve", k_b_en:"In cart", k_c1:"Pick your format of chaos|Choose just a portrait, half body or a full scene with context.", k_c2:"Drop your idea|Tell us what you have in mind (the weirder or more specific the reference, the better).", k_c3:"Bring it to life|You review the first sketch, we polish the details and you take home a 100 % original piece made to measure.",
+  k_como:"How can you commission a piece?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Buy", k_b_separar:"Reserve", k_b_en:"In cart", k_c1:"Set the framing|Choose your piece's level of detail (portrait, medium shot or full body with a setting).", k_c2:"Drop your idea|Tell us the concept, add references and describe that sour or twisted touch you're after.", k_c3:"Approve and receive|We review the first sketch together, add the final touches and deliver your 100 % original piece.", k_compra:"How can you buy an illustration?", k_desde:"From", k_ref_compra:"* Prices are a reference: the final cost depends on your order's specifications (size, finish and shipping).", k_ref_com:"* Prices are a reference: the final cost depends on your commission's specifications (level of detail, characters and setting).", k_p1:"Choose your piece|Explore the gallery and pick the illustration that best connects with your dark side.", k_p2:"Set the finish|Choose the size and how you want it: digital file, printed sheet or framed piece.", k_p3:"Confirm and coordinate|Orders are handled in order of arrival. If you choose a physical format, we'll email you to settle shipping costs and the exact delivery date for your location.",
    k_ilu:"Illustrations", 
   k_disp:"Available", k_agot:"Sold out", k_fragil2:"Fragile", k_arriba2:"This side up"
 });
@@ -720,7 +649,7 @@ function moverBurbuja(bur, act, animar){
 addEventListener("resize", () => { const a = $(`.pildora [data-s="${seccionAntes}"]`); if (a) moverBurbuja($("#burbujaNav"), a, false); });
 let seccionActual = "inicio";
 function marcar(){
-  const activa = $("#comisiones").open ? seccionActual : seccionActual;
+  const activa = seccionActual;
   document.querySelectorAll(".pildora [data-s]").forEach(a => a.setAttribute("aria-current", String(a.dataset.s === activa)));
   if (activa !== seccionAntes){ moverBurbuja($("#burbujaNav"), $(`.pildora [data-s="${activa}"]`), seccionAntes !== null); seccionAntes = activa; }
 }
@@ -859,7 +788,7 @@ async function abrirVisor(id, desde){
   if (!a.width || !b.width) return;
   vImg.animate([{translate:`${a.left - b.left + (a.width - b.width) / 2}px ${a.top - b.top + (a.height - b.height) / 2}px`, scale:String(a.width / b.width)}, {translate:"0 0", scale:"1"}], {duration:460, easing:"cubic-bezier(.2,.8,.2,1)"});
 }
-visor.addEventListener("close", () => { quitarZoom(); if (!$("#comisiones").open) html.classList.remove("fijo"); });
+visor.addEventListener("close", () => { quitarZoom(); html.classList.remove("fijo"); });
 $("#vCerrar").addEventListener("click", () => visor.close());
 $("#vAnt").addEventListener("click", () => mostrarObra(vIdx - 1, -1));
 $("#vSig").addEventListener("click", () => mostrarObra(vIdx + 1, 1));
@@ -924,21 +853,11 @@ function observar(){
 const pintarBotonCompraV3 = pintarBotonCompra;
 pintarBotonCompra = function(){ pintarBotonCompraV3(); if (window.caja3d) window.caja3d.reimprimir(); };
 
-/* ============ Comisiones en modal (de la V3) ============ */
-const modal = $("#comisiones");
-function abrirComisiones(){ if (!modal.open){ modal.showModal(); html.classList.add("fijo"); } marcar(); }
-modal.addEventListener("close", () => { html.classList.remove("fijo"); if (location.hash === "#comisiones") history.replaceState(null, "", location.pathname + location.search); marcar(); });
-modal.addEventListener("click", e => { if (e.target === modal || e.target.closest("[data-cierra]")) modal.close(); });
-document.addEventListener("click", e => {
-  const a = e.target.closest('a[href="#comisiones"]'); if (!a) return;
-  e.preventDefault(); abrirComisiones();
-});
-addEventListener("hashchange", () => { if (location.hash === "#comisiones") abrirComisiones(); });
-
 /* ============ Idioma ============ */
 function aplicarIdioma(){
   html.lang = LANG; document.title = t("doc");
   document.querySelectorAll("[data-t]").forEach(e => e.textContent = t(e.dataset.t));
+  document.querySelectorAll("[data-t-parte]").forEach(e => { const [k, n] = e.dataset.tParte.split(":"); e.textContent = (t(k).split("|")[+n] || "").trim(); });
   document.querySelectorAll("[data-t-ph]").forEach(e => e.placeholder = t(e.dataset.tPh));
   document.querySelectorAll("[data-t-aria]").forEach(e => e.setAttribute("aria-label", t(e.dataset.tAria)));
   document.querySelectorAll("[data-wa]").forEach(e => e.href = waURL(t(e.dataset.wa)));
@@ -973,7 +892,6 @@ aplicarIdioma();
 document.fonts.ready.then(() => moverBurbuja($("#burbujaNav"), $(`.pildora [data-s="${seccionAntes}"]`), false));
 marcar();
 scrollTo(0, 0);
-if (location.hash === "#comisiones") setTimeout(abrirComisiones, 2800);
 cargar();
 </script>
 
@@ -1269,24 +1187,102 @@ function cara2(x, dib, cel){
   return {alto:a.alto + b.alto, zonas:a.zonas.concat(b.zonas.map(z => ({...z, y:z.y + a.alto}))), marcas:{ilu:a.alto}};
 }
 /* Parte 2 de la cara de al lado: las ilustraciones. */
+/* ---------- Franja de comisiones: la parte baja de la cara 2 se ensancha hacia la derecha y la cámara la recorre de lado ----------
+   Medidas en lu (1000 lu = ancho de la cara). En el celular todo es 2,6 veces más grande para que se lea igual. */
+function franjaMedidas(cel){
+  const U = cel ? 2.6 : 1, pxLu = innerWidth * (cel ? .97 : .95) / 1000;
+  return {U, Hf:Math.max(540 * U, (innerHeight - 96 - (cel ? 96 : 24)) / pxLu)};
+}
+function caraFranja(x, dib, cel){
+  const p = P(x, dib), {U, Hf} = franjaMedidas(cel), zonas = [];
+  const top = 26 * U, PH = Hf - top - 74 * U, GP = 34 * U, PAD = 30 * U, ROSA = "#E68AA1";
+  let xx = 70, n = 0, formX = 0;
+  const panel = w => { p.rect(xx, top, w, PH, "#28282a"); const r = {x:xx, y:top, w, h:PH}; xx += w + GP; n++; return r; };
+  const lineas = (txt, xi, y, wi, font, color, lh) => { p.envolver(txt, wi, font).forEach(l => { p.txt(l, xi, y, font, color); y += lh; }); return y; };
+  // 1. presentación: COMISIONES y el texto, abajo del panel
+  { const r = panel(cel ? 870 : 560), xi = r.x + PAD, wi = r.w - 2 * PAD, tf = 15 * U, ft = `400 ${tf}px ${FU.sans}`, ls = p.envolver(t("com_intro"), wi, ft);
+    let yb = r.y + r.h - PAD - ls.length * tf * 1.5; ls.forEach((l, i) => p.txt(l, xi, yb + i * tf * 1.5, ft, COL.gris));
+    const T = t("com_t").toUpperCase(); let tz = 150 * U; while (tz > 40 && p.ancho(T, `900 ${tz}px ${FU.cond}`) > wi) tz -= 2;
+    yb -= 18 * U + tz * .86; p.txt(T, xi - tz * .03, yb, `900 ${tz}px ${FU.cond}`, COL.papel);
+    p.txt(t("com_pre").toUpperCase(), xi, yb - 24 * U, `800 ${11 * U}px ${FU.sans}`, COL.salmon, "left", 3 * U); }
+  // 2. cómo encargar: los tres pasos y la nota de precios
+  { const r = panel(cel ? 870 : 390), xi = r.x + PAD, wi = r.w - 2 * PAD; let y = r.y + PAD + 6 * U;
+    y = lineas(t("k_como"), xi, y, wi, `600 ${20 * U}px ${FU.sans}`, COL.papel, 24 * U) + 20 * U;
+    const tl = 13.5 * U, lh = tl * 1.45, fL = `600 ${tl}px ${FU.sans}`, fC = `400 ${tl}px ${FU.sans}`, wn = 24 * U;
+    [1, 2, 3].forEach(k => { const [lead, cu] = t("k_c" + k).split("|"); p.txt(k + ".", xi, y, fL, COL.salmon);
+      y = lineas(lead, xi + wn, y, wi - wn, fL, COL.papel, lh); y = lineas(cu, xi + wn, y, wi - wn, fC, COL.gris, lh) + 14 * U; });
+    lineas(t("k_ref_com"), xi, y + 6 * U, wi, `400 ${11.5 * U}px ${FU.sans}`, COL.deco, 11.5 * U * 1.45); }
+  // 3 a 5. los tres encargos; cada tarjeta es una zona que lleva al formulario con ese encuadre elegido
+  [1, 2, 3].forEach(c => {
+    const r = panel(cel ? 870 : 340), xi = r.x + PAD, wi = r.w - 2 * PAD; let y = r.y + PAD;
+    p.txt("0" + c, xi, y, `700 ${13 * U}px ${FU.sans}`, COL.salmon);
+    if (c === 2){ const fs2 = `800 ${10 * U}px ${FU.sans}`, tx = t("mas_pedido").toUpperCase(), tw = p.ancho(tx, fs2, U) + 18 * U, bx = r.x + r.w - PAD - tw;
+      p.rect(bx, y - 5 * U, tw, 22 * U, ROSA); p.txt(tx, bx + 9 * U, y, fs2, COL.tinta, "left", U); }
+    y += 28 * U;
+    const tit = t("c" + c + "_n").toUpperCase(); let tz = 42 * U; while (tz > 20 && p.ancho(tit, `900 ${tz}px ${FU.cond}`) > wi) tz -= 1;
+    p.txt(tit, xi, y, `900 ${tz}px ${FU.cond}`, COL.papel); y += tz * .95 + 14 * U;
+    y = lineas(t("c" + c + "_q"), xi, y, wi, `400 ${14 * U}px ${FU.sans}`, COL.gris, 21 * U) + 12 * U;
+    ["a", "b"].forEach(k => { p.rect(xi, y + 6 * U, 6 * U, 6 * U, ROSA); y = lineas(t("c" + c + "_" + k), xi + 16 * U, y, wi - 16 * U, `400 ${13 * U}px ${FU.sans}`, COL.gris, 19.5 * U) + 6 * U; });
+    let yb = r.y + r.h - PAD - 26 * U;
+    p.txt(t("c" + c + "_p"), xi, yb, `600 ${28 * U}px ${FU.cond}`, COL.papel); p.txt(t("c" + c + "_d"), xi + wi, yb + 8 * U, `400 ${12 * U}px ${FU.sans}`, COL.deco, "right");
+    yb -= 16 * U; p.rect(xi, yb, wi, 1.5 * U, "rgba(242,240,235,.14)");
+    p.txt(t("k_elegir"), xi, yb - 30 * U, `700 ${13 * U}px ${FU.sans}`, ROSA);
+    zonas.push({tipo:"cat", n:c, x:r.x, y:r.y, w:r.w, h:r.h, etq:t("k_elegir") + ": " + t("c" + c + "_n")});
+  });
+  // 6. formulario: lo impreso son las etiquetas y las cajas; encima van controles reales (zonas tipo "campo")
+  const etiqueta = (txt, xi, y) => { p.txt(txt, xi, y, `700 ${12 * U}px ${FU.sans}`, COL.gris); return y + 20 * U; };
+  const campo = (tipo, xi, y, wi, hi, txt) => {
+    y = etiqueta(txt, xi, y); p.rect(xi, y, wi, hi, "#1b1b1d"); p.marco(xi, y, wi, hi, "rgba(242,240,235,.18)", 1.5 * U);
+    if (tipo === "encuadre") p.txt("▾", xi + wi - 14 * U, y + hi / 2 - 9 * U, `400 ${15 * U}px ${FU.sans}`, COL.deco, "right");
+    zonas.push({tipo:"campo", campo:tipo, x:xi, y, w:wi, h:hi, fz:14 * U, etq:txt}); return y + hi + 16 * U; };
+  const opciones = (xi, y, wi) => {
+    y = etiqueta(t("f_formato2"), xi, y); const g = 8 * U, w = (wi - 2 * g) / 3, h = 40 * U;
+    ["dig", "imp", "enm"].forEach((o, i) => { const ox = xi + i * (w + g); p.marco(ox, y, w, h, "rgba(242,240,235,.24)", 1.5 * U);
+      p.txt(t("fmc_" + o), ox + w / 2, y + h / 2 - 8 * U, `600 ${13 * U}px ${FU.sans}`, COL.gris, "center");
+      zonas.push({tipo:"opcion", valor:o, x:ox, y, w, h, etq:t("f_formato2") + ": " + t("fmc_" + o)}); });
+    return y + h + 18 * U; };
+  const enviar = (xi, y, wi) => { const h = 48 * U; p.rect(xi, y, wi, h, ROSA);
+    p.txt(t("f_enviar2").toUpperCase(), xi + wi / 2, y + h / 2 - 8 * U, `800 ${14 * U}px ${FU.sans}`, COL.tinta, "center", U);
+    zonas.push({tipo:"enviar", x:xi, y, w:wi, h, etq:t("f_enviar2")}); return y + h; };
+  const cabeza = (xi, y, wi) => { p.txt(t("form_t"), xi, y, `900 ${36 * U}px ${FU.cond}`, COL.papel);
+    return lineas(t("form_sub2"), xi, y + 42 * U, wi, `400 ${13 * U}px ${FU.sans}`, COL.gris, 19 * U) + 16 * U; };
+  if (!cel){
+    const r = panel(800); formX = r.x; const xi = r.x + PAD, wi = r.w - 2 * PAD, gc = 28, wc = (wi - gc) / 2;
+    const y0 = cabeza(xi, r.y + PAD, wi); let yL = y0, yR = y0;
+    yL = campo("nombre", xi, yL, wc, 44, t("f_nombre")); yL = campo("correo", xi, yL, wc, 44, t("f_correo")); campo("encuadre", xi, yL, wc, 44, t("f_encuadre"));
+    const xr = xi + wc + gc; yR = campo("specs", xr, yR, wc, 100, t("f_specs")); yR = opciones(xr, yR, wc); enviar(xr, yR, wc);
+  } else {
+    let r = panel(870); formX = r.x; let xi = r.x + PAD, wi = r.w - 2 * PAD, y = cabeza(xi, r.y + PAD, wi);
+    y = campo("nombre", xi, y, wi, 44 * U, t("f_nombre")); y = campo("correo", xi, y, wi, 44 * U, t("f_correo")); campo("encuadre", xi, y, wi, 44 * U, t("f_encuadre"));
+    r = panel(870); xi = r.x + PAD; y = r.y + PAD;
+    y = campo("specs", xi, y, wi, 170 * U, t("f_specs")); y = opciones(xi, y, wi); enviar(xi, y, wi);
+  }
+  // crédito: al final de la franja, abajo a la derecha
+  const fin = xx - GP;
+  { const fc = `500 ${13 * U}px ${FU.sans}`, lh = 24 * U, lw = REM_LOGO ? lh * REM_LOGO.width / REM_LOGO.height : 0, tw = p.ancho(t("pie_diseno"), fc), x0 = fin - (tw + 12 * U + lw), yC = top + PH + 30 * U;
+    p.txt(t("pie_diseno"), x0, yC + (lh - 13 * U) / 2 - 1, fc, COL.gris); if (REM_LOGO) p.img(REM_LOGO, x0 + tw + 12 * U, yC, lw, lh); }
+  return {ancho:fin + 70, alto:Hf, zonas, n, formX};
+}
 function caraIlus(x, dib, cel){
   const p = P(x, dib), M = 60, AN = 1000 - 2 * M, fs = cel ? 1.5 : 1, zonas = [], marcas = {};
   let y = 70;
   marcas.ilu = 0;
   const TI = cel ? 124 : 156; p.txt(t("k_ilu").toUpperCase(), 500, y, `900 ${TI}px ${FU.cond}`, COL.papel, "center"); y += TI * .86 + 46;
-  // cómo encargar una comisión: la pregunta y tres pasos en columnas, más pequeños que el título y las obras
-  const tc = 20 * fs, fc = `600 ${tc}px ${FU.sans}`; p.txt(t("k_como"), M, y, fc, COL.papel); y += tc + 18;
-  const PC = cel ? 1 : 3, GC = 36, wc = (AN - (PC - 1) * GC) / PC, tl = 13 * fs, lh = tl * 1.45, fLead = `600 ${tl}px ${FU.sans}`, fCu = `400 ${tl}px ${FU.sans}`;
-  let yFila = y, altoFila = 0;
-  [1, 2, 3].forEach((n, i) => {
-    const [lead, cuerpo] = t("k_c" + n).split("|"), col = i % PC, xc = M + col * (wc + GC);
-    if (col === 0 && i){ yFila += altoFila + 12 * fs; altoFila = 0; }
-    let yy = yFila; const wn = p.txt(n + ".", xc, yy, fLead, COL.salmon) + 8;
-    p.envolver(lead, wc - wn, fLead).forEach(l => { p.txt(l, xc + wn, yy, fLead, COL.papel); yy += lh; });
-    p.envolver(cuerpo, wc - wn, fCu).forEach(l => { p.txt(l, xc + wn, yy, fCu, COL.gris); yy += lh; });
-    altoFila = Math.max(altoFila, yy - yFila);
-  });
-  y = yFila + altoFila + 50;
+  // cómo comprar: la pregunta y tres pasos en columnas, más pequeños que el título y las obras
+  { const tc = 20 * fs, fc = `600 ${tc}px ${FU.sans}`; p.txt(t("k_compra"), M, y, fc, COL.papel); y += tc + 18;
+    const PC = cel ? 1 : 3, GC = 36, wc = (AN - (PC - 1) * GC) / PC, tl = 13 * fs, lh = tl * 1.45, fLead = `600 ${tl}px ${FU.sans}`, fCu = `400 ${tl}px ${FU.sans}`;
+    let yFila = y, altoFila = 0;
+    [1, 2, 3].forEach((n, i) => {
+      const [lead, cuerpo] = t("k_p" + n).split("|"), col = i % PC, xc = M + col * (wc + GC);
+      if (col === 0 && i){ yFila += altoFila + 12 * fs; altoFila = 0; }
+      let yy = yFila; const wn = p.txt(n + ".", xc, yy, fLead, COL.salmon) + 8;
+      p.envolver(lead, wc - wn, fLead).forEach(l => { p.txt(l, xc + wn, yy, fLead, COL.papel); yy += lh; });
+      p.envolver(cuerpo, wc - wn, fCu).forEach(l => { p.txt(l, xc + wn, yy, fCu, COL.gris); yy += lh; });
+      altoFila = Math.max(altoFila, yy - yFila);
+    });
+    y = yFila + altoFila + 14;
+    p.envolver(t("k_ref_compra"), AN, `400 ${12 * fs}px ${FU.sans}`).forEach(l => { p.txt(l, M, y, `400 ${12 * fs}px ${FU.sans}`, COL.deco); y += 12 * fs * 1.45; });
+    y += 36; }
   // rejilla pareja: fichas del mismo tamaño, 3 por fila (2 en celular). Cada ficha es una sola región (ley de región común):
   // la imagen y su información comparten el mismo fondo; dentro de la ficha los espacios son cortos y entre fichas más largos (proximidad)
   const COLS = cel ? 2 : 3, G2 = 36, cw = (AN - (COLS - 1) * G2) / COLS, fh = cw * 1.22, f2 = fs * (cel ? .9 : 1), PI = 18 * f2;
@@ -1326,6 +1322,7 @@ function caraIlus(x, dib, cel){
       const anchoPrecio = () => p.ancho(cifra, `700 ${pz}px ${FU.sans}`) + 5 + p.ancho("COP", `700 ${pz * .45}px ${FU.mono}`);
       while (pz > 15 && anchoPrecio() > wi * .5) pz -= .5;
       const pW = anchoPrecio(), bx = xi + pW + 14, bw = xi + wi - bx, pf = `700 ${pz}px ${FU.sans}`, base = yc + bh / 2 + capDe(pf) / 2;
+      escribe(t("k_desde").toUpperCase(), xi, base - capDe(pf) - 7 * f2, `700 ${10 * f2}px ${FU.mono}`, COL.deco);   // el precio es de referencia
       const wc = escribe(cifra, xi, base, pf, COL.papel);
       escribe("COP", xi + wc + 5, base, `700 ${pz * .45}px ${FU.mono}`, COL.gris);
       if (disp && !en) p.rect(bx, yc, bw, bh, "#E68AA1"); else if (disp) p.rect(bx, yc, bw, bh, COL.gris); else p.marco(bx, yc, bw, bh, COL.gris, 4);
@@ -1339,12 +1336,7 @@ function caraIlus(x, dib, cel){
     });
     y += altoFicha + G2 + 6;
   }
-  y += 40;
-  // crédito: "Diseñado por" y el logo de Rem Design, centrados al final de la caja
-  { const fc = `500 ${14 * fs}px ${FU.sans}`, lh = 26 * fs, lw = REM_LOGO ? lh * REM_LOGO.width / REM_LOGO.height : 0, tw = p.ancho(t("pie_diseno"), fc), x0 = 500 - (tw + 12 + lw) / 2;
-    p.txt(t("pie_diseno"), x0, y + (lh - 14 * fs) / 2 - 1, fc, COL.gris);
-    if (REM_LOGO) p.img(REM_LOGO, x0 + tw + 12, y, lw, lh); y += lh; }
-  y += 56;
+  y += 30;
   return {alto:y, zonas, marcas};
 }
 
@@ -1356,6 +1348,19 @@ const CORTE_L = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1e9), CORTE_W = new 
 const marcos = {};
 const recursos = [];
 function texDeCanvas(cv){ const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = ANISO; tx.generateMipmaps = true; tx.minFilter = THREE.LinearMipmapLinearFilter; tx.magFilter = THREE.LinearFilter; recursos.push(tx); return tx; }
+function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s){
+  const tLU = Math.min(2048, MAXTEX) / s, k = G.k;
+  for (let x0 = 0; x0 < anchoLU; x0 += tLU) for (let y1 = 0; y1 < altoLU; y1 += tLU){
+    const wLU = Math.min(tLU, anchoLU - x0), hLU = Math.min(tLU, altoLU - y1);
+    const cv = document.createElement("canvas"); cv.width = Math.ceil(wLU * s); cv.height = Math.ceil(hLU * s); const x = cv.getContext("2d");
+    x.setTransform(s, 0, 0, s, -x0 * s, -y1 * s); dibujar(x);
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = "source-atop"; x.fillStyle = x.createPattern(granoTinta, "repeat"); x.globalAlpha = .55; x.fillRect(0, 0, cv.width, cv.height); x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    const tex = texDeCanvas(cv), nrm = ARRUGAS.clone(); nrm.needsUpdate = true; nrm.repeat.set(wLU * k / (G.Wb / 1.1), hLU * k / (G.Wb / 1.1)); recursos.push(nrm);
+    const mat = new THREE.MeshStandardMaterial({map:tex, transparent:true, roughness:.66, metalness:0, normalMap:nrm, normalScale:new THREE.Vector2(.85, .85), polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2, clippingPlanes:[CORTE_W]});
+    const geo = new THREE.PlaneGeometry(wLU * k, hLU * k); recursos.push(mat, geo);
+    const m = new THREE.Mesh(geo, mat); m.position.set((x0 + wLU / 2) * k, -(y0 + y1 + hLU / 2) * k, 0); marco.add(m);
+  }
+}
 function imprimirCara(marco, dibujar, altoLU, wWU, texW){
   const s = texW / 1000, tilePX = Math.min(2048, MAXTEX), tileLU = tilePX / s, k = wWU / 1000;
   for (let top = 0; top < altoLU; top += tileLU){
@@ -1396,7 +1401,8 @@ function construir(){
   const med = document.createElement("canvas").getContext("2d");
   const m2 = cara2(med, false, cel);
   G.alto2 = m2.alto; G.marcas = m2.marcas;
-  G.Hb = Math.max(G.alto2, 1400) * G.k + 2 * r; G.alto1 = (G.Hb - 2 * r) / G.k;
+  const mF = caraFranja(med, false, cel); G.franja = mF; G.Hf = mF.alto; G.Wf = mF.ancho;
+  G.Hb = Math.max(G.alto2 + G.Hf, 1400) * G.k + 2 * r; G.alto1 = (G.Hb - 2 * r) / G.k;
   caja = new THREE.Group(); escena.add(caja);
   const geo = new RoundedBoxGeometry(Wb, G.Hb, Db, 10, r); recursos.push(geo);
   const gr = GRANO.clone(); gr.needsUpdate = true; gr.repeat.set(2.2, 2.2 * G.Hb / Wb); const ar = ARRUGAS.clone(); ar.needsUpdate = true; ar.repeat.set(1.1, 1.1 * G.Hb / Wb); recursos.push(gr, ar);
@@ -1406,6 +1412,10 @@ function construir(){
   else mat = new THREE.MeshStandardMaterial({color:0x1f1f21, roughness:.66, metalness:0, map:gr, normalMap:ar, normalScale:new THREE.Vector2(.85, .85)});
   recursos.push(mat);
   const cuerpo = new THREE.Mesh(geo, mat); cuerpo.position.y = -G.Hb / 2; caja.add(cuerpo);
+  // el ala: la parte baja de la cara 2 sigue de largo hacia la derecha (sale por la arista de atrás), con el mismo cartón
+  { const zIni = -F / 2 + 4, zFin = F / 2 - G.Wf * G.k - r, largo = zIni - zFin, alto = G.Hb - r - G.alto2 * G.k, fondo = 220;
+    const gA = new RoundedBoxGeometry(fondo, alto, largo, 6, r), mA = mat.clone(); mA.clippingPlanes = [CORTE_W]; recursos.push(gA, mA);
+    const ala = new THREE.Mesh(gA, mA); ala.position.set(Wb / 2 - fondo / 2, -G.Hb + alto / 2, (zIni + zFin) / 2); caja.add(ala); }
   geo.computeBoundingSphere();   // con el largo completo, para que la caja no desaparezca al alargarse en el celular
   G.morf = cel ? {geo, pos:geo.attributes.position.array.slice(), uv:geo.attributes.uv.array.slice()} : null; G.L = G.Hb;
   // marcos de impresión: origen arriba a la izquierda de cada cara (vista de frente), x hacia la derecha, y hacia arriba
@@ -1417,23 +1427,43 @@ function construir(){
   const grande = innerWidth * DPR >= 2000 && MAXTEX >= 4096;
   imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? 1024 : 1536);
   imprimirCara(marcos[2], x => cara2(x, true, cel), G.alto2, F, cel ? 1536 : (grande ? 2560 : 2048));
-  G.zonas = m2.zonas.map(z => ({...z, cara:2}));
+  imprimirFranja(marcos[2], x => caraFranja(x, true, cel), G.alto2, G.Wf, G.Hf, cel ? 1 : 2);
+  G.zonas = m2.zonas.map(z => ({...z, cara:2})).concat(mF.zonas.map(z => ({...z, y:z.y + G.alto2, cara:2})));
   armarZonas();
 }
 
 /* ---------- Zonas tocables sobre lo impreso (botones reales, alineados con la caja) ---------- */
 const capa = document.getElementById("zonas");
+const FORM = {nombre:"", correo:"", encuadre:"2", specs:"", formato:"dig"};   // lo escrito se conserva al reimprimir la caja
 function armarZonas(){
   capa.innerHTML = "";
-  G.zonas.forEach((z, i) => { const b = document.createElement("button"); b.type = "button"; b.className = "zona"; b.hidden = true; b.setAttribute("aria-label", z.etq); b.dataset.i = i; capa.appendChild(b); z.el = b; });
+  G.zonas.forEach((z, i) => {
+    let b;
+    if (z.tipo === "campo"){
+      if (z.campo === "encuadre"){ b = document.createElement("select"); [1, 2, 3].forEach(n => { const o = document.createElement("option"); o.value = String(n); o.textContent = t("c" + n + "_n"); b.appendChild(o); }); b.value = FORM.encuadre; b.addEventListener("change", () => { FORM.encuadre = b.value; }); }
+      else { b = document.createElement(z.campo === "specs" ? "textarea" : "input"); if (z.campo !== "specs"){ b.type = z.campo === "correo" ? "email" : "text"; b.autocomplete = z.campo === "correo" ? "email" : "name"; } else b.placeholder = t("ph_specs");
+        b.value = FORM[z.campo] || ""; b.addEventListener("input", () => { FORM[z.campo] = b.value; b.classList.remove("falta"); }); }
+      b.className = "zona campo";
+    } else { b = document.createElement("button"); b.type = "button"; b.className = "zona" + (z.tipo === "opcion" ? " opcion" : ""); if (z.tipo === "opcion") b.setAttribute("aria-pressed", String(FORM.formato === z.valor)); }
+    b.hidden = true; b.setAttribute("aria-label", z.etq); b.dataset.i = i; capa.appendChild(b); z.el = b;
+  });
+}
+function enviarSolicitud(){
+  const falta = ["nombre", "correo", "specs"].find(k => !FORM[k].trim());
+  if (falta){ const z = G.zonas.find(q => q.campo === falta); if (z && z.el){ z.el.classList.add("falta"); z.el.placeholder = t({nombre:"e_nombre", correo:"e_correo", specs:"e_idea"}[falta]); if (!z.el.hidden) z.el.focus({preventScroll:true}); else irA(G.S.gira + G.S.B + G.S.formH); } return; }
+  const msg = [t("wa_com", {n:FORM.nombre.trim()}), `${t("wa_cat")}: ${t("c" + FORM.encuadre + "_n")}`, `${t("wa_idea")}: ${FORM.specs.trim()}`, `${t("wa_formato")}: ${t("fmc_" + FORM.formato)}`, "", `${t("wa_contacto")}: ${FORM.correo.trim()}`].join("\n");
+  window.open(waURL(msg), "_blank", "noopener");
 }
 capa.addEventListener("click", e => {
   const b = e.target.closest(".zona"); if (!b) return; const z = G.zonas[+b.dataset.i];
   // la posición de la ilustración se guarda ahora: al comprar, la caja se vuelve a imprimir y las zonas se rehacen
   const imgFalsa = id => { const zi = G.zonas.find(q => q.tipo === "ver" && q.id === id), r = zi && zi.rect ? {...zi.rect} : b.getBoundingClientRect(); return {getBoundingClientRect:() => r}; };
-  if (z.tipo === "com") abrirComisiones();
+  if (z.tipo === "com") irA((G.S.gira + G.S.B));
   else if (z.tipo === "ver") abrirVisor(z.id, imgFalsa(z.id));
   else if (z.tipo === "comprar") comprar(obra(z.id), imgFalsa(z.id));
+  else if (z.tipo === "cat"){ FORM.encuadre = String(z.n); G.zonas.forEach(q => { if (q.campo === "encuadre" && q.el) q.el.value = FORM.encuadre; }); irA(G.S.gira + G.S.B + G.S.formH); }
+  else if (z.tipo === "opcion"){ FORM.formato = z.valor; G.zonas.forEach(q => { if (q.tipo === "opcion" && q.el) q.el.setAttribute("aria-pressed", String(q.valor === z.valor)); }); }
+  else if (z.tipo === "enviar") enviarSolicitud();
 });
 const v3 = new THREE.Vector3(), nv = new THREE.Vector3(), cpos = new THREE.Vector3();
 function proyectar(v){ v3.copy(v).project(camara); return [(v3.x + 1) / 2 * innerWidth, (1 - v3.y) / 2 * innerHeight, v3.z]; }
@@ -1449,6 +1479,7 @@ function moverZonas(){
     const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]), l = Math.min(...xs), t2 = Math.min(...ys), r2 = Math.max(...xs), b2 = Math.max(...ys);
     if (r2 < 0 || b2 < tope || l > innerWidth || t2 > innerHeight || r2 - l < 18){ z.el.hidden = true; z.rect = null; continue; }
     z.el.hidden = false; Object.assign(z.el.style, {left:l + "px", top:t2 + "px", width:(r2 - l) + "px", height:(b2 - t2) + "px"});
+    if (z.fz) z.el.style.fontSize = (z.fz / z.h * (b2 - t2)).toFixed(1) + "px";   // el texto escrito crece con la caja
     z.rect = {left:l, top:t2, right:r2, bottom:b2, width:r2 - l, height:b2 - t2};
   }
 }
@@ -1490,11 +1521,16 @@ function resolver(){
   const ancho2 = vw * (cel ? .97 : .95);
   const E2 = encuadrar(2, -84, rad(-1), rad(-1.2), (vw - ancho2) / 2 - vw * .015, ancho2, -vh * (cel ? .12 : .2), P0.z);
   const PF = {...E2.q, ry:-87, roll:rad(-.6)};
-  for (let i = 0; i < 14; i++){ ponerPose(PF); const fondo = proyectar(puntoCara(2, 500, G.alto2 + G.r / G.k)); PF.y -= (fondo[1] - (vh - (cel ? 84 : 2))) / E2.ppw; }   // en el celular el final de la caja queda encima del botón de Comisiones
+  for (let i = 0; i < 14; i++){ ponerPose(PF); const fondo = proyectar(puntoCara(2, 500, G.alto2 + G.Hf + G.r / G.k)); PF.y -= (fondo[1] - (vh - (cel ? 84 : 2))) / E2.ppw; }   // en el celular el final de la caja queda encima del botón de Comisiones
   G.poses = {P0, P2:E2.q, PF}; G.ppw = E2.ppw;
   G.S = {gira:vh * 1.25};
   G.S.B = Math.max(200, (E2.q.y - PF.y) * E2.ppw);
-  document.getElementById("inicio").style.height = (G.S.gira + G.S.B + vh) + "px";
+  // tramo horizontal: cuánto se mueve la franja en pantalla por cada unidad que se mueve la cámara
+  ponerPose(PF); const a0 = proyectar(puntoCara(2, 0, G.alto2 + 10)); ponerPose({...PF, x:PF.x + 100}); const a1 = proyectar(puntoCara(2, 0, G.alto2 + 10));
+  const dpx = (a1[0] - a0[0]) / 100; G.S.dirX = dpx < 0 ? 1 : -1; G.S.pxX = Math.abs(dpx) || 1;
+  G.S.H = Math.max(0, G.Wf - 1000) * G.k * G.S.pxX;
+  G.S.formH = Math.min(G.S.H, Math.max(0, G.franja.formX - 70) * G.k * G.S.pxX);
+  document.getElementById("inicio").style.height = (G.S.gira + G.S.B + G.S.H + vh) + "px";
 }
 /* largo visible de la caja: en el celular arranca en un cubo (alto = ancho) y llega a su largo completo al terminar el giro.
    Se mueven los vértices de abajo (las esquinas redondeadas no se deforman) y lo impreso se corta a esa altura. */
@@ -1510,7 +1546,7 @@ function ajustarLargo(s){
     pa.needsUpdate = ua.needsUpdate = true;
   }
   G.L = L;
-  CORTE_L.constant = m ? L - r - 2 : 1e9; caja.updateMatrixWorld(); CORTE_W.copy(CORTE_L).applyMatrix4(caja.matrixWorld);
+  CORTE_L.constant = m && L < Hb - .5 ? L - r - 2 : 1e9; caja.updateMatrixWorld(); CORTE_W.copy(CORTE_L).applyMatrix4(caja.matrixWorld);
 }
 function mezcla(p, q, k){ return {ry:lerp(p.ry, q.ry, k), pitch:lerp(p.pitch, q.pitch, k), roll:lerp(p.roll, q.roll, k), x:lerp(p.x, q.x, k), y:lerp(p.y, q.y, k), z:p.z * Math.pow(q.z / p.z, k)}; }
 
@@ -1528,8 +1564,8 @@ function poseActual(s){
     const m0 = m1 * .85;   // baja desde el primer momento, como en bpco.kr
     q.y = (2 * t ** 3 - 3 * t ** 2 + 1) * p0 + (t ** 3 - 2 * t ** 2 + t) * m0 + (-2 * t ** 3 + 3 * t ** 2) * p1 + (t ** 3 - t ** 2) * m1;
   } else {
-    const px = s - S.gira, b = Math.min(1, px / S.B);
-    q = {ry:lerp(P2.ry, PF.ry, b), pitch:P2.pitch, roll:lerp(P2.roll, PF.roll, b), x:lerp(P2.x, PF.x, b), z:P2.z, y:P2.y - px / G.ppw};
+    const px = s - S.gira, pv = Math.min(px, S.B), b = pv / S.B, h = Math.max(0, Math.min(S.H, px - S.B));   // baja por la cara 2 y luego recorre la franja de lado
+    q = {ry:lerp(P2.ry, PF.ry, b), pitch:P2.pitch, roll:lerp(P2.roll, PF.roll, b), x:lerp(P2.x, PF.x, b) + S.dirX * h / S.pxX, z:P2.z, y:P2.y - pv / G.ppw};
   }
   if (entrada < 1){   // entrada después de la carga: la caja de frente y más lejos, luego gira y se acerca
     const e = suave3(entrada), P = {...q, ry:-8, z:q.z * 1.08, y:q.y - 30, pitch:q.pitch};
@@ -1537,9 +1573,16 @@ function poseActual(s){
   }
   return q;
 }
+/* indicador de avance del tramo horizontal (01 / 06) */
+function avanceFranja(s){
+  if (!G.franja) return; const h = Math.max(0, Math.min(G.S.H, s - G.S.gira - G.S.B)), f = G.S.H ? h / G.S.H : 0, n = G.franja.n;
+  $("#hzB").style.width = (f * 100).toFixed(2) + "%"; $("#hzN").textContent = String(Math.min(n, 1 + Math.round(f * (n - 1)))).padStart(2, "0"); $("#hzT").textContent = String(n).padStart(2, "0");
+}
 function marcarSeccion(s){
   const luMedio = (s - G.S.gira + innerHeight * .5) / (G.ppw * G.k);
-  const sec = s > G.S.gira && luMedio > G.marcas.ilu ? "ilustraciones" : "inicio";
+  let sec = s > G.S.gira && luMedio > G.marcas.ilu ? "ilustraciones" : "inicio";
+  if (s >= G.S.gira + G.S.B - innerHeight * .25) sec = "comisiones";
+  html.classList.toggle("en-com", sec === "comisiones");
   if (sec !== seccionActual){ seccionActual = sec; marcar(); }
 }
 let tPrev = 0;
@@ -1552,7 +1595,7 @@ function cuadro(now){
     renderer.render(escena, camara);
     moverZonas();
     document.getElementById("fichaEsq").style.opacity = Math.max(0, 1 - pVista / 140).toFixed(3);
-    marcarSeccion(pVista);
+    marcarSeccion(pVista); avanceFranja(pVista);
   }
   requestAnimationFrame(cuadro);
 }
@@ -1560,12 +1603,14 @@ function cuadro(now){
 /* ---------- Navegación de la cápsula ---------- */
 document.querySelectorAll(".pildora [data-s]").forEach(a => a.addEventListener("click", ev => {
   ev.preventDefault();
-  irA(a.dataset.s === "inicio" ? 0 : G.S.gira + G.marcas.ilu * G.k * G.ppw - innerHeight * .08);
+  const s = a.dataset.s; irA(s === "inicio" ? 0 : s === "comisiones" ? (G.S.gira + G.S.B) : G.S.gira + G.marcas.ilu * G.k * G.ppw - innerHeight * .08);
 }));
+/* el botón Comisiones (y cualquier enlace a #comisiones) baja hasta la sección; la caja hace su giro en el camino */
+document.addEventListener("click", e => { const a = e.target.closest('a[href="#comisiones"]'); if (!a || a.closest(".pildora")) return; e.preventDefault(); irA((G.S.gira + G.S.B)); });
 let viaje = 0;
 function irA(meta){
   if (reducido){ scrollTo(0, meta); return; }
-  const y0 = scrollY, d = meta - y0, D = Math.min(2200, Math.max(900, Math.abs(d) * .45)), t0 = performance.now(), id = ++viaje;
+  const y0 = scrollY, d = meta - y0, D = Math.min(2600, Math.max(900, Math.abs(d) * .45)), t0 = performance.now(), id = ++viaje;
   const curva = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
   (function paso(now){ if (id !== viaje) return; const k = Math.min(1, (now - t0) / D); scrollTo(0, y0 + d * curva(k)); if (k < 1) requestAnimationFrame(paso); })(t0);
 }
@@ -1574,7 +1619,8 @@ function irA(meta){
 /* ---------- Tamaño y arranque ---------- */
 function medirLienzo(){ renderer.setSize(innerWidth, innerHeight, false); }
 let rsT;
-addEventListener("resize", () => { clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel) construir(); resolver(); }, 150); });
+let anchoRs = innerWidth;
+addEventListener("resize", () => { const act = document.activeElement; if (innerWidth === anchoRs && act && act.classList && act.classList.contains("campo")) return; anchoRs = innerWidth; clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel) construir(); resolver(); }, 150); });
 async function iniciar(){
   await Promise.all([
     document.fonts.load(`900 100px "Fira Sans Extra Condensed"`), document.fonts.load(`600 100px "Fira Sans Extra Condensed"`),
