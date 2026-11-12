@@ -45,7 +45,11 @@ html.cargando,html.fijo{overflow:hidden}
 body{margin:0;color:#2a2a2b;background:var(--blanco5);font:16px/1.6 var(--texto)}
 /* fondo blanco granulado */
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.22;background-image:var(--grano-osc)}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.06))}
+/* luz de estudio: un foco suave detrás de la caja y las esquinas más oscuras, como un fondo de fotografía de producto */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:
+  radial-gradient(ellipse 58% 50% at 52% 46%,rgba(255,255,255,.78),rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 75%),
+  radial-gradient(ellipse 110% 90% at 50% 46%,rgba(0,0,0,0) 35%,rgba(40,38,36,.62) 100%),
+  linear-gradient(180deg,rgba(40,38,36,.22),rgba(40,38,36,0) 32%,rgba(40,38,36,0) 66%,rgba(40,38,36,.3))}
 img{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
@@ -1187,7 +1191,7 @@ function caracterSuelto(p, cx, cy, w, grados){
 function cara1(x, dib, alto, cel){
   const p = P(x, dib), M = 64, fs = cel ? 1.3 : 1;
   const T = 245; ["AGRIO", "ART"].forEach((l, i) => p.txt(l, M - 12, 34 + i * T * .82, `900 ${T}px ${FU.cond}`, COL.papel));
-  p.girar(790, 610, rad(-4), () => {
+  p.girar(610, 700, rad(-4), () => {   // la etiqueta de Cuidado, más a la izquierda y más abajo
     const w = 340, h = 160 * fs, [b1, b2] = div(t("k_bizarro"));
     x.globalAlpha = .6;
     p.marco(-w / 2, 0, w, h, COL.gris, 5); p.rectGrano(-w / 2, 0, w, 56 * fs, COL.gris);
@@ -1195,7 +1199,7 @@ function cara1(x, dib, alto, cel){
     p.txt(b1.toUpperCase(), 0, 76 * fs, `700 ${18 * fs}px ${FU.mono}`, COL.gris, "center"); p.txt(b2.toUpperCase(), 0, 104 * fs, `700 ${18 * fs}px ${FU.mono}`, COL.gris, "center");
     x.globalAlpha = 1;
   });
-  [.1, .3, .5, .7, .9].forEach((f, k) => p.estrella(f * 1000 - 20, 880 + (k % 2) * 46, 40 + (k % 3) * 8));
+  [[.14, 905, 48], [.88, 880, 40]].forEach(([f, yy, sz]) => p.estrella(f * 1000 - sz / 2, yy, sz));   // solo dos estrellas en la cara 1
   return [];
 }
 /* Parte 1 de la cara de al lado: el texto de las tandas e impresiones (solo texto, como ref11) y el botón de comisión. */
