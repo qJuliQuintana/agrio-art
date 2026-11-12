@@ -79,7 +79,7 @@ dialog{color-scheme:dark}
 .ca-btn .ico{width:16px;height:16px}
 .ca-n{min-width:18px;height:18px;padding:0 5px;background:var(--acento);color:#1C1C1D;font:700 11px/18px var(--mono);text-align:center}
 .ca-n[hidden]{display:none}
-.com-fijo{position:fixed;right:clamp(14px,2vw,28px);bottom:clamp(14px,2.4vh,26px);z-index:81;display:inline-flex;align-items:center;gap:10px;padding:14px 20px;border-radius:999px;background:#EC9AAE;color:#1C1C1D;font:800 14px/1 var(--texto);text-decoration:none;box-shadow:0 14px 30px -12px rgba(236,154,174,.75);transition:translate .2s,box-shadow .2s}
+.com-fijo{position:fixed;right:clamp(14px,2vw,28px);bottom:clamp(14px,2.4vh,26px);z-index:81;display:inline-flex;align-items:center;gap:10px;padding:14px 20px;border-radius:999px;background:#E68AA1;color:#1C1C1D;font:800 14px/1 var(--texto);text-decoration:none;box-shadow:0 14px 30px -12px rgba(236,154,174,.75);transition:translate .2s,box-shadow .2s}
 .com-fijo:hover{translate:0 -2px;box-shadow:0 18px 36px -12px rgba(236,154,174,.9)}
 .com-fijo i{font-style:normal;font-size:16px;transition:translate .2s}
 .com-fijo:hover i{translate:3px 0}
@@ -670,7 +670,7 @@ Object.assign(T.es, {
   
   k_tandas:"Esta es una galería donde lo agrio se vuelve divertido. Explora un universo de ilustraciones 100 % originales del autor o solicita con un encargo personalizado.",
   k_tandas_hl:"lo agrio", k_spec:"Arte digital|y análogo·Impresiones|firmadas·Comisiones|abiertas",
-  k_como:"¿Cómo puedes encargar una comisión?", k_b_comprar:"Comprar", k_b_separar:"Separar", k_b_en:"En carrito", k_c1:"Escoge el formato del caos|Selecciona si quieres solo un retrato, medio cuerpo o una escena completa con contexto.", k_c2:"Suelta tu idea|Dinos qué tienes en mente (entre más rara o específica sea la referencia, mejor).", k_c3:"Dale vida|Revisas el boceto inicial, pulimos detalles y te llevas una obra 100 % original hecha a tu medida.",
+  k_como:"¿Cómo puedes encargar una comisión?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Comprar", k_b_separar:"Separar", k_b_en:"En carrito", k_c1:"Escoge el formato del caos|Selecciona si quieres solo un retrato, medio cuerpo o una escena completa con contexto.", k_c2:"Suelta tu idea|Dinos qué tienes en mente (entre más rara o específica sea la referencia, mejor).", k_c3:"Dale vida|Revisas el boceto inicial, pulimos detalles y te llevas una obra 100 % original hecha a tu medida.",
    k_ilu:"Ilustraciones", 
   k_disp:"Disponible", k_agot:"Agotada", k_fragil2:"Frágil", k_arriba2:"Esta cara arriba"
 });
@@ -691,7 +691,7 @@ Object.assign(T.en, {
   
   k_tandas:"This is a gallery where the sour turns fun. Explore a universe of 100 % original illustrations by the artist or request a custom commission.",
   k_tandas_hl:"the sour", k_spec:"Digital and|analog art·Signed|prints·Commissions|open",
-  k_como:"How can you commission a piece?", k_b_comprar:"Buy", k_b_separar:"Reserve", k_b_en:"In cart", k_c1:"Pick your format of chaos|Choose just a portrait, half body or a full scene with context.", k_c2:"Drop your idea|Tell us what you have in mind (the weirder or more specific the reference, the better).", k_c3:"Bring it to life|You review the first sketch, we polish the details and you take home a 100 % original piece made to measure.",
+  k_como:"How can you commission a piece?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Buy", k_b_separar:"Reserve", k_b_en:"In cart", k_c1:"Pick your format of chaos|Choose just a portrait, half body or a full scene with context.", k_c2:"Drop your idea|Tell us what you have in mind (the weirder or more specific the reference, the better).", k_c3:"Bring it to life|You review the first sketch, we polish the details and you take home a 100 % original piece made to measure.",
    k_ilu:"Illustrations", 
   k_disp:"Available", k_agot:"Sold out", k_fragil2:"Fragile", k_arriba2:"This side up"
 });
@@ -1130,7 +1130,7 @@ async function cargarImagenes(){
 /* ---------- Impresión: maqueta en "lu" (1000 lu = ancho de la cara) ---------- */
 const FU = {cond:'"Fira Sans Extra Condensed", sans-serif', sans:'"Instrument Sans", sans-serif', mono:'"Instrument Sans", sans-serif', nun:'"Instrument Sans", sans-serif'};
 const TINTA_CAR = [169, 167, 162];
-const COL = {gris:"#A9A7A2", grisB:"#7d7b77", salmon:"#C6647E", papel:"#EDEBE6", tinta:"#1b1b1d"};
+const COL = {deco:"#A9A7A2", gris:"#E6E4DF", grisB:"#7d7b77", salmon:"#C6647E", papel:"#EDEBE6", tinta:"#1b1b1d"};
 const ESTRELLA = new Path2D("M8 0C8.6 5.4 10.6 7.4 16 8 10.6 8.6 8.6 10.6 8 16 7.4 10.6 5.4 8.6 0 8 5.4 7.4 7.4 5.4 8 0z");
 const FLECHAS = new Path2D("M5 26V10H0L8 0l8 10h-5v16zM23 26V10h-5l8-10 8 10h-5v16z");
 /* grano para estrellas y etiquetas: puntos del color con opacidad al azar */
@@ -1151,7 +1151,7 @@ function P(x, dib){
     rect(px, py, w, h, color){ if (dib){ x.fillStyle = color; x.fillRect(px, py, w, h); } },
     marco(px, py, w, h, color, lw){ if (dib){ x.strokeStyle = color; x.lineWidth = lw; x.strokeRect(px + lw / 2, py + lw / 2, w - lw, h - lw); } },
     ovalo(cx, cy, rx, ry, color, lw, rot = 0){ if (dib){ x.strokeStyle = color; x.lineWidth = lw; x.beginPath(); x.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2); x.stroke(); } },
-    estrella(px, py, s, color = COL.gris){ if (dib){ const pth = new Path2D(); pth.addPath(ESTRELLA, new DOMMatrix([s / 16, 0, 0, s / 16, px, py])); x.fillStyle = patronGrano(x, color); x.fill(pth); } },
+    estrella(px, py, s, color = COL.deco){ if (dib){ const pth = new Path2D(); pth.addPath(ESTRELLA, new DOMMatrix([s / 16, 0, 0, s / 16, px, py])); x.fillStyle = patronGrano(x, color); x.fill(pth); } },
     rectGrano(px, py, w, h, color){ if (dib){ x.fillStyle = patronGrano(x, color); x.fillRect(px, py, w, h); } },
     flechas(px, py, s, color){ if (dib){ x.save(); x.translate(px, py); x.scale(s / 34, s / 34); x.fillStyle = color; x.fill(FLECHAS); x.restore(); } },
     img(im, px, py, w, h){ if (dib && im) x.drawImage(im, px, py, w, h); },
@@ -1186,7 +1186,7 @@ function caracterSuelto(p, cx, cy, w, grados){
 }
 function cara1(x, dib, alto, cel){
   const p = P(x, dib), M = 64, fs = cel ? 1.3 : 1;
-  const T = 245; ["AGRIO", "ART"].forEach((l, i) => p.txt(l, M - 12, 34 + i * T * .82, `900 ${T}px ${FU.cond}`, COL.salmon));
+  const T = 245; ["AGRIO", "ART"].forEach((l, i) => p.txt(l, M - 12, 34 + i * T * .82, `900 ${T}px ${FU.cond}`, COL.papel));
   p.girar(790, 610, rad(-4), () => {
     const w = 340, h = 160 * fs, [b1, b2] = div(t("k_bizarro"));
     x.globalAlpha = .6;
@@ -1205,7 +1205,7 @@ function caraTandas(x, dib, cel){
   // título apilado, como "PEOPLE / BRAND / PLEASURE" en la referencia
   div(t("k_gal")).forEach(l => {
     const L = l.toUpperCase(); let sz = 200; while (sz > 60 && p.ancho(L, `900 ${sz}px ${FU.cond}`) > AN) sz -= 2;
-    p.txt(L, 500, y, `900 ${sz}px ${FU.cond}`, COL.salmon, "center"); y += sz * .86;
+    p.txt(L, 500, y, `900 ${sz}px ${FU.cond}`, COL.papel, "center"); y += sz * .86;
   });
   y += 70;
   [[.12, 30, 40], [.5, 0, 50], [.86, 40, 42]].forEach(([f, dy, sz]) => p.estrella(f * 1000 - sz / 2, y + dy, sz));
@@ -1244,7 +1244,7 @@ function caraTandas(x, dib, cel){
       xx += o.ww;
       if (icono && k === enHueco){
         const cx = xx + hueco + ancho / 2, cy = y + cy0, r = Math.min(ancho, PT) * .42;
-        p.estrella(cx - r, cy - r, r * 2, COL.gris);
+        p.estrella(cx - r, cy - r, r * 2, COL.deco);
         xx += ancho + hueco;
       }
       if (k < l.length - 1) xx += hueco;
@@ -1269,7 +1269,7 @@ function caraIlus(x, dib, cel){
   const p = P(x, dib), M = 60, AN = 1000 - 2 * M, fs = cel ? 1.5 : 1, zonas = [], marcas = {};
   let y = 70;
   marcas.ilu = 0;
-  const TI = cel ? 124 : 156; p.txt(t("k_ilu").toUpperCase(), 500, y, `900 ${TI}px ${FU.cond}`, COL.salmon, "center"); y += TI * .86 + 46;
+  const TI = cel ? 124 : 156; p.txt(t("k_ilu").toUpperCase(), 500, y, `900 ${TI}px ${FU.cond}`, COL.papel, "center"); y += TI * .86 + 46;
   // cómo encargar una comisión: la pregunta y tres pasos en columnas, más pequeños que el título y las obras
   const tc = 20 * fs, fc = `600 ${tc}px ${FU.sans}`; p.txt(t("k_como"), M, y, fc, COL.papel); y += tc + 18;
   const PC = cel ? 1 : 3, GC = 36, wc = (AN - (PC - 1) * GC) / PC, tl = 13 * fs, lh = tl * 1.45, fLead = `600 ${tl}px ${FU.sans}`, fCu = `400 ${tl}px ${FU.sans}`;
@@ -1288,7 +1288,7 @@ function caraIlus(x, dib, cel){
   const COLS = cel ? 2 : 3, G2 = 36, cw = (AN - (COLS - 1) * G2) / COLS, fh = cw * 1.22, f2 = fs * (cel ? .9 : 1), PI = 18 * f2;
   const capDe = font => { x.font = font; x.textBaseline = "alphabetic"; return x.measureText("H0").actualBoundingBoxAscent; };   // alto real de mayúsculas y cifras
   const escribe = (s, px, base, font, color, align = "left") => { x.font = font; const w = x.measureText(s).width; if (dib){ x.fillStyle = color; x.textAlign = align; x.textBaseline = "alphabetic"; x.fillText(s, px, base); } return w; };
-  const tz0 = 32 * f2, sq = 11 * f2, bh = 50 * f2, altoInfo = 14 + tz0 + 12 + sq * 1.3 + 18 + bh + PI, altoFicha = fh + altoInfo;
+  const tz0 = 32 * f2, fD = 14.5 * f2, lhD = fD * 1.42, bh = 50 * f2, altoInfo = 14 + tz0 + 10 + 3 * lhD + 16 + bh + PI, altoFicha = fh + altoInfo;
   for (let i0 = 0; i0 < OBRAS.length; i0 += COLS){
     const obras = OBRAS.slice(i0, i0 + COLS);
     let x0 = 500 - (obras.length * cw + (obras.length - 1) * G2) / 2;
@@ -1308,24 +1308,14 @@ function caraIlus(x, dib, cel){
         x.fillText([est, est, est, est].join("  ·  "), 0, 2 * f2); if ("letterSpacing" in x) x.letterSpacing = "0px";
         x.restore();
       }
-      if (disp){
-        let ef = 15 * f2; const fe = () => `700 ${ef}px ${FU.mono}`;
-        const eW = () => { const c = capDe(fe()); return 12 + c + 8 + p.ancho(est, fe()) + 9 + p.ancho(num, fe()) + 12; };
-        while (ef > 9 && eW() > cw - 24) ef -= .5;
-        const ex = x0 + 12, ey = y + 12, eh = ef * 2.2, ew = eW(), cap = capDe(fe()), cy = ey + eh / 2, base = cy + cap / 2;
-        p.rect(ex, ey, ew, eh, COL.papel); p.marco(ex, ey, ew, eh, COL.tinta, 2);
-        p.rect(ex + 12, cy - cap / 2, cap, cap, COL.salmon);   // el cuadrito mide lo mismo que las mayúsculas y comparte su centro
-        const tw = escribe(est, ex + 12 + cap + 8, base, fe(), COL.tinta);
-        escribe(num, ex + 12 + cap + 8 + tw + 9, base, fe(), COL.tinta);
-      }
       let yc = y + fh + 14;
       // título con menos peso, pegado a su imagen
       const tit = o.t[LANG].toUpperCase(); let tz = tz0; while (tz > 18 && p.ancho(tit, `600 ${tz}px ${FU.cond}`) > wi) tz -= .5;
-      p.txt(tit, xi, yc, `600 ${tz}px ${FU.cond}`, COL.salmon); yc += tz0 + 12;
-      // disponibilidad: los cuadritos y la cantidad, centrados en la misma línea
-      const pw = p.pila(xi, yc, o.stock, sq, "rgba(169,167,162,.3)"), fn = `700 ${14 * f2}px ${FU.mono}`;
-      escribe(num, xi + pw + 6, yc + sq * .65 + capDe(fn) / 2, fn, COL.gris);
-      yc += sq * 1.3 + 18;
+      p.txt(tit, xi, yc, `600 ${tz}px ${FU.cond}`, COL.papel); yc += tz0 + 10;
+      // descripción de la obra: máximo 3 líneas, con puntos suspensivos si no cabe
+      { const fdF = `400 ${fD}px ${FU.sans}`, desc = t("k_desc_ej"); let ls = p.envolver(desc, wi, fdF);
+        if (ls.length > 3){ ls = ls.slice(0, 3); let u = ls[2]; while (u.length && p.ancho(u + "…", fdF) > wi) u = u.slice(0, -1).trimEnd(); ls[2] = u + "…"; }
+        yc -= 2; ls.forEach((l, k) => p.txt(l, xi, yc + k * lhD, fdF, COL.gris)); yc += 3 * lhD + 16 + 2; }
       // precio y botón en la misma línea: es lo más importante de la ficha
       const lab = (disp ? (en ? t("k_b_en") : t("k_b_comprar")) : t("k_b_separar")).toUpperCase();
       const cifra = "$" + o.precio.toLocaleString("es-CO"); let pz = 26 * f2;
@@ -1334,7 +1324,7 @@ function caraIlus(x, dib, cel){
       const pW = anchoPrecio(), bx = xi + pW + 14, bw = xi + wi - bx, pf = `700 ${pz}px ${FU.sans}`, base = yc + bh / 2 + capDe(pf) / 2;
       const wc = escribe(cifra, xi, base, pf, COL.papel);
       escribe("COP", xi + wc + 5, base, `700 ${pz * .45}px ${FU.mono}`, COL.gris);
-      if (disp && !en) p.rect(bx, yc, bw, bh, COL.salmon); else if (disp) p.rect(bx, yc, bw, bh, COL.gris); else p.marco(bx, yc, bw, bh, COL.gris, 4);
+      if (disp && !en) p.rect(bx, yc, bw, bh, "#E68AA1"); else if (disp) p.rect(bx, yc, bw, bh, COL.gris); else p.marco(bx, yc, bw, bh, COL.gris, 4);
       let fb = 16 * f2; while (fb > 9 && p.ancho(lab, `700 ${fb}px ${FU.nun}`, 1) > bw - 16) fb -= .5;   // el texto siempre cabe en el botón
       const fbF = `700 ${fb}px ${FU.nun}`;
       if (dib && "letterSpacing" in x) x.letterSpacing = "1px";
@@ -1419,7 +1409,7 @@ function construir(){
   marcos[1] = mk(new THREE.Vector3(-F / 2, -r, Db / 2 + .7), 0);
   marcos[2] = mk(new THREE.Vector3(Wb / 2 + .7, -r, F / 2), Math.PI / 2);
   marcos[0] = mk(new THREE.Vector3(-F / 2, .7, -F / 2), 0, -Math.PI / 2);     // cara de arriba
-  pegatinaBorde(-6, -r - 185 * G.k, 150 * G.k, rad(7));
+  pegatinaBorde(-35, -r - 375 * G.k, 150 * G.k, rad(7));
   const grande = innerWidth * DPR >= 2000 && MAXTEX >= 4096;
   imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? 1024 : 1536);
   imprimirCara(marcos[2], x => cara2(x, true, cel), G.alto2, F, cel ? 1536 : (grande ? 2560 : 2048));
