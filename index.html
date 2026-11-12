@@ -205,7 +205,7 @@ select.zona.campo option{color:#1C1C1D;background:#F2F0EB}
 .zona.campo.falta{box-shadow:0 0 0 2px #ff8fa6}
 .zona.campo.falta::placeholder{color:#ff9db1}
 .zona.opcion[aria-pressed="true"]{box-shadow:0 0 0 2px #E68AA1;background:rgba(230,138,161,.16)}
-html.en-com html.en-com .com-fijo{opacity:0;pointer-events:none;translate:0 14px}
+html.en-com .com-fijo{opacity:0;pointer-events:none;translate:0 14px}
 .com-fijo{transition:translate .25s,box-shadow .2s,opacity .25s}
 /* ---------- (estilos que venían del modal, aún usados por las tarjetas y el formulario) ---------- */
 .modal{position:fixed;inset:0 0 0 auto;width:min(620px,100vw);height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#1D1D1F;color:var(--papel);overflow:auto;overscroll-behavior:contain}
@@ -442,7 +442,7 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
 /* ============ Datos (muestra: títulos, precios, formatos y unidades por confirmar con Nicolás) ============
    stock: unidades disponibles de la tanda actual de 5. color: el tono que más resalta de la ilustración,
    oscurecido y apagado para teñir el fondo sin competir con el salmón. */
-const WHATSAPP = "573028510223"; // sale de su bio en Instagram; por confirmar
+const WHATSAPP = "573028510223"; // confirmado por la usuaria el 2026-11-12
 const TANDA = 5;
 const OBRAS = [
   {id:"tigre", img:"img/tigre.jpg", foco:"50% 36%", precio:400000, stock:2, color:"#4A2A70",
@@ -473,7 +473,7 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  d_tec:"Técnica", d_fmt:"Formato", d_tanda:"Tanda actual",
  comprar:"Comprar ilustración", en_carrito:"En el carrito", separar:"Separar ilustración",
  com_pre:"Encargos personalizados", com_t:"Comisiones",
- com_intro:"Una ilustración hecha solo para ti, con el trazo de Agrio, en blanco y negro. Elige el tipo de encargo, cuéntame tu idea y la dibujamos juntos.",
+ com_intro:"Una ilustración hecha solo para ti, con el trazo de Agrio. Elige el tipo de encargo, cuéntame tu idea y la dibujamos juntos.",
  com_cta:"Empezar mi encargo", com_terms_cta:"Ver condiciones",
  cat_t:"Elige tu encargo", cat_sub:"Tres tamaños de historia. Entre más mundo, más tiempo de dibujo.", mas_pedido:"El más pedido",
  c1_n:"Busto", c1_q:"Retrato de cabeza y hombros con fondo sencillo. Ideal para un avatar, un regalo o tu propio monstruo.", c1_a:"Una persona o personaje", c1_b:"Fondo plano o con textura", c1_p:"Desde $250.000", c1_d:"1 a 2 semanas",
@@ -504,7 +504,7 @@ en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_
  d_tec:"Technique", d_fmt:"Format", d_tanda:"Current batch",
  comprar:"Buy illustration", en_carrito:"In your cart", separar:"Reserve illustration",
  com_pre:"Custom work", com_t:"Commissions",
- com_intro:"An illustration made just for you, in Agrio's black-and-white line. Pick the kind of piece, tell me your idea and we'll draw it together.",
+ com_intro:"An illustration made just for you, in Agrio's line. Pick the kind of piece, tell me your idea and we'll draw it together.",
  com_cta:"Start my commission", com_terms_cta:"See the terms",
  cat_t:"Pick your commission", cat_sub:"Three sizes of story. The more world, the more drawing time.", mas_pedido:"Most requested",
  c1_n:"Bust", c1_q:"Head and shoulders portrait with a simple background. Great for an avatar, a gift or your own monster.", c1_a:"One person or character", c1_b:"Plain or textured background", c1_p:"From $250.000", c1_d:"1 to 2 weeks",
@@ -876,14 +876,16 @@ let cajaLista = null;
 const cajaPromesa = new Promise(r => { cajaLista = r; });
 async function cargar(){
   const sin = reducido || new URLSearchParams(location.search).has("sinintro");
-  let n = 0; const t0 = performance.now();
-  const poner = v => { n = Math.max(n, v); $("#cargaN").textContent = Math.round(n); $("#cargaB").style.setProperty("--p", n + "%"); $("#carga").setAttribute("aria-valuenow", Math.round(n)); };
-  const lento = setInterval(() => poner(Math.min(88, n + (90 - n) * .06)), 120);   // avanza solo mientras se arma la caja
-  await Promise.race([cajaPromesa, espera(15000)]);
-  clearInterval(lento);
-  if (!sin){ const falta = 1400 - (performance.now() - t0); if (falta > 0) await espera(falta); }
-  poner(100);
-  if (!sin){ await espera(280); $("#carga").classList.add("apaga"); await espera(650); }
+  let n = 0, lista = false; const t0 = performance.now(), D = sin ? 1 : 3200;
+  const poner = v => { n = Math.max(n, v); $("#cargaN").textContent = Math.round(n); $("#cargaB").style.setProperty("--p", n.toFixed(2) + "%"); $("#carga").setAttribute("aria-valuenow", Math.round(n)); };
+  Promise.race([cajaPromesa, espera(15000)]).then(() => { lista = true; });
+  // se llena de abajo hacia arriba en 3,2 s con un movimiento suave; si la caja aún no está lista, espera en 94 %
+  await new Promise(fin => { (function paso(ahora){
+    const k = Math.min(1, (ahora - t0) / D), v = (k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2) * 100;
+    poner(lista ? v : Math.min(v, 94));
+    if (k >= 1 && lista){ poner(100); fin(); } else requestAnimationFrame(paso);
+  })(t0); });
+  if (!sin){ await espera(180); $("#carga").classList.add("apaga"); await espera(650); }
   $("#carga").classList.add("fuera"); html.classList.remove("cargando");
   setTimeout(() => $("#carga").remove(), 900);
   if (window.caja3d) window.caja3d.entrar(sin);
@@ -1205,20 +1207,19 @@ function caraFranja(x, dib, cel){
   const lista = [];
   const panel = (w, fondo, contenido, despues) => { const r = {x:xx, w, fondo, contenido, despues}; lista.push(r); xx += w + GP; n++; return r; };
   const lineas = (txt, xi, y, wi, font, color, lh, d) => { p.envolver(txt, wi, font).forEach(l => { if (d) p.txt(l, xi, y, font, color); y += lh; }); return y; };
-  // 1. presentación
-  panel(cel ? 870 : 560 * U, "#28282a", (xi, y, wi, d) => {
-    if (d) p.txt(t("com_pre").toUpperCase(), xi, y, `800 ${11 * U}px ${FU.sans}`, COL.salmon, "left", 3 * U); y += 34 * U;
-    const T = t("com_t").toUpperCase(); let tz = 150 * U; while (tz > 40 && p.ancho(T, `900 ${tz}px ${FU.cond}`) > wi) tz -= 2;
-    if (d) p.txt(T, xi - tz * .03, y, `900 ${tz}px ${FU.cond}`, COL.papel); y += tz * .86 + 18 * U;
-    return lineas(t("com_intro"), xi, y, wi, `400 ${15 * U}px ${FU.sans}`, COL.gris, 22.5 * U, d);
-  });
-  // 2. cómo encargar
-  panel(cel ? 870 : 390 * U, "#28282a", (xi, y, wi, d) => {
-    y = lineas(t("k_como"), xi, y + 6 * U, wi, `600 ${20 * U}px ${FU.sans}`, COL.papel, 24 * U, d) + 20 * U;
-    const tl = 13.5 * U, lh = tl * 1.45, fL = `600 ${tl}px ${FU.sans}`, fC = `400 ${tl}px ${FU.sans}`, wn = 24 * U;
-    [1, 2, 3].forEach(k => { const [lead, cu] = t("k_c" + k).split("|"); if (d) p.txt(k + ".", xi, y, fL, COL.salmon);
-      y = lineas(lead, xi + wn, y, wi - wn, fL, COL.papel, lh, d); y = lineas(cu, xi + wn, y, wi - wn, fC, COL.gris, lh, d) + 14 * U; });
-    return lineas(t("k_ref_com"), xi, y + 6 * U, wi, `400 ${11.5 * U}px ${FU.sans}`, COL.deco, 11.5 * U * 1.45, d);
+  // 1. COMISIONES grande y centrado, y debajo sus reglas en tres columnas (igual que ILUSTRACIONES y sus pasos de compra); sin recuadro
+  panel(cel ? 870 : 860, null, (xi, y, wi, d) => {
+    const T = t("com_t").toUpperCase(); let tz = (cel ? 124 : 150) * (cel ? 2.6 : U); while (tz > 40 && p.ancho(T, `900 ${tz}px ${FU.cond}`) > wi) tz -= 2;
+    if (d) p.txt(T, xi + wi / 2, y, `900 ${tz}px ${FU.cond}`, COL.papel, "center"); y += tz * .86 + 40 * U;
+    y = lineas(t("k_como"), xi, y, wi, `600 ${20 * U}px ${FU.sans}`, COL.papel, 24 * U, d) + 16 * U;
+    const PC = cel ? 1 : 3, GC = 32 * U, wc = (wi - (PC - 1) * GC) / PC, tl = 13 * U, lh = tl * 1.45, fL = `600 ${tl}px ${FU.sans}`, fC = `400 ${tl}px ${FU.sans}`;
+    let yF = y, altoF = 0;
+    [1, 2, 3].forEach((k, i) => { const [lead, cu] = t("k_c" + k).split("|"), col = i % PC, xc = xi + col * (wc + GC);
+      if (col === 0 && i){ yF += altoF + 12 * U; altoF = 0; }
+      let yy = yF; const wn = p.ancho(k + ".", fL) + 8 * U; if (d) p.txt(k + ".", xc, yy, fL, COL.salmon);
+      yy = lineas(lead, xc + wn, yy, wc - wn, fL, COL.papel, lh, d); yy = lineas(cu, xc + wn, yy, wc - wn, fC, COL.gris, lh, d);
+      altoF = Math.max(altoF, yy - yF); });
+    return lineas(t("k_ref_com"), xi, yF + altoF + 14 * U, wi, `400 ${11.5 * U}px ${FU.sans}`, COL.deco, 11.5 * U * 1.45, d);
   });
   // 3 a 5. los tres encargos: cortos (el precio va justo después del texto) y cada uno en un gris distinto
   const GRISES = ["#2e2e31", "#3c3c40", "#4b4b50"];
@@ -1269,16 +1270,35 @@ function caraFranja(x, dib, cel){
     formX = r.x;
     panel(870, null, (xi, y, wi, d) => { y = campo("specs", xi, y, wi, 170 * U, t("f_specs"), d); y = opciones(xi, y, wi, d); return enviar(xi, y, wi, d); });
   }
-  const altoMax = Math.max(...lista.map(r => r.contenido(r.x + PAD, PAD, r.w - 2 * PAD, false) + PAD)), disp = Hf - top - 70 / pxLu;
+  const altoMax = Math.max(...lista.map(r => r.contenido(r.x + PAD, PAD, r.w - 2 * PAD, false) + PAD)), disp = Hf - top - 84 / pxLu;   // abajo queda el pie fijo
   const fila = top + Math.max(0, (disp - altoMax) / 2);
   lista.forEach(r => { r.y = fila; r.h = r.contenido(r.x + PAD, fila + PAD, r.w - 2 * PAD, false) - fila + PAD;
     if (r.fondo) p.rect(r.x, fila, r.w, r.h, r.fondo); r.contenido(r.x + PAD, fila + PAD, r.w - 2 * PAD, true); if (r.despues) r.despues(r); });
   // la franja termina justo donde termina el último panel, para que al final quede de borde a borde
   const fin = xx - GP, ancho = Math.max(1000, fin + 70);
-  // crédito: abajo a la derecha de la última vista
-  { const fc = `500 ${13 * U}px ${FU.sans}`, lh = 24 * U, lw = REM_LOGO ? lh * REM_LOGO.width / REM_LOGO.height : 0, tw = p.ancho(t("pie_diseno"), fc), x0 = ancho - 500 - (tw + 12 * U + lw) / 2, yC = Hf - (cel ? 40 : 28) / pxLu - lh;   // centrado abajo de la pantalla al final del recorrido
-    p.txt(t("pie_diseno"), x0, yC + (lh - 13 * U) / 2 - 1, fc, COL.gris); if (REM_LOGO) p.img(REM_LOGO, x0 + tw + 12 * U, yC, lw, lh); }
   return {ancho, alto:Hf, zonas, n, formX};
+}
+/* pie fijo de comisiones (no se desliza): Instagram y WhatsApp a la izquierda, "Diseñado por" pequeño a la derecha */
+const IG_URL = "https://www.instagram.com/agrioink/";
+function caraPie(x, dib, cel){
+  const p = P(x, dib), {pxLu, Hf, U} = franjaMedidas(cel), zonas = [], f = (cel ? 11 : 12) / pxLu, fz = `600 ${f}px ${FU.sans}`, col = COL.gris, ic = f * 1.25;
+  const filas = cel ? 2 : 1, alto = (filas * 34) / pxLu, y0 = Hf - alto - (cel ? 18 : 14) / pxLu;
+  const yA = y0 + (cel ? 0 : (alto - ic) / 2), M = 70;
+  const icIG = (px, py) => { if (!dib) return; x.save(); x.strokeStyle = col; x.lineWidth = ic * .1; const r = ic * .28;
+    x.beginPath(); x.roundRect ? x.roundRect(px, py, ic, ic, r) : x.rect(px, py, ic, ic); x.stroke(); x.beginPath(); x.arc(px + ic / 2, py + ic / 2, ic * .24, 0, 7); x.stroke();
+    x.fillStyle = col; x.beginPath(); x.arc(px + ic * .76, py + ic * .24, ic * .07, 0, 7); x.fill(); x.restore(); };
+  const icWA = (px, py) => { if (!dib) return; x.save(); x.strokeStyle = col; x.lineWidth = ic * .1; const cx = px + ic / 2, cy = py + ic / 2, r = ic * .44;
+    x.beginPath(); x.arc(cx, cy, r, Math.PI * .72, Math.PI * .62 + Math.PI * 2); x.lineTo(px + ic * .06, py + ic * .98); x.closePath(); x.stroke();
+    x.lineWidth = ic * .11; x.beginPath(); x.moveTo(cx - r * .38, cy - r * .32); x.quadraticCurveTo(cx - r * .3, cy + r * .4, cx + r * .4, cy + r * .36); x.stroke(); x.restore(); };
+  const enlace = (ico, txt, href, px, py, etq) => { ico(px, py); const w = p.txt(txt, px + ic + 9 / pxLu, py + (ic - f) / 2 - .5 / pxLu, fz, col);
+    const ancho = ic + 9 / pxLu + w; zonas.push({tipo:"enlace", href, x:px - 6 / pxLu, y:py - 8 / pxLu, w:ancho + 12 / pxLu, h:ic + 16 / pxLu, etq}); return ancho; };
+  const wIG = enlace(icIG, "@AgrioInk", IG_URL, M, yA, "Instagram @AgrioInk");
+  if (cel) enlace(icWA, "+57 302 851 0223", "wa", 1000 - M - (ic + 9 / pxLu + p.ancho("+57 302 851 0223", fz)), yA, "WhatsApp +57 302 851 0223");
+  else enlace(icWA, "+57 302 851 0223", "wa", M + wIG + 34 / pxLu, yA, "WhatsApp +57 302 851 0223");
+  // crédito: pequeño, a la derecha
+  { const fc = `500 ${f * .9}px ${FU.sans}`, lh = ic * 1.05, lw = REM_LOGO ? lh * REM_LOGO.width / REM_LOGO.height : 0, tw = p.ancho(t("pie_diseno"), fc), xC = 1000 - M - (tw + 8 / pxLu + lw), yC = cel ? yA + 30 / pxLu : yA + (ic - lh) / 2;
+    p.txt(t("pie_diseno"), xC, yC + (lh - f * .9) / 2 - .5 / pxLu, fc, COL.deco); if (REM_LOGO) p.img(REM_LOGO, xC + tw + 8 / pxLu, yC, lw, lh); }
+  return {zonas, y0, alto:Hf - y0};
 }
 function caraIlus(x, dib, cel){
   const p = P(x, dib), M = 60, AN = 1000 - 2 * M, fs = cel ? 1.5 : 1, zonas = [], marcas = {};
@@ -1371,8 +1391,8 @@ function relieve(wMundo, hMundo){
   if (KRAFT_BUMP){ const kb = KRAFT_BUMP.clone(); kb.needsUpdate = true; kb.repeat.set(wMundo / G.Wb, hMundo / (G.Wb * 675 / 435)); recursos.push(kb); return {bumpMap:kb, bumpScale:4}; }
   const nrm = ARRUGAS.clone(); nrm.needsUpdate = true; nrm.repeat.set(wMundo / (G.Wb / 1.1), hMundo / (G.Wb / 1.1)); recursos.push(nrm); return {normalMap:nrm, normalScale:new THREE.Vector2(.85, .85)};
 }
-function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s){
-  const grupo = new THREE.Group(); marco.add(grupo); G.franjaG = grupo;
+function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s, fijo){
+  const grupo = new THREE.Group(); marco.add(grupo); if (!fijo) G.franjaG = grupo;
   const tLU = Math.min(2048, MAXTEX) / s, k = G.k;
   for (let x0 = 0; x0 < anchoLU; x0 += tLU) for (let y1 = 0; y1 < altoLU; y1 += tLU){
     const wLU = Math.min(tLU, anchoLU - x0), hLU = Math.min(tLU, altoLU - y1);
@@ -1468,7 +1488,8 @@ function construir(){
   imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? 1536 : (grande ? 2560 : 2048));
   imprimirCara(marcos[2], x => cara2(x, true, cel), G.alto2, F, cel ? 1536 : (grande ? 2560 : 2048));
   imprimirFranja(marcos[2], x => caraFranja(x, true, cel), G.alto2, G.Wf, G.Hf, Math.min(3, Math.max(1, DPR * innerWidth / 1000)));
-  G.zonas = m2.zonas.map(z => ({...z, cara:2})).concat(mF.zonas.map(z => ({...z, y:z.y + G.alto2, cara:2, franja:true})));
+  const mP = caraPie(med, false, cel); imprimirFranja(marcos[2], x => { x.translate(0, -mP.y0); caraPie(x, true, cel); }, G.alto2 + mP.y0, 1000, mP.alto, Math.min(3, Math.max(1, DPR * innerWidth / 1000)), true);
+  G.zonas = m2.zonas.map(z => ({...z, cara:2})).concat(mF.zonas.map(z => ({...z, y:z.y + G.alto2, cara:2, franja:true}))).concat(caraPie(med, false, cel).zonas.map(z => ({...z, y:z.y + G.alto2, cara:2})));
   armarZonas();
 }
 
@@ -1504,6 +1525,7 @@ capa.addEventListener("click", e => {
   else if (z.tipo === "cat"){ FORM.encuadre = String(z.n); G.zonas.forEach(q => { if (q.campo === "encuadre" && q.el) q.el.value = FORM.encuadre; }); irA(G.S.gira + G.S.B + G.S.T + G.S.formH); }
   else if (z.tipo === "opcion"){ FORM.formato = z.valor; G.zonas.forEach(q => { if (q.tipo === "opcion" && q.el) q.el.setAttribute("aria-pressed", String(q.valor === z.valor)); }); }
   else if (z.tipo === "enviar") enviarSolicitud();
+  else if (z.tipo === "enlace") window.open(z.href === "wa" ? waURL(t("wa_hola")) : z.href, "_blank", "noopener");
 });
 const v3 = new THREE.Vector3(), nv = new THREE.Vector3(), cpos = new THREE.Vector3();
 function proyectar(v){ v3.copy(v).project(camara); return [(v3.x + 1) / 2 * innerWidth, (1 - v3.y) / 2 * innerHeight, v3.z]; }
