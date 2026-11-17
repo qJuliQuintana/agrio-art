@@ -1260,14 +1260,7 @@ function caracterSuelto(p, cx, cy, w, grados){
 function cara1(x, dib, alto, cel){
   const p = P(x, dib), M = 64, fs = cel ? 1.3 : 1;
   const T = 245; ["AGRIO", "ART"].forEach((l, i) => p.txt(l, M - 12, 34 + i * T * .82, `900 ${T}px ${FU.cond}`, COL.papel));
-  p.girar(610, 700, rad(-4), () => {   // la etiqueta de Cuidado, más a la izquierda y más abajo
-    const w = 340, h = 160 * fs, [b1, b2] = div(t("k_bizarro"));
-    x.globalAlpha = .6;
-    p.marco(-w / 2, 0, w, h, COL.gris, 5); p.rectGrano(-w / 2, 0, w, 56 * fs, COL.gris);
-    p.txt("⚠ " + t("k_cuidado").toUpperCase(), 0, 13 * fs, `900 ${34 * fs}px ${FU.cond}`, COL.tinta, "center", 3);
-    p.txt(b1.toUpperCase(), 0, 76 * fs, `700 ${18 * fs}px ${FU.mono}`, COL.gris, "center"); p.txt(b2.toUpperCase(), 0, 104 * fs, `700 ${18 * fs}px ${FU.mono}`, COL.gris, "center");
-    x.globalAlpha = 1;
-  });
+  caracterSuelto(p, 600, 790, 230, 6);   // el carácter, donde antes iba la etiqueta de Cuidado
   [[.14, 905, 48], [.88, 880, 40]].forEach(([f, yy, sz]) => p.estrella(f * 1000 - sz / 2, yy, sz));   // solo dos estrellas en la cara 1
   return [];
 }
@@ -1540,7 +1533,7 @@ function armarComisiones(oculto){
     COM.interior = {mesh, alto}; }
   // el fondo: un canto alrededor de la abertura y cuatro hojas con bisagra (las de adelante y atrás por fuera)
   const tapas = new THREE.Group(); caja.add(tapas); COM.tapas = tapas; COM.hojas = [];
-  const mc = matCarton(1, .32);
+  const mc = matCarton(1, .32); mc.color.setHex(0x141416);   // las hojas, del mismo negro que la caja aunque les dé la luz
   [[2 * RIM + 8, 10, 9, 0, 6, RIM], [2 * RIM + 8, 10, 9, 0, 6, -RIM], [9, 10, 2 * RIM + 8, RIM, 6, 0], [9, 10, 2 * RIM + 8, -RIM, 6, 0]].forEach(([a, b, c, px, py, pz]) => {
     const geo = new THREE.BoxGeometry(a, b, c); recursos.push(geo); const m = new THREE.Mesh(geo, mc); m.position.set(px, py, pz); tapas.add(m); });
   [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(2 * RIM - 2, 5, HOJA); recursos.push(geo);
@@ -1549,7 +1542,7 @@ function armarComisiones(oculto){
     const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); });
   // los tres marcos: iguales, profundos y redondeados como la caja; caen al piso, debajo de ella
   COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = [];
-  COM.piso = -Hb - 1350;
+  COM.piso = -Hb - 1750;
   const carr = G.carrusel, mm = matCarton(.35, .35, .22), gap = carr ? 50 : 90, total = ENCARGOS.reduce((a, e) => a + e.w, 0) + gap * 2;
   let xx = -total / 2;
   ENCARGOS.forEach((e, i) => {
@@ -1563,12 +1556,13 @@ function armarComisiones(oculto){
     const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; sombra.scale.set(w * 1.2, 190, 1); recursos.push(sg, sm);
     COM.grupo.add(g, sombra);
     const fin = new THREE.Vector3(xx + w / 2, COM.piso + h / 2, 200); xx += w + gap;
-    const ini = [new THREE.Vector3(-200, -Hb + 380, -110), new THREE.Vector3(10, -Hb + 560, 70), new THREE.Vector3(220, -Hb + 300, -30)][i];   // adentro del cubo (su fondo está en -Hb)
-    const giro = [[1.25, .55, .35], [-1.05, -.35, -.25], [1.45, .85, -.45]][i];
-    COM.marcos.push({g, sombra, e, fin, ini, giro, u:0, dur:.7});
+    const ini = new THREE.Vector3(0, -Hb + 290, [250, -250, 0][i]);   // de pie dentro de la caja, lejos de las paredes (su fondo está en -Hb)
+    const giro = [.09, -.11, .08][i];
+    const ky = (ini.y + Hb + h / 2 + 24) / (ini.y - fin.y), uSal = .8 * Math.sqrt(ky);   // cuándo sale del todo por la abertura
+    COM.marcos.push({g, sombra, e, fin, ini, giro, uSal, u:0, t0:0, dur:.5});
   });
-  // salen los tres a la vez; cada uno "pesa" distinto, así no aterrizan juntos
-  [1, .8, 1.16].forEach((k, i) => { COM.marcos[i].dur = .62 * k; });
+  // salen uno tras otro: el del centro, el de la izquierda y el de la derecha (caen tan abajo que no se cruzan)
+  COM.marcos.forEach((m, i) => { m.t0 = [.22, .02, .42][i]; m.dur = [.5, .46, .5][i]; });
   COM.paso = COM.marcos[1].fin.x - COM.marcos[0].fin.x;
   armarPlacas();
 }
@@ -1662,7 +1656,6 @@ function construir(){
   marcos[1] = mk(new THREE.Vector3(-F / 2, -r, Db / 2 + .7), 0);
   marcos[2] = mk(new THREE.Vector3(Wb / 2 + .7, -r, F / 2), Math.PI / 2);
   marcos[0] = mk(new THREE.Vector3(-F / 2, .7, -F / 2), 0, -Math.PI / 2);     // cara de arriba
-  pegatinaBorde(-35, -r - 375 * G.k, 150 * G.k, rad(7));
   const grande = innerWidth * DPR >= 2000 && MAXTEX >= 4096;
   const texCel = navigator.deviceMemory && navigator.deviceMemory < 4 ? 1536 : 2048;   // en el celular, más resolución para que el texto aguante el zoom con los dedos
   imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? texCel : (grande ? 2560 : 2048));
@@ -1828,12 +1821,7 @@ function resolver(){
   html.classList.toggle("modo-abajo", G.modo === "abajo"); html.classList.toggle("modo-lado", G.modo === "lado"); html.classList.toggle("com-columna", G.carrusel);
   const pw = Math.round(Math.min(460, Math.max(360, vw * .34))); html.style.setProperty("--pw", pw + "px"); colocarPie();
   const abajo = G.modo === "abajo", carr = G.carrusel, placaH = abajo ? 44 : 54, cabH = abajo ? 70 : 84, puntosH = carr ? 28 : 0;
-  const Hb = G.Hb, ry = -58, eje = new THREE.Vector3(0, 1, 0);
-  const ptsA = () => { const L = [], giro = caja.rotation.y;
-    [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([a, b]) => { L.push(new THREE.Vector3(a * 500, -Hb + 9, b * 500)); L.push(new THREE.Vector3(a * 500, -Hb + G.Wb, b * 500)); });
-    [[0, 1], [0, -1], [1, 0], [-1, 0]].forEach(([a, b]) => { L.push(new THREE.Vector3(a ? a * 660 : -RIM, -Hb - 440, b ? b * 660 : -RIM)); L.push(new THREE.Vector3(a ? a * 660 : RIM, -Hb - 440, b ? b * 660 : RIM)); });
-    return L.map(v => v.applyAxisAngle(eje, giro)); };
-  const PA = encajar({ry, pitch:rad(26), roll:0, x:0, y:-Hb - 600, z:P0.z}, ptsA, abajo ? [vw * .1, vw * .9, vh * .16, vh * .84] : [vw * .32, vw * .68, vh * .14, vh * .86]);
+  const Hb = G.Hb, ry = PF.ry;
   // los marcos ya posados (girados de tres cuartos), con sus 8 esquinas
   const posar = m => { m.g.position.copy(m.fin); m.g.rotation.set(-.04, GIRO_M, 0); m.g.updateMatrixWorld(true); };
   const pts = ms => () => { const L = []; ms.forEach(m => { posar(m); const {w, h} = m.e; for (const a of [-1, 1]) for (const b of [-1, 1]) for (const c of [-1, 1]) L.push(m.g.localToWorld(new THREE.Vector3(a * w / 2, b * h / 2, c * PR / 2))); }); return L; };
@@ -1857,16 +1845,21 @@ function resolver(){
   // tamaño de diseño del texto de los detalles: el de la ventana del marco, de frente, con el panel abierto
   { ponerPose(PMp); const m0 = COM.marcos[0], a = proyectar(m0.fin), b = proyectar(m0.fin.clone().add(new THREE.Vector3(100, 0, 0))), k = Math.abs(b[0] - a[0]) / 100;
     G.detW = Math.round((m0.e.w - 2 * MOL - 2 * MAT) * k); G.detH = Math.round((m0.e.h - 2 * MOL - MAT - MATB) * k); }
-  Object.assign(G.poses, {PA, PM, PMf:PM, PMp}); G.placaH = placaH; G.puntosH = puntosH;
+  // al abrirse: la misma caja, la cámara un poco más abajo y más lejos, con el fondo de la caja arriba y el piso a la vista
+  const PA = {ry, pitch:lerp(PF.pitch, PM.pitch, .5), roll:0, x:PF.x, y:PF.y, z:carr ? PF.z * Math.pow(PM.z / PF.z, .6) * 1.5 : PF.z};   // en computador la caja no se aleja
+  { ponerPose(PA); const fondo = [[1, 1], [1, -1], [-1, 1], [-1, -1]].map(([a, b]) => caja.localToWorld(new THREE.Vector3(a * G.Wb / 2, -Hb, b * G.Db / 2)));
+    centrarX(PA, () => fondo, vw / 2); alinearY(PA, caja.localToWorld(new THREE.Vector3(G.Wb / 2, -Hb, 0)), vh * (abajo ? .24 : .22)); }
+  const PB = carr ? null : alinearY({...PA, x:0, pitch:PM.pitch}, COM.marcos[1].fin, vh * .52);   // computador: el marco del centro, a la misma distancia
+  Object.assign(G.poses, {PA, PB, PM, PMf:PM, PMp}); G.placaH = placaH; G.puntosH = puntosH;
   ajustarDetalles();
-  G.S.R = 0; G.S.A = vh * 1.3; G.S.C = vh * 1.5; G.S.D = vh * .7;
+  G.S.R = 0; G.S.A = vh * .8; G.S.C = vh * 1.7; G.S.D = vh * .7;
   G.S.com = G.S.gira + G.S.B; G.S.marcos = G.S.com + G.S.A + G.S.C; G.S.fin = G.S.marcos + G.S.D;
   document.getElementById("inicio").style.height = (G.S.fin + vh) + "px";
 }
 /* largo visible de la caja: en el celular arranca en un cubo (alto = ancho) y llega a su largo completo al terminar el giro.
    Se mueven los vértices de abajo (las esquinas redondeadas no se deforman) y lo impreso se corta a esa altura. */
 function ajustarLargo(s){
-  const {Hb, Wb, r} = G, m = G.morf, kS = G.S.A ? suave3(Math.max(0, Math.min(1, (s - G.S.com) / (G.S.A * .4)))) : 0;
+  const {Hb, Wb, r} = G, m = G.morf, kS = 0;
   let L = G.cubo ? lerp(Math.min(Wb, Hb), Hb, suave3(Math.min(1, s / (G.S.gira * .9)))) : Hb;
   if (kS > 0) L = lerp(L, Math.min(Wb, Hb), kS);   // al abrirse, la caja vuelve a ser un cubo: baja su parte de arriba y el fondo se queda en su sitio
   caja.position.y = kS > 0 ? -(Hb - L) : 0;
@@ -1885,6 +1878,7 @@ function ajustarLargo(s){
   CORTE_L.constant = m && L < Hb - .5 ? L - r - 2 : 1e9; caja.updateMatrixWorld(); CORTE_W.copy(CORTE_L).applyMatrix4(caja.matrixWorld);
   VEN_DL.constant = 1000 * G.k; VEN_I.copy(VEN_IL).applyMatrix4(marcos[2].matrixWorld); VEN_D.copy(VEN_DL).applyMatrix4(marcos[2].matrixWorld);
 }
+function hermite(t, p0, p1, m0, m1){ const t2 = t * t, t3 = t2 * t; return (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1; }
 function mezcla(p, q, k){ return {ry:lerp(p.ry, q.ry, k), pitch:lerp(p.pitch, q.pitch, k), roll:lerp(p.roll, q.roll, k), x:lerp(p.x, q.x, k), y:lerp(p.y, q.y, k), z:p.z * Math.pow(q.z / p.z, k)}; }
 
 /* ---------- El recorrido con el scroll, con inercia: gira 180° pasando por la cara 2 y baja por la cara 3 ---------- */
@@ -1903,8 +1897,17 @@ function poseActual(s){
   } else {
     const px = s - S.gira;
     if (px <= S.B){ const b = px / S.B; q = {ry:lerp(P2.ry, PF.ry, b), pitch:P2.pitch, roll:lerp(P2.roll, PF.roll, b), x:lerp(P2.x, PF.x, b), z:P2.z, y:P2.y - px / G.ppw}; }   // baja por la cara 2
-    else if (px <= S.B + S.A) q = mezcla(PF, G.poses.PA, suave3(Math.min(1, (px - S.B) / (S.A * .85))));   // se aleja y mira el fondo de la caja
-    else if (px <= S.B + S.A + S.C) q = mezcla(G.poses.PA, G.poses.PM, suave3(Math.min(1, (px - S.B - S.A) / (S.C * .8))));   // baja con los marcos
+    else if (px <= S.B + S.A + S.C){   // sigue bajando sin detenerse: se abre el fondo y salen los marcos
+      const {PA, PM} = G.poses, p = px - S.B, T1 = S.A + S.C * .35, T2 = S.C * .55;
+      const lim = (v, d) => Math.sign(v) * Math.min(Math.abs(v), 2.6 * Math.abs(d));
+      const PB = G.poses.PB, Y2 = PB ? PB.y : PM.y, T2b = PB ? T2 * .5 : T2, vPA = Math.min(0, (Y2 - PA.y) / T2b * .9);   // velocidad (unidades por px) al pasar por PA
+      if (p <= T1){ const t = p / T1; q = mezcla(PF, PA, suave3(t)); q.y = hermite(t, PF.y, PA.y, lim(-T1 / G.ppw, PA.y - PF.y), lim(vPA * T1, PA.y - PF.y)); }
+      else if (p <= T1 + T2){ const t = (p - T1) / T2;
+        if (PB){ if (t < .5){ const k = t / .5; q = mezcla(PA, PB, suave3(k)); q.y = hermite(k, PA.y, PB.y, lim(vPA * T2b, PB.y - PA.y), 0); }   // computador: baja a la misma distancia hasta el marco del centro
+          else q = mezcla(PB, PM, suave3((t - .5) / .5)); }   // y ahí, con la caja ya fuera de la pantalla, se aleja para mostrar los tres
+        else { q = mezcla(PA, PM, suave3(t)); q.y = hermite(t, PA.y, PM.y, lim(vPA * T2, PM.y - PA.y), 0); } }
+      else q = {...PM};
+    }
     else q = mezcla(G.poses.PM, G.poses.PMp, suaveIO(Math.min(1, (px - S.B - S.A - S.C) / S.D)));   // deja sitio al panel
     if (G.carrusel && px > S.B + S.A) q.x += COM.carr * COM.paso * suave3(Math.min(1, (px - S.B - S.A) / (S.C * .8)));   // el carrusel
   }
@@ -1937,19 +1940,17 @@ function animarCom(s){
   // cerrada, la caja tiene su fondo de siempre; las hojas y el interior solo existen mientras se abre (ya como cubo)
   const abierta = a > .43; COM.tapas.visible = COM.interior.mesh.visible = abierta; COM.cuerpo.material[3] = abierta ? COM.oculto : COM.matCuerpo;
   // las hojas: primero las de afuera, luego las de adentro
-  COM.hojas.forEach(h => { const k = salida(pinza((a - (h.ext ? .45 : .58)) / .38)), ang = k * (h.ext ? 1.95 : 1.78);
+  COM.hojas.forEach(h => { const k = salida(pinza((a - (h.ext ? .45 : .6)) / .32)), ang = k * (h.ext ? 2.2 : 3);
     if (h.eje === "x") h.piv.rotation.x = -h.sg * ang; else h.piv.rotation.z = h.sg * ang; });
-  // los tres caen a la vez con gravedad, aterrizan en momentos distintos y rebotan un poco
-  const ryA = rad(G.poses.PA.ry);
+  // salen por la abertura uno tras otro: caen derecho hasta quedar fuera de la caja y solo entonces se van a su sitio
   COM.marcos.forEach((m, i) => {
-    const u = pinza((c - .06) / m.dur); m.u = u; m.g.visible = u > 0; m.sombra.visible = u > .5;
+    const u = pinza((c - m.t0) / m.dur); m.u = u; m.g.visible = abierta; m.sombra.visible = u > .5;
     COM.sel[i] += ((FORM.encuadre === String(i + 1) ? 1 : 0) - COM.sel[i]) * .18;
     if (!m.g.visible) return;
-    vA.copy(m.ini).applyAxisAngle(eY, ryA);
-    const kx = suave3(Math.min(1, u * 1.15)), kr = salida(Math.min(1, u * 1.1));
     let ky = 1, mov = 0; if (u < .8) ky = (u / .8) ** 2; else { const b = (u - .8) / .2; mov = Math.sin(Math.PI * 2 * b) * (1 - b); }
-    m.g.position.set(lerp(vA.x, m.fin.x, kx), lerp(vA.y, m.fin.y, ky) + Math.abs(mov) * 30 + COM.sel[i] * 26, lerp(vA.z, m.fin.z, kx));
-    m.g.rotation.set(m.giro[0] * (1 - kr) - .04 * kr, (ryA + m.giro[1]) * (1 - kr) + GIRO_M * kr, m.giro[2] * (1 - kr) + mov * .025);
+    const kx = suave3(pinza((u - m.uSal) / (.8 - m.uSal))), ola = Math.sin(Math.PI * kx) * m.giro;
+    m.g.position.set(lerp(m.ini.x, m.fin.x, kx), lerp(m.ini.y, m.fin.y, ky) + Math.abs(mov) * 30 + COM.sel[i] * 26, lerp(m.ini.z, m.fin.z, kx));
+    m.g.rotation.set(-.04 * kx + ola * .5, GIRO_M * kx, ola + mov * .025);
     m.sombra.position.set(m.g.position.x, COM.piso + 1, m.fin.z + 20);
     m.sombra.material.opacity = .3 * pinza((u - .5) / .3) ** 2 * (1 - COM.sel[i] * .35);
   });
@@ -1984,7 +1985,7 @@ function moverPlacas(){
     [...puntosCarr.children].forEach((d, i) => d.setAttribute("aria-current", String(i === ic))); }
   else { puntosCarr.classList.remove("ver"); puntosCarr.style.opacity = 0; }
   // las reglas, arriba de la fila (computador) o del marco del centro (carrusel; se van cuando entra el panel)
-  const op = pinza((comC - .55) / .25) * (G.carrusel ? 1 - pinza(comD * 2.5) : 1), vis = cajas.filter(Boolean);
+  const op = pinza((comC - .82) / .12) * (G.carrusel ? 1 - pinza(comD * 2.5) : 1), vis = cajas.filter(Boolean);
   if (op <= 0 || !vis.length){ reglasCom.classList.remove("ver"); reglasCom.style.opacity = 0; return; }
   const ref = G.carrusel ? [cc || vis[0]] : vis, cx = (Math.min(...ref.map(q => q[0])) + Math.max(...ref.map(q => q[2]))) / 2, top = Math.min(...ref.map(q => q[1])) - (G.carrusel ? 0 : 12);
   reglasCom.classList.add("ver");
