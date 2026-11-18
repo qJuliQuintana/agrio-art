@@ -384,6 +384,27 @@ html.no3d .com-reglas{position:static;visibility:visible;opacity:1;width:auto;ma
 /* r36: el formulario va debajo de los marcos, como una tarjeta que sube con la página */
 .panel-com{left:0;top:0;right:auto;bottom:auto;z-index:4;overflow:visible;border-radius:22px;padding:clamp(22px,3vw,34px) clamp(20px,3vw,36px) calc(28px + env(safe-area-inset-bottom));box-shadow:0 24px 60px rgba(0,0,0,.18);will-change:transform}
 .panel-com .pc-cerrar{display:none}
+/* r37: título y pasos detrás de la escena (los marcos pasan por delante), el texto de cada marco impreso en él, formulario de vidrio y sin pie */
+.com-reglas{z-index:2;color:#2c2c2e}
+.com-reglas .cr-t{color:#1C1C1D}
+.com-reglas li{color:#2c2c2e}
+html.modo-abajo .com-reglas ol{grid-template-columns:1fr}
+.pie-com{display:none!important}
+.placa .pl-det{width:1px!important;height:1px!important;padding:0;overflow:hidden;clip-path:inset(50%);transform:none!important}
+.panel-com{background:rgba(255,255,255,.3);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.7);color:#1C1C1D;
+  box-shadow:0 22px 50px -14px rgba(28,28,29,.24),inset 0 1px 0 rgba(255,255,255,.8);padding:clamp(20px,2.4vw,30px) clamp(18px,2.4vw,30px) clamp(20px,2.4vw,28px)}
+#panelCom h2{margin:0 0 8px;color:#C6647E}
+.panel-com .pc-sub{color:#3a3a3b}
+.panel-com .pc-grupo legend,.panel-com .pc-campo>span{color:#55565a}
+.panel-com .pc-campo input,.panel-com .pc-campo textarea{border-color:rgba(28,28,29,.16);background:rgba(255,255,255,.62);color:#1C1C1D}
+.panel-com .pc-campo input::placeholder,.panel-com .pc-campo textarea::placeholder{color:rgba(28,28,29,.42)}
+.panel-com .pc-campo input:focus,.panel-com .pc-campo textarea:focus{border-color:#C6647E;box-shadow:0 0 0 1px #C6647E}
+.panel-com .pc-campo .falta{border-color:#d2486a}
+.panel-com .pc-chip{border-color:rgba(28,28,29,.22);background:rgba(255,255,255,.45);color:#1C1C1D}
+.panel-com .pc-chip[aria-pressed="true"]{background:#1C1C1D;border-color:#1C1C1D;color:#F2F0EB}
+.panel-com .pc-chip:focus-visible,.panel-com .pc-enviar:focus-visible{outline-color:#A9425E}
+.panel-com .pc-ref{color:#5d5e62}
+html.modo-lado .panel-com .pc-campo textarea{min-height:84px}
 .pc-in{position:relative;max-width:620px;margin:0 auto}
 .pc-cerrar{position:absolute;top:-4px;right:-6px;width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(242,240,235,.26);border-radius:50%;background:transparent;color:#F2F0EB;cursor:pointer}
 .pc-cerrar svg{width:16px;height:16px}
@@ -453,10 +474,6 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
   <p class="fe-desc" data-t="ficha_desc">Ilustración y tatuaje de autor. Explora la galería o encarga una pieza hecha a tu medida.</p>
   <div class="fe-pie"><span data-t="ficha_pie">Hecho a mano</span><span>05</span></div>
 </div>
-<canvas id="escena" aria-hidden="true"></canvas>
-<div class="zonas" id="zonas"></div>
-<div class="placas" id="placas"></div>
-<div class="carr-puntos" id="carrPuntos"></div>
 <div class="com-reglas" id="comReglas">
   <h2 class="cr-tit" data-t="nav_com"></h2>
   <p class="cr-t" data-t="k_como"></p>
@@ -466,6 +483,10 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
     <li><span><b data-t-parte="k_c3:0"></b> <span data-t-parte="k_c3:1"></span></span></li>
   </ol>
 </div>
+<canvas id="escena" aria-hidden="true"></canvas>
+<div class="zonas" id="zonas"></div>
+<div class="placas" id="placas"></div>
+<div class="carr-puntos" id="carrPuntos"></div>
 <aside class="panel-com" id="panelCom" aria-labelledby="pcT">
   <div class="pc-in">
     <button class="pc-cerrar" type="button" id="pcCerrar" aria-label="Cerrar" data-t-aria="cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -1058,6 +1079,7 @@ const luzB = new THREE.DirectionalLight(0xfff0ea, .32); luzB.position.set(1, .15
 const rad = g => g * Math.PI / 180;
 const lerp = (a, b, k) => a + (b - a) * k;
 const suave3 = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const suaveS = k => (1 - Math.cos(Math.PI * k)) / 2;
 const suaveIO = k => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
 const esCel = () => innerWidth < 760;
 const esCubo = () => innerWidth < 1100 || innerHeight > innerWidth;   // celular y tablet: la caja empieza como un cubo y se alarga al bajar
@@ -1501,8 +1523,8 @@ function doblez(y){
 /* ---------- Comisiones: el fondo de la caja (4 hojas con bisagra), su interior oscuro y los tres marcos vacíos que caen ---------- */
 const COM = {grupo:null, tapas:null, hojas:[], interior:null, marcos:[], placas:[], piso:0, sel:[0, 0, 0], idx:0, idxT:0, carr:0, paso:0, arr:null, sinClic:0};
 /* modo del panel (abajo: celular y tablet vertical; lado: pantallas anchas) y de los marcos (carrusel con el dedo salvo en computador) */
-const modoCom = () => (innerWidth < 760 || (innerHeight > innerWidth && innerWidth < 1000)) ? "abajo" : "lado";
-const esCarrusel = () => innerWidth < 1200 || innerHeight > innerWidth;
+const modoCom = () => esCel() ? "abajo" : "lado";
+const esCarrusel = () => false;
 /* los tres marcos son iguales (unidades de la caja), con volumen como la caja y girados de tres cuartos */
 const ENCARGOS = [{n:1, w:560, h:460}, {n:2, w:560, h:460}, {n:3, w:560, h:460}];
 const MOL = 34, MAT = 20, MATB = 24, PR = 70, GIRO_M = -.38, ZPAS = PR / 2 - 16;   // moldura, paspartú, profundidad, giro y plano del paspartú
@@ -1512,7 +1534,7 @@ function matCarton(rx, ry, fuerza = .2){
   if (KRAFT_MAP){ const km = KRAFT_MAP.clone(), kb = KRAFT_BUMP.clone(); [km, kb].forEach(t => { t.needsUpdate = true; t.repeat.set(rx, ry); }); recursos.push(km, kb); Object.assign(p, {map:km, bumpMap:kb, bumpScale:4}); }
   const m = granoFino(new THREE.MeshStandardMaterial(p), fuerza); recursos.push(m); return m;
 }
-function texPaspartu(w, h){
+function texPaspartu(w, h, n){
   const k = 2.6, c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k); const x = c.getContext("2d");
   x.fillStyle = "#EFEDE8"; x.fillRect(0, 0, c.width, c.height);
   const m = MAT * k, mb = MATB * k, vw = c.width - 2 * m, vh = c.height - m - mb;
@@ -1520,6 +1542,20 @@ function texPaspartu(w, h){
   x.fillStyle = "#E3E0D9"; x.fillRect(m, m, vw, vh);
   const g = x.createLinearGradient(0, m, 0, m + 26 * k); g.addColorStop(0, "rgba(0,0,0,.12)"); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(m, m, vw, 26 * k);
   const g2 = x.createLinearGradient(m, 0, m + 18 * k, 0); g2.addColorStop(0, "rgba(0,0,0,.07)"); g2.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g2; x.fillRect(m, m, 18 * k, vh);
+  if (n){   // el texto del encargo, impreso en la ventana: se ve desde que el marco sale de la caja
+    const cc = "c" + n, pad = 24 * k, x0 = m + pad, ancho = vw - 2 * pad, alto = vh - 2 * pad, fuente = (pz, fz) => `${pz} ${fz}px "Instrument Sans", sans-serif`;
+    const partir = (txt, fz, pz, an) => { x.font = fuente(pz, fz); const ls = []; let l = "";
+      String(txt).split(/\s+/).forEach(pa => { const q = l ? l + " " + pa : pa; if (l && x.measureText(q).width > an){ ls.push(l); l = pa; } else l = q; }); if (l) ls.push(l); return ls; };
+    let fz = 27 * k, b;
+    for (let it = 0; it < 30; it++){
+      const lh = fz * 1.36, ind = fz * 1.2, gap = fz * .6, q = partir(t(cc + "_q"), fz, 400, ancho), la = partir(t(cc + "_a"), fz, 600, ancho - ind), lb = partir(t(cc + "_b"), fz, 600, ancho - ind);
+      b = {fz, lh, ind, gap, q, la, lb, H:(q.length + la.length + lb.length) * lh + 2 * gap};
+      if (b.H <= alto) break; fz *= .95; }
+    let y = m + (vh - b.H) / 2; x.textBaseline = "middle";
+    x.fillStyle = "#3a3a3d"; x.font = fuente(400, b.fz); b.q.forEach(l => { x.fillText(l, x0, y + b.lh / 2); y += b.lh; });
+    [b.la, b.lb].forEach(ls => { y += b.gap; const lado = b.fz * .45; x.fillStyle = "#C6647E"; x.fillRect(x0 + b.fz * .1, y + b.lh / 2 - lado / 2, lado, lado);
+      x.fillStyle = "#1C1C1D"; x.font = fuente(600, b.fz); ls.forEach(l => { x.fillText(l, x0 + b.ind, y + b.lh / 2); y += b.lh; }); });
+  }
   return texDeCanvas(c);
 }
 let TEX_SOMBRA = null;
@@ -1549,22 +1585,19 @@ function armarComisiones(oculto){
     const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA_C / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); });
   // los tres marcos: iguales, profundos y redondeados como la caja; caen al piso, debajo de ella
   COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = [];
-  const carr = G.carrusel, mm = matCarton(.35, .35, .22);
-  COM.esc = carr ? 1 : .46;   // en computador la fila de tres cabe debajo de la caja, del ancho de ella
+  const mm = matCarton(.35, .35, .22);
+  COM.esc = 1;   // el tamaño depende de la pantalla: se fija en resolver()
   ENCARGOS.forEach((e, i) => {
     const g = new THREE.Group(), mo = MOL, {w, h} = e;
     [[w, mo, 0, h / 2 - mo / 2], [w, mo, 0, -h / 2 + mo / 2], [mo, h - 2 * mo + 2, w / 2 - mo / 2, 0], [mo, h - 2 * mo + 2, -w / 2 + mo / 2, 0]].forEach(([a, b, px, py]) => {
       const geo = new RoundedBoxGeometry(a, b, PR, 3, 7); recursos.push(geo); const m = new THREE.Mesh(geo, mm); m.position.set(px, py, 0); g.add(m); });
-    const pg = new THREE.PlaneGeometry(w - 2 * mo + 2, h - 2 * mo + 2), mp = granoFino(new THREE.MeshStandardMaterial({color:0xcfccc4, map:texPaspartu(w - 2 * mo, h - 2 * mo), roughness:.95, metalness:0, envMapIntensity:.6}), .06, 1.1);
+    const pg = new THREE.PlaneGeometry(w - 2 * mo + 2, h - 2 * mo + 2), mp = nitido(new THREE.MeshStandardMaterial({color:0xcfccc4, map:texPaspartu(w - 2 * mo, h - 2 * mo, e.n), roughness:.95, metalness:0, envMapIntensity:.6}));
     const pp = new THREE.Mesh(pg, mp); pp.position.z = ZPAS; g.add(pp);
     const fg = new THREE.BoxGeometry(w - 8, h - 8, 6), f = new THREE.Mesh(fg, mm); f.position.z = -PR / 2 + 3; g.add(f); recursos.push(pg, mp, fg);
-    g.scale.setScalar(COM.esc);
     const sg = new THREE.PlaneGeometry(1, 1), sm = new THREE.MeshBasicMaterial({map:texSombra(), color:0x000000, transparent:true, opacity:0, depthWrite:false});
-    const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; sombra.scale.set(w * 1.2 * COM.esc, 150 * COM.esc, 1); recursos.push(sg, sm);
+    const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; recursos.push(sg, sm);
     COM.grupo.add(g, sombra);
-    // guardados de pie dentro de la caja, con el borde de abajo cerca de la abertura (su fondo está en -Hb)
-    const ini = new THREE.Vector3(0, -Hb + 50 + h * COM.esc / 2, [250, -250, 0][i] * (carr ? 1 : .8));
-    COM.marcos.push({g, sombra, e, fin:new THREE.Vector3(), ini, giro:[.07, -.08, .06][i], u:0, p0:0, p1:1, orden:0});
+    COM.marcos.push({g, sombra, e, fin:new THREE.Vector3(), ini:new THREE.Vector3(), giro:[.07, -.08, .06][i], u:0, p0:0, p1:1, orden:0});
   });
   armarPlacas();
 }
@@ -1830,45 +1863,46 @@ function resolver(){
   S.A = 0; S.C = 1;
   ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - S.B / ppw});
   const yb0 = proyectar(caja.localToWorld(new THREE.Vector3(G.Wb / 2, -Hb, 0)))[1];   // el fondo de la caja en pantalla al terminar la galería
-  // el título y los pasos: medidos como lo impreso de Ilustraciones (mismas proporciones en "lu")
-  const lu = ppw * G.k, fs = cel ? 1.5 : 1, anchoCara = 1000 * lu;
+  // el título y los pasos: medidos como lo impreso de Ilustraciones (mismas proporciones en "lu"), legibles también en el celular
+  const lu = ppw * G.k, fs = cel ? 1.5 : 1, anchoCara = 1000 * lu, lado = G.modo === "lado";
   const cab = document.getElementById("comReglas");
   cab.style.setProperty("--ft", ((cel ? 124 : 156) * lu).toFixed(1) + "px");
-  cab.style.setProperty("--fq", Math.max(15, 20 * fs * lu).toFixed(1) + "px");
-  cab.style.setProperty("--fp", Math.max(13, 13 * fs * lu).toFixed(1) + "px");
-  cab.style.setProperty("--m", (60 * lu).toFixed(1) + "px"); cab.style.setProperty("--gc", (36 * lu).toFixed(1) + "px");
+  cab.style.setProperty("--fq", Math.max(cel ? 19 : 17, 20 * fs * lu).toFixed(1) + "px");
+  cab.style.setProperty("--fp", Math.max(cel ? 15.5 : 14.5, 14 * fs * lu).toFixed(1) + "px");
+  const mg = 60 * lu; cab.style.setProperty("--m", mg.toFixed(1) + "px"); cab.style.setProperty("--gc", (36 * lu).toFixed(1) + "px");
   const cabW = Math.min(vw, anchoCara); cab.style.width = cabW + "px"; G.cabW = cabW; G.cabH = cab.offsetHeight;
-  // posiciones en el mundo, hacia abajo desde el fondo de la caja
-  const yT = -Hb - (HOJA_C + 40);   // el título, debajo de la hoja de adelante ya colgando
-  G.yCab = yT;
-  const esc = COM.esc, hM = ENCARGOS[0].h * esc, wM = ENCARGOS[0].w * esc, gapM = (carr ? 50 : 60) * esc;
-  const yM = yT - G.cabH * u - 40 * u - hM / 2;   // centro de los marcos
-  COM.marcos.forEach((m, i) => { m.fin.set(carr ? i * (wM + gapM) : (i - 1) * (wM + gapM), yM, 400); });
-  COM.paso = COM.marcos[1].fin.x - COM.marcos[0].fin.x;
-  COM.piso = yM - hM / 2;
-  // el orden de salida: en fila, izquierda, derecha y el del centro al final; en el carrusel, del más lejano al del centro
-  const orden = carr ? [2, 1, 0] : [0, 2, 1];
-  orden.forEach((i, k) => { COM.marcos[i].orden = k; });
-  // la apertura: las hojas se abren mientras el fondo de la caja sube por la pantalla
+  // todo lo de abajo vive en un plano un poco delante de la cara (el de los marcos): el título, los marcos y el formulario suben juntos
+  const zR = caja.localToWorld(new THREE.Vector3(G.Wb / 2, -Hb, 0)).z + 60; G.zR = zR;
+  const yT = -Hb - (HOJA_C + 130); G.yCab = yT;   // el título, debajo de la hoja de adelante ya colgando (sin que lo tape)
+  const enP = (x, y) => proyectar(new THREE.Vector3(x, y, zR)), pT = enP(0, yT), kR = Math.abs(enP(100, yT)[0] - pT[0]) / 100, uR = 1 / kR;
+  // columnas: en tablet y computador, los marcos uno sobre otro a la izquierda y el formulario fijo a la derecha; en el celular, todo en una columna
+  const x0 = (vw - cabW) / 2 + mg, x1 = (vw + cabW) / 2 - mg, gut = Math.max(24, vw * .03);
+  const fw = lado ? Math.round(Math.min(460, Math.max(330, (x1 - x0) * .4))) : Math.round(Math.min(vw - 28, 560));
+  panelCom.style.width = fw + "px"; G.formW = fw; G.formH = panelCom.offsetHeight; G.formX = lado ? x1 - fw : (vw - fw) / 2;
+  const colW = lado ? x1 - fw - gut - x0 : vw, xCol = lado ? x0 + colW / 2 : vw / 2;
+  const {w:wE, h:hE} = ENCARGOS[0], wPx = lado ? Math.min(colW * .9, vh * .5 * wE / hE) : Math.min(vw * .72, vh * .4 * wE / hE);
+  const esc = COM.esc = Math.min((2 * RIM - 70) / wE, wPx * uR / wE), hM = hE * esc, paso = hM + (placaH + (lado ? 70 : 56)) * uR;
+  const yM0 = yT - G.cabH * uR - (lado ? 56 : 44) * uR - hM / 2, xM = (xCol - pT[0]) * uR;
+  COM.marcos.forEach((m, i) => { m.g.scale.setScalar(esc); m.sombra.scale.set(wE * 1.2 * esc, 150 * esc, 1); m.fin.set(xM, yM0 - i * paso, zR); m.orden = 2 - i; });
+  COM.paso = 0; COM.piso = yM0 - 2 * paso - hM / 2;
+  // salen de la caja como un tren, el de abajo primero: nunca se cruzan y bajan con suavidad hasta su lugar
+  COM.d0 = (-Hb + 50) - COM.piso;
+  COM.marcos.forEach(m => m.ini.set(0, m.fin.y + COM.d0, 0));
+  // la apertura: las hojas se abren mientras el fondo de la caja sube por la pantalla; luego bajan los marcos
   const L = G.lay = {};
   L.pa0 = Math.max(0, yb0 - vh * .82); L.pa1 = Math.max(L.pa0 + vh * .3, yb0 - vh * .4);
-  // cada marco sale cuando la caja ya está abierta y baja con suavidad hasta su lugar, uno tras otro
-  const yAterr = vh * (cel ? .6 : .58), pL = yb0 + (-Hb - yM) * ppw - yAterr;
-  const pS = L.pa1 - vh * .12, dS = vh * (cel ? .16 : .2), dL = vh * .1;
-  COM.marcos.forEach(m => { m.p0 = pS + m.orden * dS; m.p1 = Math.max(m.p0 + vh * .5, pL + m.orden * dL); });
-  // tamaño del texto de los detalles: el de la ventana del marco ya posado, de frente
-  { const m0 = COM.marcos[0], a = proyectar(m0.fin), b = proyectar(m0.fin.clone().add(new THREE.Vector3(100, 0, 0))), k = Math.abs(b[0] - a[0]) / 100;
-    G.detW = Math.round((m0.e.w - 2 * MOL - 2 * MAT) * esc * k); G.detH = Math.round((m0.e.h - 2 * MOL - MAT - MATB) * esc * k); }
-  ajustarDetalles();
-  // el formulario, debajo de los nombres de los marcos
-  const fw = Math.round(Math.min(cel ? vw - 28 : 640, anchoCara * .9)); panelCom.style.width = fw + "px"; G.formW = fw; G.formH = panelCom.offsetHeight;
-  const yF = yM - hM / 2 - (placaH + puntosH + 46) * u;
-  G.yForm = yF;
-  const pantalla = y => yb0 + (-Hb - y) * ppw;   // dónde está una altura del mundo al terminar la galería
-  S.A = L.pa1; S.marcos = S.com + Math.max(...COM.marcos.map(m => m.p1)); S.C = S.marcos - S.com - S.A;
-  S.titulo = S.com + pantalla(yT) - (cel ? 86 : 100);
-  S.form = S.com + pantalla(yF) - vh * .1;
-  S.fin = Math.max(S.marcos + 10, S.com + pantalla(yF) + G.formH + 28 - vh); S.D = S.fin - S.marcos;
+  const aScroll = (y, Y) => (enP(0, y)[1] - Y) * ppw / kR;   // cuánto hay que bajar para que una altura del mundo quede en Y
+  // los marcos esperan a que el título y los pasos se vean completos; luego bajan por delante de ellos
+  COM.pS = Math.max(L.pa1 - vh * .12, aScroll(yT - G.cabH * uR, vh * (cel ? .7 : .95))); COM.pE = COM.pS + COM.d0 * ppw / (cel ? 2 : 2.2);
+  // dónde quedan el comienzo de la columna, su final y el formulario
+  G.yTopCol = yM0 + hM / 2; G.yFinCol = COM.piso - (placaH + 12) * uR - hM * .14;   // los marcos girados se ven un poco más abajo de su borde
+  G.yForm = G.yFinCol - 36 * uR;
+  G.fijo = Math.min(cel ? 72 : 88, vh - G.formH - 16);
+  S.A = L.pa1; S.marcos = S.com + COM.pE; S.C = S.marcos - S.com - S.A;
+  S.titulo = S.com + aScroll(yT, cel ? 86 : 100);
+  if (lado){ S.fin = Math.max(S.marcos + 10, S.com + aScroll(G.yFinCol, vh - 40)); S.form = Math.min(S.fin, S.com + aScroll(G.yTopCol, G.fijo)); }
+  else { S.fin = Math.max(S.marcos + 10, S.com + aScroll(G.yForm, vh - G.formH - 28)); S.form = Math.min(S.fin, S.com + aScroll(G.yForm, vh * .1)); }
+  S.D = S.fin - S.marcos;
   document.getElementById("inicio").style.height = (G.S.fin + vh) + "px";
 }
 /* largo visible de la caja: en el celular arranca en un cubo (alto = ancho) y llega a su largo completo al terminar el giro.
@@ -1947,35 +1981,34 @@ function animarCom(s){
   COM.hojas.forEach(h => { const k = suave3(pinza(h.ext ? a / .6 : (a - .35) / .65)), ang = k * (h.ext ? 2.15 : 1.95);
     if (h.eje === "x") h.piv.rotation.x = -h.sg * ang; else h.piv.rotation.z = h.sg * ang; });
   // los marcos: salen por la abertura uno tras otro y bajan con suavidad hasta su lugar; solo se apartan a los lados ya fuera de la caja y de las hojas
-  const esc = COM.esc, libre = -G.Hb - (G.carrusel ? 430 : HOJA_C + 20);
+  const esc = COM.esc, libre = -G.Hb - (HOJA_C + 20), tr = pinza((p - COM.pS) / Math.max(1, COM.pE - COM.pS)), baja = COM.d0 * (1 - suaveS(tr));
   COM.marcos.forEach((m, i) => {
-    const t = pinza((p - m.p0) / (m.p1 - m.p0)); m.u = t; m.g.visible = abierta; m.sombra.visible = t > .6;
+    m.u = tr; m.g.visible = abierta; m.sombra.visible = tr > .6;
     COM.sel[i] += ((FORM.encuadre === String(i + 1) ? 1 : 0) - COM.sel[i]) * .18;
     if (!abierta) return;
-    const h2 = m.e.h * esc / 2, y = lerp(m.ini.y, m.fin.y, suave3(t)), arriba = y + h2;
+    const h2 = m.e.h * esc / 2, y = m.fin.y + baja, arriba = y + h2;
     const kx = suave3(pinza((libre - arriba) / Math.max(1, libre - (m.fin.y + h2)))), ola = Math.sin(Math.PI * kx) * m.giro;
     m.g.position.set(lerp(m.ini.x, m.fin.x, kx), y + COM.sel[i] * 26 * esc, lerp(m.ini.z, m.fin.z, kx));
     m.g.rotation.set(-.04 * kx + ola * .4, GIRO_M * kx, ola);
     m.sombra.position.set(m.g.position.x, m.fin.y - h2 - 4, m.fin.z + 10);
-    m.sombra.material.opacity = .26 * pinza((t - .6) / .4) ** 2 * (1 - COM.sel[i] * .35);
+    m.sombra.material.opacity = .26 * pinza((tr - .6) / .4) ** 2 * (1 - COM.sel[i] * .35);
   });
   capa.style.visibility = a > .5 ? "hidden" : "";
 }
 const vC = new THREE.Vector3();
 /* el título, los pasos y el formulario siguen a la caja como una página (se calculan con la misma cámara) */
 function moverBloques(){
-  const vw = VP.w, vh = VP.h, xc = vw / 2;
-  // el título y los pasos aparecen cuando los tres marcos ya bajaron por debajo de ellos
-  const yT = proyectar(caja.localToWorld(vC.set(G.Wb / 2, G.yCab, 0)))[1], yB = yT + G.cabH;
-  let op = 1;
-  COM.marcos.forEach(m => { if (!m.g.visible){ op = 0; return; } const c = proyectar(m.g.position)[1], hh = m.e.h * COM.esc / 2 * (G.ppw || 1);
-    op = Math.min(op, pinza(((c - hh) - yB) / 60)); });
-  const fuera = yB < -20 || yT > vh + 20;
-  reglasCom.classList.toggle("ver", !fuera && op > 0);
-  Object.assign(reglasCom.style, {left:(xc - G.cabW / 2) + "px", transform:`translateY(${yT.toFixed(1)}px)`, opacity:op.toFixed(2)});
-  // el formulario y el pie
-  const yF = proyectar(caja.localToWorld(vC.set(G.Wb / 2, G.yForm, 0)))[1], vis = yF < vh + 40 && yF + G.formH > -40;
-  panelCom.style.transform = `translate(${(xc - G.formW / 2).toFixed(1)}px, ${yF.toFixed(1)}px)`;
+  const vw = VP.w, vh = VP.h, zR = G.zR;
+  // el título y los pasos suben con la página, detrás de la escena (los marcos pasan por delante y no lo tapan para siempre)
+  const yT = proyectar(vC.set(0, G.yCab, zR))[1], fuera = yT + G.cabH < -20 || yT > vh + 20;
+  reglasCom.classList.toggle("ver", !fuera);
+  Object.assign(reglasCom.style, {left:((vw - G.cabW) / 2) + "px", transform:`translateY(${yT.toFixed(1)}px)`, opacity:1});
+  // el formulario: en tablet y computador se queda fijo a la derecha mientras se recorren los marcos; en el celular va debajo de ellos
+  let yF;
+  if (G.modo === "lado"){ const a = proyectar(vC.set(0, G.yTopCol, zR))[1], b = proyectar(vC.set(0, G.yFinCol, zR))[1]; yF = Math.min(Math.max(a, G.fijo), b - G.formH); }
+  else yF = proyectar(vC.set(0, G.yForm, zR))[1];
+  const vis = yF < vh + 40 && yF + G.formH > -40;
+  panelCom.style.transform = `translate(${G.formX.toFixed(1)}px, ${yF.toFixed(1)}px)`;
   panelCom.style.visibility = vis ? "visible" : "hidden"; panelCom.inert = !vis;
   comD = pinza((vh - yF) / (vh * .5));
 }
@@ -1991,9 +2024,6 @@ function moverPlacas(){
     for (const a of [-1, 1]) for (const c of [-1, 1]) for (const z of [-1, 1]){ const q = proyectar(m.g.localToWorld(vB.set(a * w / 2, c * h / 2, z * PR / 2))); xs.push(q[0]); ys.push(q[1]); }
     const l = Math.min(...xs), tp = Math.min(...ys), r = Math.max(...xs), bt = Math.max(...ys); cajas.push([l, tp, r, bt]);
     b.hidden = false; Object.assign(b.style, {left:l + "px", top:tp + "px", width:(r - l) + "px", height:(bt - tp + G.placaH) + "px", opacity:pinza((m.u - .97) / .03).toFixed(2)});
-    const ix = w / 2 - MOL - MAT, yT = h / 2 - MOL - MAT, yB = -h / 2 + MOL + MATB;
-    const q = [[-ix, yT], [ix, yT], [-ix, yB], [ix, yB]].map(([x, y]) => { const pq = proyectar(m.g.localToWorld(vB.set(x, y, ZPAS + .5))); return [pq[0] - l, pq[1] - tp]; });
-    b.querySelector(".pl-det").style.transform = matrizCuadro(G.detW, G.detH, q);
   });
   // los puntos del carrusel, debajo del marco del centro
   const ic = Math.max(0, Math.min(M.length - 1, Math.round(COM.carr))), cc = cajas[ic];
