@@ -363,14 +363,16 @@ footer::before{content:"";position:absolute;inset:0;opacity:.22;background-image
 .carr-puntos button::before{content:"";width:8px;height:8px;border-radius:999px;background:rgba(28,28,29,.28);transition:width .2s,background-color .2s}
 .carr-puntos button[aria-current="true"]::before{width:22px;background:#C6647E}
 .carr-puntos button:focus-visible{outline:2px solid #C6647E;outline-offset:1px;border-radius:6px}
-.com-reglas{position:fixed;z-index:3;left:0;top:0;box-sizing:border-box;visibility:hidden;opacity:0;pointer-events:none;color:#3c3d40}
+/* r36: el título y los pasos de comisiones, con las mismas proporciones que "Ilustraciones" impreso en la caja */
+.com-reglas{position:fixed;z-index:3;left:0;top:0;box-sizing:border-box;padding:0 var(--m,40px);visibility:hidden;opacity:0;pointer-events:none;color:#4f5054}
 .com-reglas.ver{visibility:visible}
-.com-reglas .cr-t{margin:0 0 10px;font:900 clamp(18px,1.7vw,24px)/1.05 var(--cond);text-transform:uppercase;letter-spacing:.01em;color:#1C1C1D}
-.com-reglas ol{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px;margin:0;padding:0;list-style:none;counter-reset:r}
-html.com-columna .com-reglas ol{grid-template-columns:1fr}
-.com-reglas li{counter-increment:r;display:grid;grid-template-columns:20px 1fr;font:400 13px/1.45 var(--texto)}
-.com-reglas li::before{content:counter(r);font:900 17px/1.1 var(--cond);color:#C6647E}
-.com-reglas b{color:#1C1C1D;font-weight:600}
+.com-reglas .cr-tit{margin:0 0 calc(var(--ft,80px) * .3);font:900 var(--ft,80px)/.86 var(--cond);text-transform:uppercase;text-align:center;color:#1C1C1D}
+.com-reglas .cr-t{margin:0 0 calc(var(--fq,20px) * .9);font:600 var(--fq,20px)/1.2 var(--texto);color:#1C1C1D}
+.com-reglas ol{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--fp,13px) * .9) var(--gc,24px);margin:0;padding:0;list-style:none;counter-reset:r}
+html.com-columna.modo-abajo .com-reglas ol{grid-template-columns:1fr}
+.com-reglas li{counter-increment:r;display:grid;grid-template-columns:auto 1fr;column-gap:.5em;font:400 var(--fp,13px)/1.45 var(--texto)}
+.com-reglas li::before{content:counter(r) ".";font-weight:600;color:#C6647E}
+.com-reglas b{display:block;color:#1C1C1D;font-weight:600}
 html.no3d .com-reglas{position:static;visibility:visible;opacity:1;width:auto;max-width:720px;margin:0 auto;padding:24px 20px}
 .placa:focus-visible{outline:2px solid #C6647E;outline-offset:4px}
 .placa[aria-pressed="true"] b{color:#A9425E}
@@ -379,9 +381,9 @@ html.no3d .com-reglas{position:static;visibility:visible;opacity:1;width:auto;ma
 .panel-com{position:fixed;right:0;bottom:0;z-index:82;box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;visibility:hidden;transform:translateX(104%);
   background:#1F1F21 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
   background-attachment:local;color:#E6E4DF;font:15px/1.5 var(--texto);box-shadow:-24px 0 60px rgba(0,0,0,.24)}
-html.modo-lado .panel-com{top:0;z-index:79;width:var(--pw,420px);padding:92px clamp(22px,2.2vw,34px) 34px}
-html.modo-abajo .panel-com{left:0;top:50vh;top:50lvh;border-radius:22px 0 0 0;padding:24px 20px calc(44px + env(safe-area-inset-bottom));transition:top .32s cubic-bezier(.2,.8,.2,1),border-radius .32s}
-html.modo-abajo .panel-com.lleno{top:0;z-index:90;border-radius:0}
+/* r36: el formulario va debajo de los marcos, como una tarjeta que sube con la página */
+.panel-com{left:0;top:0;right:auto;bottom:auto;z-index:4;overflow:visible;border-radius:22px;padding:clamp(22px,3vw,34px) clamp(20px,3vw,36px) calc(28px + env(safe-area-inset-bottom));box-shadow:0 24px 60px rgba(0,0,0,.18);will-change:transform}
+.panel-com .pc-cerrar{display:none}
 .pc-in{position:relative;max-width:620px;margin:0 auto}
 .pc-cerrar{position:absolute;top:-4px;right:-6px;width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(242,240,235,.26);border-radius:50%;background:transparent;color:#F2F0EB;cursor:pointer}
 .pc-cerrar svg{width:16px;height:16px}
@@ -456,6 +458,7 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
 <div class="placas" id="placas"></div>
 <div class="carr-puntos" id="carrPuntos"></div>
 <div class="com-reglas" id="comReglas">
+  <h2 class="cr-tit" data-t="nav_com"></h2>
   <p class="cr-t" data-t="k_como"></p>
   <ol>
     <li><span><b data-t-parte="k_c1:0"></b> <span data-t-parte="k_c1:1"></span></span></li>
@@ -1419,9 +1422,13 @@ const CORTE_L = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1e9), CORTE_W = new 
 const VEN_I = new THREE.Plane(), VEN_D = new THREE.Plane(), VEN_IL = new THREE.Plane(new THREE.Vector3(1, 0, 0), 0), VEN_DL = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
 const marcos = {};
 const recursos = [];
+function nitido(mat){
+  mat.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace("#include <map_fragment>", THREE.ShaderChunk.map_fragment.replace("texture2D( map, vMapUv )", "texture2D( map, vMapUv, -.8 )")); };
+  mat.customProgramCacheKey = () => "nitido"; return mat;
+}
 function texDeCanvas(cv){ const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = ANISO; tx.generateMipmaps = true; tx.minFilter = THREE.LinearMipmapLinearFilter; tx.magFilter = THREE.LinearFilter; recursos.push(tx); return tx; }
 function relieve(wMundo, hMundo){
-  if (KRAFT_BUMP){ const kb = KRAFT_BUMP.clone(); kb.needsUpdate = true; kb.repeat.set(wMundo / G.Wb, hMundo / (G.Wb * 675 / 435)); recursos.push(kb); return {bumpMap:kb, bumpScale:4}; }
+  if (KRAFT_BUMP){ const kb = KRAFT_BUMP.clone(); kb.needsUpdate = true; kb.repeat.set(wMundo / G.Wb, hMundo / (G.Wb * 675 / 435)); recursos.push(kb); return {bumpMap:kb, bumpScale:1.2}; }
   const nrm = ARRUGAS.clone(); nrm.needsUpdate = true; nrm.repeat.set(wMundo / (G.Wb / 1.1), hMundo / (G.Wb / 1.1)); recursos.push(nrm); return {normalMap:nrm, normalScale:new THREE.Vector2(.85, .85)};
 }
 function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s, fijo){
@@ -1431,9 +1438,9 @@ function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s, fijo){
     const wLU = Math.min(tLU, anchoLU - x0), hLU = Math.min(tLU, altoLU - y1);
     const cv = document.createElement("canvas"); cv.width = Math.ceil(wLU * s); cv.height = Math.ceil(hLU * s); const x = cv.getContext("2d");
     x.setTransform(s, 0, 0, s, -x0 * s, -y1 * s); dibujar(x);
-    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = "source-atop"; x.fillStyle = x.createPattern(granoTinta, "repeat"); x.globalAlpha = .55; x.fillRect(0, 0, cv.width, cv.height); x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = "source-atop"; x.fillStyle = x.createPattern(granoTinta, "repeat"); x.globalAlpha = .16; x.fillRect(0, 0, cv.width, cv.height); x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
     const tex = texDeCanvas(cv), rel = relieve(wLU * k, hLU * k);
-    const mat = new THREE.MeshStandardMaterial({map:tex, transparent:true, roughness:.7, metalness:0, ...rel, polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2, clippingPlanes:[CORTE_W, VEN_I, VEN_D]});
+    const mat = nitido(new THREE.MeshStandardMaterial({map:tex, transparent:true, roughness:.7, metalness:0, ...rel, polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2, clippingPlanes:[CORTE_W, VEN_I, VEN_D]}));
     const geo = new THREE.PlaneGeometry(wLU * k, hLU * k); recursos.push(mat, geo);
     const m = new THREE.Mesh(geo, mat); m.position.set((x0 + wLU / 2) * k, -(y0 + y1 + hLU / 2) * k, 0); grupo.add(m);
   }
@@ -1444,9 +1451,9 @@ function imprimirCara(marco, dibujar, altoLU, wWU, texW, y0 = 0){
     const hLU = Math.min(tileLU, altoLU - top), hPX = Math.ceil(hLU * s);
     const cv = document.createElement("canvas"); cv.width = texW; cv.height = hPX; const x = cv.getContext("2d");
     x.setTransform(s, 0, 0, s, 0, -top * s); dibujar(x);
-    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = "source-atop"; x.fillStyle = x.createPattern(granoTinta, "repeat"); x.globalAlpha = .55; x.fillRect(0, 0, cv.width, cv.height); x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = "source-atop"; x.fillStyle = x.createPattern(granoTinta, "repeat"); x.globalAlpha = .16; x.fillRect(0, 0, cv.width, cv.height); x.globalAlpha = 1; x.globalCompositeOperation = "source-over";
     const tex = texDeCanvas(cv), rel = relieve(wWU, hLU * k);
-    const mat = granoFino(new THREE.MeshStandardMaterial({map:tex, transparent:true, roughness:.7, metalness:0, ...rel, polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2, clippingPlanes:[CORTE_W]}), .1, 1.2);
+    const mat = nitido(new THREE.MeshStandardMaterial({map:tex, transparent:true, roughness:.7, metalness:0, ...rel, polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2, clippingPlanes:[CORTE_W]}));
     const geo = new THREE.PlaneGeometry(wWU, hLU * k); recursos.push(mat, geo);
     const m = new THREE.Mesh(geo, mat); m.position.set(wWU / 2, -(y0 + top + hLU / 2) * k, 0); marco.add(m);
   }
@@ -1499,7 +1506,7 @@ const esCarrusel = () => innerWidth < 1200 || innerHeight > innerWidth;
 /* los tres marcos son iguales (unidades de la caja), con volumen como la caja y girados de tres cuartos */
 const ENCARGOS = [{n:1, w:560, h:460}, {n:2, w:560, h:460}, {n:3, w:560, h:460}];
 const MOL = 34, MAT = 20, MATB = 24, PR = 70, GIRO_M = -.38, ZPAS = PR / 2 - 16;   // moldura, paspartú, profundidad, giro y plano del paspartú
-const RIM = 489, HOJA = 486;
+const RIM = 489, HOJA = 486, HOJA_C = 250;
 function matCarton(rx, ry, fuerza = .2){
   const p = {color:0x1f1f21, roughness:.7, metalness:0};
   if (KRAFT_MAP){ const km = KRAFT_MAP.clone(), kb = KRAFT_BUMP.clone(); [km, kb].forEach(t => { t.needsUpdate = true; t.repeat.set(rx, ry); }); recursos.push(km, kb); Object.assign(p, {map:km, bumpMap:kb, bumpScale:4}); }
@@ -1538,13 +1545,12 @@ function armarComisiones(oculto){
     const geo = new THREE.BoxGeometry(a, b, c); recursos.push(geo); const m = new THREE.Mesh(geo, mc); m.position.set(px, py, pz); tapas.add(m); });
   [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(2 * RIM - 2, 5, HOJA); recursos.push(geo);
     const m = new THREE.Mesh(geo, mc); m.position.z = -sg * HOJA / 2; piv.add(m); piv.position.set(0, 3.5, sg * RIM); tapas.add(piv); COM.hojas.push({piv, eje:"x", sg, ext:true}); });
-  [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(HOJA, 5, 2 * RIM - 60); recursos.push(geo);
-    const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); });
+  [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(HOJA_C, 5, 2 * RIM - 60); recursos.push(geo);
+    const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA_C / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); });
   // los tres marcos: iguales, profundos y redondeados como la caja; caen al piso, debajo de ella
   COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = [];
-  COM.piso = -Hb - 1750;
-  const carr = G.carrusel, mm = matCarton(.35, .35, .22), gap = carr ? 50 : 90, total = ENCARGOS.reduce((a, e) => a + e.w, 0) + gap * 2;
-  let xx = -total / 2;
+  const carr = G.carrusel, mm = matCarton(.35, .35, .22);
+  COM.esc = carr ? 1 : .46;   // en computador la fila de tres cabe debajo de la caja, del ancho de ella
   ENCARGOS.forEach((e, i) => {
     const g = new THREE.Group(), mo = MOL, {w, h} = e;
     [[w, mo, 0, h / 2 - mo / 2], [w, mo, 0, -h / 2 + mo / 2], [mo, h - 2 * mo + 2, w / 2 - mo / 2, 0], [mo, h - 2 * mo + 2, -w / 2 + mo / 2, 0]].forEach(([a, b, px, py]) => {
@@ -1552,18 +1558,14 @@ function armarComisiones(oculto){
     const pg = new THREE.PlaneGeometry(w - 2 * mo + 2, h - 2 * mo + 2), mp = granoFino(new THREE.MeshStandardMaterial({color:0xcfccc4, map:texPaspartu(w - 2 * mo, h - 2 * mo), roughness:.95, metalness:0, envMapIntensity:.6}), .06, 1.1);
     const pp = new THREE.Mesh(pg, mp); pp.position.z = ZPAS; g.add(pp);
     const fg = new THREE.BoxGeometry(w - 8, h - 8, 6), f = new THREE.Mesh(fg, mm); f.position.z = -PR / 2 + 3; g.add(f); recursos.push(pg, mp, fg);
+    g.scale.setScalar(COM.esc);
     const sg = new THREE.PlaneGeometry(1, 1), sm = new THREE.MeshBasicMaterial({map:texSombra(), color:0x000000, transparent:true, opacity:0, depthWrite:false});
-    const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; sombra.scale.set(w * 1.2, 190, 1); recursos.push(sg, sm);
+    const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; sombra.scale.set(w * 1.2 * COM.esc, 150 * COM.esc, 1); recursos.push(sg, sm);
     COM.grupo.add(g, sombra);
-    const fin = new THREE.Vector3(xx + w / 2, COM.piso + h / 2, 200); xx += w + gap;
-    const ini = new THREE.Vector3(0, -Hb + 290, [250, -250, 0][i]);   // de pie dentro de la caja, lejos de las paredes (su fondo está en -Hb)
-    const giro = [.09, -.11, .08][i];
-    const ky = (ini.y + Hb + h / 2 + 24) / (ini.y - fin.y), uSal = .8 * Math.sqrt(ky);   // cuándo sale del todo por la abertura
-    COM.marcos.push({g, sombra, e, fin, ini, giro, uSal, u:0, t0:0, dur:.5});
+    // guardados de pie dentro de la caja, con el borde de abajo cerca de la abertura (su fondo está en -Hb)
+    const ini = new THREE.Vector3(0, -Hb + 50 + h * COM.esc / 2, [250, -250, 0][i] * (carr ? 1 : .8));
+    COM.marcos.push({g, sombra, e, fin:new THREE.Vector3(), ini, giro:[.07, -.08, .06][i], u:0, p0:0, p1:1, orden:0});
   });
-  // salen uno tras otro: el del centro, el de la izquierda y el de la derecha (caen tan abajo que no se cruzan)
-  COM.marcos.forEach((m, i) => { m.t0 = [.22, .02, .42][i]; m.dur = [.5, .46, .5][i]; });
-  COM.paso = COM.marcos[1].fin.x - COM.marcos[0].fin.x;
   armarPlacas();
 }
 const capaPlacas = document.getElementById("placas"), puntosCarr = document.getElementById("carrPuntos");
@@ -1579,7 +1581,7 @@ function armarPlacas(){
     b.addEventListener("click", () => {
       if (performance.now() - COM.sinClic < 350) return;   // fue un deslizamiento, no un toque
       if (G.carrusel && Math.round(COM.carr) !== i){ COM.idx = i; return; }   // el de un lado: primero se trae al centro
-      elegirEncargo(String(e.n), true); if (comD < .98) irA(G.S.fin);
+      elegirEncargo(String(e.n), true); if (comD < .98) irA(G.S.form);
     });
     capaPlacas.appendChild(b); COM.placas.push(b);
     const d = document.createElement("button"); d.type = "button"; d.setAttribute("aria-label", t(c + "_n")); d.addEventListener("click", () => { COM.idx = i; });
@@ -1656,10 +1658,10 @@ function construir(){
   marcos[1] = mk(new THREE.Vector3(-F / 2, -r, Db / 2 + .7), 0);
   marcos[2] = mk(new THREE.Vector3(Wb / 2 + .7, -r, F / 2), Math.PI / 2);
   marcos[0] = mk(new THREE.Vector3(-F / 2, .7, -F / 2), 0, -Math.PI / 2);     // cara de arriba
-  const grande = innerWidth * DPR >= 2000 && MAXTEX >= 4096;
+  const texD = Math.min(4096, MAXTEX, Math.max(2048, Math.ceil(innerWidth * .97 * DPR * 1.15 / 256) * 256));   // en computador: un poco más que los píxeles de la cara en pantalla
   const texCel = navigator.deviceMemory && navigator.deviceMemory < 4 ? 1536 : 2048;   // en el celular, más resolución para que el texto aguante el zoom con los dedos
-  imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? texCel : (grande ? 2560 : 2048));
-  imprimirCara(marcos[2], x => cara2(x, true, cel), G.alto2, F, cel ? texCel : (grande ? 2560 : 2048));
+  imprimirCara(marcos[1], x => cara1(x, true, G.alto1, cel), Math.min(G.alto1, 1300), F, cel ? texCel : texD);
+  imprimirCara(marcos[2], x => cara2(x, true, cel), G.alto2, F, cel ? texCel : texD);
   G.zonas = m2.zonas.map(z => ({...z, cara:2}));
   armarComisiones(oculto);
   armarZonas();
@@ -1692,7 +1694,7 @@ async function enviarSolicitud(){
   const falta = ["nombre", "correo", "specs"].find(k => !FORM[k].trim()) || (correoMal ? "correo" : null);
   if (falta){ const el = campo(falta); el.classList.add("falta"); el.setAttribute("aria-invalid", "true");
     if (correoMal && falta === "correo") avisar(t("e_correo_mal")); else el.placeholder = t({nombre:"e_nombre", correo:"e_correo", specs:"e_idea"}[falta]);
-    if (comD < .98) irA(G.S.fin); el.focus({preventScroll:true}); return; }
+    if (comD < .98) irA(G.S.form); el.focus({preventScroll:true}); return; }
   if (!CORREO_SOLICITUDES){ avisar(t("f_sin_correo")); return; }
   enviando = true; avisar(t("f_enviando"));
   const datos = {_subject:t("mail_asunto", {n:FORM.nombre.trim()}), _template:"table", _captcha:"false", _replyto:FORM.correo.trim(),
@@ -1713,21 +1715,22 @@ document.querySelectorAll("#pcForm input, #pcForm textarea").forEach(el => el.ad
 document.querySelectorAll('[data-grupo="encuadre"] .pc-chip').forEach(c => c.addEventListener("click", () => elegirEncargo(c.dataset.v, false)));
 document.querySelectorAll('[data-grupo="formato"] .pc-chip').forEach(c => c.addEventListener("click", () => { FORM.formato = c.dataset.v; document.querySelectorAll('[data-grupo="formato"] .pc-chip').forEach(o => o.setAttribute("aria-pressed", String(o === c))); }));
 const escribiendo = () => { const a = document.activeElement; return !!(a && panelCom.contains(a) && /^(INPUT|TEXTAREA)$/.test(a.tagName)); };
-panelCom.addEventListener("focusin", () => { if (G.modo === "abajo" && escribiendo()) panelCom.classList.add("lleno"); });
-panelCom.addEventListener("focusout", () => setTimeout(() => { if (!escribiendo()) panelCom.classList.remove("lleno"); }, 120));
+// en pantallas táctiles, al escribir se sube la página para que el campo quede arriba del teclado
+panelCom.addEventListener("focusin", e => { if (!TACTIL || !/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  setTimeout(() => { const r = e.target.getBoundingClientRect(), y = r.top - VP.h * .18; if (Math.abs(y) > 30) irA(Math.min(G.S.fin, pVista + y)); }, 60); });
 document.getElementById("pcCerrar").addEventListener("click", () => { if (document.activeElement) document.activeElement.blur(); panelCom.classList.remove("lleno"); irA(G.S.marcos + G.S.R); });
 addEventListener("keydown", e => { if (e.key === "Escape" && panelCom.classList.contains("lleno") && document.activeElement) document.activeElement.blur(); });
 { const svg = document.querySelector("#logoRem svg"); if (svg){ const c = svg.cloneNode(true); c.querySelector("mask").id = "remMascara2"; c.querySelector("[mask]").setAttribute("mask", "url(#remMascara2)"); c.setAttribute("aria-hidden", "true"); pieCom.querySelector(".rem").appendChild(c); } }
 /* el pie: en el celular va al final del panel; en pantallas anchas, abajo a la izquierda, junto a los marcos */
-function colocarPie(){ const dentro = G.modo === "abajo", inP = panelCom.querySelector(".pc-in"); if (dentro && pieCom.parentElement !== inP) inP.appendChild(pieCom); if (!dentro && pieCom.parentElement !== document.body) panelCom.after(pieCom); }
+function colocarPie(){ const dentro = true, inP = panelCom.querySelector(".pc-in"); if (dentro && pieCom.parentElement !== inP) inP.appendChild(pieCom); if (!dentro && pieCom.parentElement !== document.body) panelCom.after(pieCom); }
 capa.addEventListener("click", e => {
   const b = e.target.closest(".zona"); if (!b) return; const z = G.zonas[+b.dataset.i];
   // la posición de la ilustración se guarda ahora: al comprar, la caja se vuelve a imprimir y las zonas se rehacen
   const imgFalsa = id => { const zi = G.zonas.find(q => q.tipo === "ver" && q.id === id), r = zi && zi.rect ? {...zi.rect} : b.getBoundingClientRect(); return {getBoundingClientRect:() => r}; };
-  if (z.tipo === "com") irA(G.S.fin);
+  if (z.tipo === "com") irA(G.S.form);
   else if (z.tipo === "ver") abrirVisor(z.id, imgFalsa(z.id));
   else if (z.tipo === "comprar") comprar(obra(z.id), imgFalsa(z.id));
-  else if (z.tipo === "cat"){ elegirEncargo(String(z.n), true); irA(G.S.fin); }
+  else if (z.tipo === "cat"){ elegirEncargo(String(z.n), true); irA(G.S.form); }
   else if (z.tipo === "opcion"){ FORM.formato = z.valor; G.zonas.forEach(q => { if (q.tipo === "opcion" && q.el) q.el.setAttribute("aria-pressed", String(q.valor === z.valor)); }); }
   else if (z.tipo === "enviar") enviarSolicitud();
   else if (z.tipo === "enlace") window.open(z.href === "wa" ? waURL(t("wa_hola")) : z.href, "_blank", "noopener");
@@ -1816,44 +1819,56 @@ function resolver(){
   G.poses = {P0, P2:E2.q, PF}; G.ppw = E2.ppw;
   G.S = {gira:vh * 1.25};
   G.S.B = Math.max(200, (E2.q.y - PF.y) * E2.ppw);
-  // 3) comisiones: la caja vuelve a ser cubo y abre su fondo (PA), los marcos caen al piso (PM) y entra el panel (PMp)
+  // 3) comisiones: la cámara sigue bajando a la misma velocidad y distancia que en la galería (la caja no cambia de tamaño).
+  //    Debajo de la caja, como una página: el fondo abierto, el título y los pasos, los marcos y el formulario.
   G.modo = modoCom(); G.carrusel = esCarrusel();
   html.classList.toggle("modo-abajo", G.modo === "abajo"); html.classList.toggle("modo-lado", G.modo === "lado"); html.classList.toggle("com-columna", G.carrusel);
-  const pw = Math.round(Math.min(460, Math.max(360, vw * .34))); html.style.setProperty("--pw", pw + "px"); colocarPie();
-  const abajo = G.modo === "abajo", carr = G.carrusel, placaH = abajo ? 44 : 54, cabH = abajo ? 70 : 84, puntosH = carr ? 28 : 0;
-  const Hb = G.Hb, ry = PF.ry;
-  // los marcos ya posados (girados de tres cuartos), con sus 8 esquinas
-  const posar = m => { m.g.position.copy(m.fin); m.g.rotation.set(-.04, GIRO_M, 0); m.g.updateMatrixWorld(true); };
-  const pts = ms => () => { const L = []; ms.forEach(m => { posar(m); const {w, h} = m.e; for (const a of [-1, 1]) for (const b of [-1, 1]) for (const c of [-1, 1]) L.push(m.g.localToWorld(new THREE.Vector3(a * w / 2, b * h / 2, c * PR / 2))); }); return L; };
-  const reglas = document.getElementById("comReglas"), medir = W => { reglas.style.width = W + "px"; return reglas.offsetHeight; };
-  let PM, PMp;
-  if (!carr){   // en fila: las reglas arriba, a lo ancho de la fila
-    const x0 = 40, x1 = vw - pw - 40, W = Math.min(1000, x1 - x0), m0 = x0 + (x1 - x0 - W) / 2;
-    G.reglasW = W; G.reglasH = medir(W);
-    PMp = encajar({ry, pitch:rad(-7), roll:0, x:0, y:COM.piso + 300, z:P0.z}, pts(COM.marcos), [m0, m0 + W, cabH + 16 + G.reglasH + 30, vh - 150 - placaH]);
-    PM = centrarX({...PMp}, pts(COM.marcos), vw / 2);
-  } else {     // carrusel: un marco grande en el centro y los otros asomándose a los lados
-    const areaW = abajo ? vw : vw - pw, m0 = COM.marcos[0];
-    const hMax = abajo ? vh * .5 - 16 - placaH - puntosH - cabH - 10 : vh - 150 - placaH - puntosH - cabH - 20;
-    const anchoF = Math.min(areaW * .74, 560, hMax * 1.12);
-    G.reglasW = Math.min(vw - 40, 520); G.reglasH = medir(G.reglasW);
-    const y0 = cabH + 16 + G.reglasH + 26;
-    PM = encajar({ry, pitch:rad(-7), roll:0, x:m0.fin.x, y:m0.fin.y, z:P0.z}, pts([m0]), [vw / 2 - anchoF / 2, vw / 2 + anchoF / 2, y0, y0 + hMax]);
-    PMp = encajar({...PM}, pts([m0]), [areaW / 2 - anchoF / 2, areaW / 2 + anchoF / 2, cabH + 10, cabH + 10 + hMax]);
-    ponerPose(PMp); G.pasoPx = Math.abs(proyectar(COM.marcos[1].fin)[0] - proyectar(m0.fin)[0]);
-  }
-  // tamaño de diseño del texto de los detalles: el de la ventana del marco, de frente, con el panel abierto
-  { ponerPose(PMp); const m0 = COM.marcos[0], a = proyectar(m0.fin), b = proyectar(m0.fin.clone().add(new THREE.Vector3(100, 0, 0))), k = Math.abs(b[0] - a[0]) / 100;
-    G.detW = Math.round((m0.e.w - 2 * MOL - 2 * MAT) * k); G.detH = Math.round((m0.e.h - 2 * MOL - MAT - MATB) * k); }
-  // al abrirse: la misma caja, la cámara un poco más abajo y más lejos, con el fondo de la caja arriba y el piso a la vista
-  const PA = {ry, pitch:lerp(PF.pitch, PM.pitch, .5), roll:0, x:PF.x, y:PF.y, z:carr ? PF.z * Math.pow(PM.z / PF.z, .6) * 1.5 : PF.z};   // en computador la caja no se aleja
-  { ponerPose(PA); const fondo = [[1, 1], [1, -1], [-1, 1], [-1, -1]].map(([a, b]) => caja.localToWorld(new THREE.Vector3(a * G.Wb / 2, -Hb, b * G.Db / 2)));
-    centrarX(PA, () => fondo, vw / 2); alinearY(PA, caja.localToWorld(new THREE.Vector3(G.Wb / 2, -Hb, 0)), vh * (abajo ? .24 : .22)); }
-  const PB = carr ? null : alinearY({...PA, x:0, pitch:PM.pitch}, COM.marcos[1].fin, vh * .52);   // computador: el marco del centro, a la misma distancia
-  Object.assign(G.poses, {PA, PB, PM, PMf:PM, PMp}); G.placaH = placaH; G.puntosH = puntosH;
+  colocarPie();
+  const carr = G.carrusel, Hb = G.Hb, ppw = G.ppw, u = 1 / ppw, placaH = cel ? 46 : 54, puntosH = carr ? 28 : 0;
+  G.placaH = placaH; G.puntosH = puntosH;
+  const S = G.S; S.com = S.gira + S.B; S.R = 0;
+  S.A = 0; S.C = 1;
+  ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - S.B / ppw});
+  const yb0 = proyectar(caja.localToWorld(new THREE.Vector3(G.Wb / 2, -Hb, 0)))[1];   // el fondo de la caja en pantalla al terminar la galería
+  // el título y los pasos: medidos como lo impreso de Ilustraciones (mismas proporciones en "lu")
+  const lu = ppw * G.k, fs = cel ? 1.5 : 1, anchoCara = 1000 * lu;
+  const cab = document.getElementById("comReglas");
+  cab.style.setProperty("--ft", ((cel ? 124 : 156) * lu).toFixed(1) + "px");
+  cab.style.setProperty("--fq", Math.max(15, 20 * fs * lu).toFixed(1) + "px");
+  cab.style.setProperty("--fp", Math.max(13, 13 * fs * lu).toFixed(1) + "px");
+  cab.style.setProperty("--m", (60 * lu).toFixed(1) + "px"); cab.style.setProperty("--gc", (36 * lu).toFixed(1) + "px");
+  const cabW = Math.min(vw, anchoCara); cab.style.width = cabW + "px"; G.cabW = cabW; G.cabH = cab.offsetHeight;
+  // posiciones en el mundo, hacia abajo desde el fondo de la caja
+  const yT = -Hb - (HOJA_C + 40);   // el título, debajo de la hoja de adelante ya colgando
+  G.yCab = yT;
+  const esc = COM.esc, hM = ENCARGOS[0].h * esc, wM = ENCARGOS[0].w * esc, gapM = (carr ? 50 : 60) * esc;
+  const yM = yT - G.cabH * u - 40 * u - hM / 2;   // centro de los marcos
+  COM.marcos.forEach((m, i) => { m.fin.set(carr ? i * (wM + gapM) : (i - 1) * (wM + gapM), yM, 400); });
+  COM.paso = COM.marcos[1].fin.x - COM.marcos[0].fin.x;
+  COM.piso = yM - hM / 2;
+  // el orden de salida: en fila, izquierda, derecha y el del centro al final; en el carrusel, del más lejano al del centro
+  const orden = carr ? [2, 1, 0] : [0, 2, 1];
+  orden.forEach((i, k) => { COM.marcos[i].orden = k; });
+  // la apertura: las hojas se abren mientras el fondo de la caja sube por la pantalla
+  const L = G.lay = {};
+  L.pa0 = Math.max(0, yb0 - vh * .82); L.pa1 = Math.max(L.pa0 + vh * .3, yb0 - vh * .4);
+  // cada marco sale cuando la caja ya está abierta y baja con suavidad hasta su lugar, uno tras otro
+  const yAterr = vh * (cel ? .6 : .58), pL = yb0 + (-Hb - yM) * ppw - yAterr;
+  const pS = L.pa1 - vh * .12, dS = vh * (cel ? .16 : .2), dL = vh * .1;
+  COM.marcos.forEach(m => { m.p0 = pS + m.orden * dS; m.p1 = Math.max(m.p0 + vh * .5, pL + m.orden * dL); });
+  // tamaño del texto de los detalles: el de la ventana del marco ya posado, de frente
+  { const m0 = COM.marcos[0], a = proyectar(m0.fin), b = proyectar(m0.fin.clone().add(new THREE.Vector3(100, 0, 0))), k = Math.abs(b[0] - a[0]) / 100;
+    G.detW = Math.round((m0.e.w - 2 * MOL - 2 * MAT) * esc * k); G.detH = Math.round((m0.e.h - 2 * MOL - MAT - MATB) * esc * k); }
   ajustarDetalles();
-  G.S.R = 0; G.S.A = vh * .8; G.S.C = vh * 1.7; G.S.D = vh * .7;
-  G.S.com = G.S.gira + G.S.B; G.S.marcos = G.S.com + G.S.A + G.S.C; G.S.fin = G.S.marcos + G.S.D;
+  // el formulario, debajo de los nombres de los marcos
+  const fw = Math.round(Math.min(cel ? vw - 28 : 640, anchoCara * .9)); panelCom.style.width = fw + "px"; G.formW = fw; G.formH = panelCom.offsetHeight;
+  const yF = yM - hM / 2 - (placaH + puntosH + 46) * u;
+  G.yForm = yF;
+  const pantalla = y => yb0 + (-Hb - y) * ppw;   // dónde está una altura del mundo al terminar la galería
+  S.A = L.pa1; S.marcos = S.com + Math.max(...COM.marcos.map(m => m.p1)); S.C = S.marcos - S.com - S.A;
+  S.titulo = S.com + pantalla(yT) - (cel ? 86 : 100);
+  S.form = S.com + pantalla(yF) - vh * .1;
+  S.fin = Math.max(S.marcos + 10, S.com + pantalla(yF) + G.formH + 28 - vh); S.D = S.fin - S.marcos;
   document.getElementById("inicio").style.height = (G.S.fin + vh) + "px";
 }
 /* largo visible de la caja: en el celular arranca en un cubo (alto = ancho) y llega a su largo completo al terminar el giro.
@@ -1896,20 +1911,9 @@ function poseActual(s){
     q.y = (2 * t ** 3 - 3 * t ** 2 + 1) * p0 + (t ** 3 - 2 * t ** 2 + t) * m0 + (-2 * t ** 3 + 3 * t ** 2) * p1 + (t ** 3 - t ** 2) * m1;
   } else {
     const px = s - S.gira;
-    if (px <= S.B){ const b = px / S.B; q = {ry:lerp(P2.ry, PF.ry, b), pitch:P2.pitch, roll:lerp(P2.roll, PF.roll, b), x:lerp(P2.x, PF.x, b), z:P2.z, y:P2.y - px / G.ppw}; }   // baja por la cara 2
-    else if (px <= S.B + S.A + S.C){   // sigue bajando sin detenerse: se abre el fondo y salen los marcos
-      const {PA, PM} = G.poses, p = px - S.B, T1 = S.A + S.C * .35, T2 = S.C * .55;
-      const lim = (v, d) => Math.sign(v) * Math.min(Math.abs(v), 2.6 * Math.abs(d));
-      const PB = G.poses.PB, Y2 = PB ? PB.y : PM.y, T2b = PB ? T2 * .5 : T2, vPA = Math.min(0, (Y2 - PA.y) / T2b * .9);   // velocidad (unidades por px) al pasar por PA
-      if (p <= T1){ const t = p / T1; q = mezcla(PF, PA, suave3(t)); q.y = hermite(t, PF.y, PA.y, lim(-T1 / G.ppw, PA.y - PF.y), lim(vPA * T1, PA.y - PF.y)); }
-      else if (p <= T1 + T2){ const t = (p - T1) / T2;
-        if (PB){ if (t < .5){ const k = t / .5; q = mezcla(PA, PB, suave3(k)); q.y = hermite(k, PA.y, PB.y, lim(vPA * T2b, PB.y - PA.y), 0); }   // computador: baja a la misma distancia hasta el marco del centro
-          else q = mezcla(PB, PM, suave3((t - .5) / .5)); }   // y ahí, con la caja ya fuera de la pantalla, se aleja para mostrar los tres
-        else { q = mezcla(PA, PM, suave3(t)); q.y = hermite(t, PA.y, PM.y, lim(vPA * T2, PM.y - PA.y), 0); } }
-      else q = {...PM};
-    }
-    else q = mezcla(G.poses.PM, G.poses.PMp, suaveIO(Math.min(1, (px - S.B - S.A - S.C) / S.D)));   // deja sitio al panel
-    if (G.carrusel && px > S.B + S.A) q.x += COM.carr * COM.paso * suave3(Math.min(1, (px - S.B - S.A) / (S.C * .8)));   // el carrusel
+    const b = Math.min(1, px / S.B);   // baja por la cara 2 y sigue bajando igual por debajo de la caja
+    q = {ry:lerp(P2.ry, PF.ry, b), pitch:P2.pitch, roll:lerp(P2.roll, PF.roll, b), x:lerp(P2.x, PF.x, b), z:P2.z, y:P2.y - px / G.ppw};
+    if (G.carrusel && COM.marcos.length) q.x += COM.carr * COM.paso * pinza((px - S.B - S.A - S.C * .6) / (S.C * .4));   // el carrusel, cuando los marcos ya bajaron
   }
   if (entrada < 1){   // entrada después de la carga: la caja de frente y más lejos, luego gira y se acerca
     const e = suave3(entrada), P = {...q, ry:-8, z:q.z * 1.08, y:q.y - 30, pitch:q.pitch};
@@ -1931,37 +1935,49 @@ const pinza = v => Math.max(0, Math.min(1, v));
 const salida = k => 1 - Math.pow(1 - k, 3);
 const eY = new THREE.Vector3(0, 1, 0), vA = new THREE.Vector3(), vB = new THREE.Vector3();
 function animarCom(s){
-  const S = G.S, a = pinza((s - S.com) / S.A), c = pinza((s - S.com - S.A) / S.C), d = pinza((s - S.marcos) / S.D);
-  comC = c;
+  const S = G.S, L = G.lay, p = s - S.com, a = pinza((p - L.pa0) / (L.pa1 - L.pa0));
+  comC = pinza((s - S.com - S.A) / Math.max(1, S.C));
   // el carrusel se acerca a su marco (o sigue al dedo)
   const arrastrando = COM.arr && COM.arr.mov;
   COM.carr += ((arrastrando ? COM.idxT : COM.idx) - COM.carr) * (arrastrando ? .55 : .14); if (Math.abs(COM.carr - COM.idx) < .001 && !arrastrando) COM.carr = COM.idx;
   if (!G.carrusel) COM.carr = COM.idx = 0;
-  // cerrada, la caja tiene su fondo de siempre; las hojas y el interior solo existen mientras se abre (ya como cubo)
-  const abierta = a > .43; COM.tapas.visible = COM.interior.mesh.visible = abierta; COM.cuerpo.material[3] = abierta ? COM.oculto : COM.matCuerpo;
-  // las hojas: primero las de afuera, luego las de adentro
-  COM.hojas.forEach(h => { const k = salida(pinza((a - (h.ext ? .45 : .6)) / .32)), ang = k * (h.ext ? 2.2 : 3);
+  // cerrada, la caja tiene su fondo de siempre; las hojas y el interior aparecen al empezar a abrirse
+  const abierta = a > 0; COM.tapas.visible = COM.interior.mesh.visible = abierta; COM.cuerpo.material[3] = abierta ? COM.oculto : COM.matCuerpo;
+  // las hojas giran con suavidad: primero las laterales, luego la de adelante y la de atrás (todas quedan a la vista)
+  COM.hojas.forEach(h => { const k = suave3(pinza(h.ext ? a / .6 : (a - .35) / .65)), ang = k * (h.ext ? 2.15 : 1.95);
     if (h.eje === "x") h.piv.rotation.x = -h.sg * ang; else h.piv.rotation.z = h.sg * ang; });
-  // salen por la abertura uno tras otro: caen derecho hasta quedar fuera de la caja y solo entonces se van a su sitio
+  // los marcos: salen por la abertura uno tras otro y bajan con suavidad hasta su lugar; solo se apartan a los lados ya fuera de la caja y de las hojas
+  const esc = COM.esc, libre = -G.Hb - (G.carrusel ? 430 : HOJA_C + 20);
   COM.marcos.forEach((m, i) => {
-    const u = pinza((c - m.t0) / m.dur); m.u = u; m.g.visible = abierta; m.sombra.visible = u > .5;
+    const t = pinza((p - m.p0) / (m.p1 - m.p0)); m.u = t; m.g.visible = abierta; m.sombra.visible = t > .6;
     COM.sel[i] += ((FORM.encuadre === String(i + 1) ? 1 : 0) - COM.sel[i]) * .18;
-    if (!m.g.visible) return;
-    let ky = 1, mov = 0; if (u < .8) ky = (u / .8) ** 2; else { const b = (u - .8) / .2; mov = Math.sin(Math.PI * 2 * b) * (1 - b); }
-    const kx = suave3(pinza((u - m.uSal) / (.8 - m.uSal))), ola = Math.sin(Math.PI * kx) * m.giro;
-    m.g.position.set(lerp(m.ini.x, m.fin.x, kx), lerp(m.ini.y, m.fin.y, ky) + Math.abs(mov) * 30 + COM.sel[i] * 26, lerp(m.ini.z, m.fin.z, kx));
-    m.g.rotation.set(-.04 * kx + ola * .5, GIRO_M * kx, ola + mov * .025);
-    m.sombra.position.set(m.g.position.x, COM.piso + 1, m.fin.z + 20);
-    m.sombra.material.opacity = .3 * pinza((u - .5) / .3) ** 2 * (1 - COM.sel[i] * .35);
+    if (!abierta) return;
+    const h2 = m.e.h * esc / 2, y = lerp(m.ini.y, m.fin.y, suave3(t)), arriba = y + h2;
+    const kx = suave3(pinza((libre - arriba) / Math.max(1, libre - (m.fin.y + h2)))), ola = Math.sin(Math.PI * kx) * m.giro;
+    m.g.position.set(lerp(m.ini.x, m.fin.x, kx), y + COM.sel[i] * 26 * esc, lerp(m.ini.z, m.fin.z, kx));
+    m.g.rotation.set(-.04 * kx + ola * .4, GIRO_M * kx, ola);
+    m.sombra.position.set(m.g.position.x, m.fin.y - h2 - 4, m.fin.z + 10);
+    m.sombra.material.opacity = .26 * pinza((t - .6) / .4) ** 2 * (1 - COM.sel[i] * .35);
   });
-  // el panel entra de derecha a izquierda; mientras se escribe se queda abierto
-  comD = d;
-  const k = suaveIO(d);
-  panelCom.style.transform = `translateX(${((1 - k) * 104).toFixed(2)}%)`;
-  panelCom.style.visibility = d > 0 ? "visible" : "hidden";
-  panelCom.inert = d < .98;
-  if (pieCom.parentElement === document.body){ pieCom.style.opacity = k.toFixed(3); pieCom.style.transform = `translateY(${((1 - k) * 14).toFixed(1)}px)`; pieCom.classList.toggle("ver", d > .98); }
   capa.style.visibility = a > .5 ? "hidden" : "";
+}
+const vC = new THREE.Vector3();
+/* el título, los pasos y el formulario siguen a la caja como una página (se calculan con la misma cámara) */
+function moverBloques(){
+  const vw = VP.w, vh = VP.h, xc = vw / 2;
+  // el título y los pasos aparecen cuando los tres marcos ya bajaron por debajo de ellos
+  const yT = proyectar(caja.localToWorld(vC.set(G.Wb / 2, G.yCab, 0)))[1], yB = yT + G.cabH;
+  let op = 1;
+  COM.marcos.forEach(m => { if (!m.g.visible){ op = 0; return; } const c = proyectar(m.g.position)[1], hh = m.e.h * COM.esc / 2 * (G.ppw || 1);
+    op = Math.min(op, pinza(((c - hh) - yB) / 60)); });
+  const fuera = yB < -20 || yT > vh + 20;
+  reglasCom.classList.toggle("ver", !fuera && op > 0);
+  Object.assign(reglasCom.style, {left:(xc - G.cabW / 2) + "px", transform:`translateY(${yT.toFixed(1)}px)`, opacity:op.toFixed(2)});
+  // el formulario y el pie
+  const yF = proyectar(caja.localToWorld(vC.set(G.Wb / 2, G.yForm, 0)))[1], vis = yF < vh + 40 && yF + G.formH > -40;
+  panelCom.style.transform = `translate(${(xc - G.formW / 2).toFixed(1)}px, ${yF.toFixed(1)}px)`;
+  panelCom.style.visibility = vis ? "visible" : "hidden"; panelCom.inert = !vis;
+  comD = pinza((vh - yF) / (vh * .5));
 }
 /* cada marco es un botón: adentro sus detalles (en la perspectiva del marco), debajo el nombre y el precio */
 const reglasCom = document.getElementById("comReglas");
@@ -1984,12 +2000,7 @@ function moverPlacas(){
   if (G.carrusel && cc){ puntosCarr.classList.add("ver"); Object.assign(puntosCarr.style, {left:((cc[0] + cc[2]) / 2) + "px", top:(cc[3] + G.placaH + 2) + "px", opacity:1});
     [...puntosCarr.children].forEach((d, i) => d.setAttribute("aria-current", String(i === ic))); }
   else { puntosCarr.classList.remove("ver"); puntosCarr.style.opacity = 0; }
-  // las reglas, arriba de la fila (computador) o del marco del centro (carrusel; se van cuando entra el panel)
-  const op = pinza((comC - .82) / .12) * (G.carrusel ? 1 - pinza(comD * 2.5) : 1), vis = cajas.filter(Boolean);
-  if (op <= 0 || !vis.length){ reglasCom.classList.remove("ver"); reglasCom.style.opacity = 0; return; }
-  const ref = G.carrusel ? [cc || vis[0]] : vis, cx = (Math.min(...ref.map(q => q[0])) + Math.max(...ref.map(q => q[2]))) / 2, top = Math.min(...ref.map(q => q[1])) - (G.carrusel ? 0 : 12);
-  reglasCom.classList.add("ver");
-  Object.assign(reglasCom.style, {width:G.reglasW + "px", left:(G.carrusel ? (VP.w - G.reglasW) / 2 : cx - G.reglasW / 2) + "px", top:(top - G.reglasH - 18) + "px", opacity:op.toFixed(2)});
+
 }
 let tPrev = 0;
 function cuadro(now){
@@ -1997,10 +2008,10 @@ function cuadro(now){
   const meta = recorrido(), k = reducido ? 1 : 1 - Math.pow(.9, dt / 16.7);
   pVista += (meta - pVista) * k; if (Math.abs(meta - pVista) < .3) pVista = meta;
   if (G.poses){
-    const sV = escribiendo() ? Math.max(pVista, G.S.fin) : pVista;   // con el teclado abierto el panel no se mueve
+    const sV = pVista;
     ponerPose(poseActual(sV)); ajustarLargo(sV); animarCom(sV);
     renderer.render(escena, camara);
-    moverZonas(); moverPlacas();
+    moverZonas(); moverPlacas(); moverBloques();
     document.getElementById("fichaEsq").style.opacity = Math.max(0, 1 - pVista / 140).toFixed(3);
     marcarSeccion(pVista);
   }
@@ -2010,10 +2021,10 @@ function cuadro(now){
 /* ---------- Navegación de la cápsula ---------- */
 document.querySelectorAll(".pildora [data-s]").forEach(a => a.addEventListener("click", ev => {
   ev.preventDefault();
-  const s = a.dataset.s; irA(s === "inicio" ? 0 : s === "comisiones" ? G.S.fin : G.S.gira + G.marcas.ilu * G.k * G.ppw - innerHeight * .08);
+  const s = a.dataset.s; irA(s === "inicio" ? 0 : s === "comisiones" ? G.S.titulo : G.S.gira + G.marcas.ilu * G.k * G.ppw - innerHeight * .08);
 }));
 /* el botón Comisiones (y cualquier enlace a #comisiones) baja hasta la sección; la caja hace su giro en el camino */
-document.addEventListener("click", e => { const a = e.target.closest('a[href="#comisiones"]'); if (!a || a.closest(".pildora")) return; e.preventDefault(); irA(G.S.fin); });
+document.addEventListener("click", e => { const a = e.target.closest('a[href="#comisiones"]'); if (!a || a.closest(".pildora")) return; e.preventDefault(); irA(G.S.titulo); });
 let viaje = 0;
 function irA(meta){
   if (reducido){ scrollTo(0, meta); return; }
