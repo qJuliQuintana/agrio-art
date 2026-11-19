@@ -376,6 +376,7 @@ html.com-columna.modo-abajo .com-reglas ol{grid-template-columns:1fr}
 html.no3d .com-reglas{position:static;visibility:visible;opacity:1;width:auto;max-width:720px;margin:0 auto;padding:24px 20px}
 .placa:focus-visible{outline:2px solid #C6647E;outline-offset:4px}
 .placa[aria-pressed="true"] b{color:#A9425E}
+html.hoja-imp .placa b,html.hoja-imp .placa .pl-precio,html.hoja-imp .placa .pl-insignia{visibility:hidden}
 .placa[aria-pressed="true"] b::after{content:"";display:block;height:2px;margin-top:4px;border-radius:2px;background:#C6647E}
 
 .panel-com{position:fixed;right:0;bottom:0;z-index:82;box-sizing:border-box;overflow-y:auto;-webkit-overflow-scrolling:touch;visibility:hidden;transform:translateX(104%);
@@ -1645,7 +1646,7 @@ function hojaArrugada(w, h, sem){
 function arrugar(hj, c, br = 0){   // c: 0 bola, 1 hoja desarrugada; br: cuánto se recogen los bordes (las no elegidas)
   if (Math.abs(c - hj.c) < .002 && Math.abs(br - hj.b) < .002) return; hj.c = c; hj.b = br;
   const pos = hj.geo.attributes.position.array, {plano, bola, pl, bo, ru} = hj, s = c * c * (3 - 2 * c);
-  const amp = hj.w * (.016 + .09 * (1 - c) * (1 - c) + .05 * Math.sin(Math.PI * c));
+  const amp = hj.w * ((HOJA_EST ? .007 : .016) + .09 * (1 - c) * (1 - c) + .05 * Math.sin(Math.PI * c));
   for (let i = 0; i < pl.length; i++){
     pos[i * 3] = lerp(bola[i * 3], plano[i * 3], s); pos[i * 3 + 1] = lerp(bola[i * 3 + 1], plano[i * 3 + 1], s); pos[i * 3 + 2] = lerp(bola[i * 3 + 2], pl[i] * amp, s);
     if (br > 0 && bo[i] > 0){   // el borde se arruga y se recoge hacia el centro y hacia atrás; el centro (el texto) queda liso
@@ -1655,6 +1656,66 @@ function arrugar(hj, c, br = 0){   // c: 0 bola, 1 hoja desarrugada; br: cuánto
     }
   }
   hj.geo.attributes.position.needsUpdate = true; hj.geo.computeVertexNormals(); hj.geo.computeBoundingSphere();
+}
+const HOJA_EST = 2;
+function texHoja(w, h, n, est){
+  const k = 3.6, c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k); const x = c.getContext("2d");
+  x.scale(k, k);
+  const P = [null, {bg:"#EEE8DC", ink:"#1C1C1D", sub:"#4d4842", acc:"#B9506C", borde:true},
+                   {bg:"#F3F1EC", ink:"#1C1C1D", sub:"#46464a", acc:"#C6647E", ficha:true},
+                   {bg:"#1C1C1E", ink:"#F2F0EB", sub:"#B4B1AB", acc:"#E68AA1"},
+                   {bg:"#B88E61", ink:"#1E1712", sub:"#3a2c20", acc:"#8E2F45", borde:true, kraft:true}][est];
+  // el papel: con borde irregular (rasgado suave) en los estilos que lo llevan
+  x.beginPath();
+  if (P.borde){ const pt = []; const paso = 9, j = (a, b) => (rH(a * 1.7 + n, b * 2.3, est) - .5) * 5;
+    for (let u = 4; u <= w - 4; u += paso) pt.push([u, 4 + j(u, 1)]);
+    for (let v = 4; v <= h - 4; v += paso) pt.push([w - 4 + j(v, 2), v]);
+    for (let u = w - 4; u >= 4; u -= paso) pt.push([u, h - 4 + j(u, 3)]);
+    for (let v = h - 4; v >= 4; v -= paso) pt.push([4 + j(v, 4), v]);
+    pt.forEach(([a, b], i) => i ? x.lineTo(a, b) : x.moveTo(a, b)); x.closePath(); }
+  else x.rect(0, 0, w, h);
+  x.fillStyle = P.bg; x.fill(); x.save(); x.clip();
+  // fibras y motas del papel
+  for (let i = 0; i < (P.kraft ? 900 : 380); i++){ const a = rH(i, n, 1) * w, b = rH(i, n, 2) * h, l = 2 + rH(i, n, 3) * (P.kraft ? 9 : 6), an = rH(i, n, 4) * 6.28;
+    x.strokeStyle = est === 3 ? `rgba(255,255,255,${.03 + rH(i, n, 5) * .04})` : `rgba(60,40,20,${(P.kraft ? .06 : .035) + rH(i, n, 5) * .05})`; x.lineWidth = .35 + rH(i, n, 6) * .4;
+    x.beginPath(); x.moveTo(a, b); x.lineTo(a + Math.cos(an) * l, b + Math.sin(an) * l); x.stroke(); }
+  const cc = "c" + n, pad = P.ficha ? 44 : 40, an = w - 2 * pad, fuente = (pz, fz, fam) => `${pz} ${fz}px ${fam}`;
+  const partir = (txt, f, ancho) => { x.font = f; const ls = []; let l = ""; String(txt).split(/\s+/).forEach(pa => { const q = l ? l + " " + pa : pa; if (l && x.measureText(q).width > ancho){ ls.push(l); l = pa; } else l = q; }); if (l) ls.push(l); return ls; };
+  x.textBaseline = "alphabetic";
+  if (P.ficha){   // ficha: marco negro, franja con el nombre, talón perforado con el precio
+    x.strokeStyle = P.ink; x.lineWidth = 3; x.strokeRect(16, 16, w - 32, h - 32);
+    x.fillStyle = P.ink; x.fillRect(16, 16, w - 32, 132);
+  }
+  let y = pad + 6;
+  x.font = fuente(600, 15, FU.sans); x.fillStyle = P.ficha ? "#F3F1EC" : P.acc; x.textAlign = "left"; x.fillText((P.ficha ? "N° " : "") + "0" + n, pad, y + 8);
+  if (n === 2){ const tx = t("mas_pedido").toUpperCase(); x.font = fuente(700, 12.5, FU.sans); const tw = x.measureText(tx).width + 20; x.fillStyle = P.acc;
+    x.beginPath(); x.roundRect(w - pad - tw, y - 8, tw, 24, 12); x.fill(); x.fillStyle = est === 3 ? "#1C1C1D" : "#fff"; x.textAlign = "center"; x.fillText(tx, w - pad - tw / 2, y + 8.5); x.textAlign = "left"; }
+  y += 30;
+  // el nombre: grande, en la letra condensada de la marca
+  let fz = 74; x.font = fuente(900, fz, FU.cond); const nom = t(cc + "_n").toUpperCase(); while (x.measureText(nom).width > an && fz > 30){ fz -= 2; x.font = fuente(900, fz, FU.cond); }
+  x.fillStyle = P.ficha ? "#F3F1EC" : P.ink; x.fillText(nom, pad, y + fz * .82); y += fz * .86 + (P.ficha ? 34 : 14);
+  if (!P.ficha){ x.font = fuente(600, 21, FU.sans); x.fillStyle = P.acc; x.fillText(t(cc + "_p"), pad, y + 18); y += 38;
+    x.fillStyle = P.sub; x.globalAlpha = .45; x.fillRect(pad, y, an, 1.4); x.globalAlpha = 1; y += 24; }
+  // descripción y viñetas (se achican si no caben)
+  const tope = h - pad - (P.ficha ? 96 : 6);
+  let fd = 20, b;
+  for (let it = 0; it < 20; it++){ const lq = partir(t(cc + "_q"), fuente(400, fd, FU.sans), an), la = partir(t(cc + "_a"), fuente(600, fd * .95, FU.sans), an - 22), lb = partir(t(cc + "_b"), fuente(600, fd * .95, FU.sans), an - 22);
+    b = {lq, la, lb, lh:fd * 1.42}; if (y + (lq.length + la.length + lb.length) * b.lh + 22 <= tope) break; fd *= .95; }
+  y = Math.max(y, tope - ((b.lq.length + b.la.length + b.lb.length) * b.lh + 24));   // los detalles van abajo: arriba el nombre, abajo lo que incluye
+  x.fillStyle = P.sub; x.font = fuente(400, fd, FU.sans); b.lq.forEach(l => { x.fillText(l, pad, y + fd); y += b.lh; }); y += 16;
+  [b.la, b.lb].forEach(ls => { x.fillStyle = P.acc; x.fillRect(pad + 1, y + fd * .45, fd * .42, fd * .42); x.fillStyle = P.ink; x.font = fuente(600, fd * .95, FU.sans); ls.forEach(l => { x.fillText(l, pad + 22, y + fd); y += b.lh; }); y += 4; });
+  if (P.ficha){   // el talón: línea perforada y el precio
+    const yp = h - 16 - 86; x.setLineDash([5, 6]); x.strokeStyle = P.ink; x.lineWidth = 1.6; x.beginPath(); x.moveTo(16, yp); x.lineTo(w - 16, yp); x.stroke(); x.setLineDash([]);
+    x.fillStyle = P.bg; [16, w - 16].forEach(cx => { x.beginPath(); x.arc(cx, yp, 9, 0, 6.29); x.fill(); });
+    x.font = fuente(900, 34, FU.cond); x.fillStyle = P.ink; x.fillText(t(cc + "_p").toUpperCase(), pad, yp + 54); }
+  if (P.kraft){   // sello del precio, como tinta estampada
+    x.save(); x.translate(w - pad - 58, h - pad - 54); x.rotate(-.18); x.strokeStyle = P.acc; x.lineWidth = 3; x.globalAlpha = .85;
+    x.beginPath(); x.arc(0, 0, 54, 0, 6.29); x.stroke(); x.beginPath(); x.arc(0, 0, 47, 0, 6.29); x.lineWidth = 1.2; x.stroke();
+    x.fillStyle = P.acc; x.textAlign = "center"; x.font = fuente(900, 22, FU.cond); const pr = t(cc + "_p").split(" "); x.fillText(pr[0].toUpperCase(), 0, -4); x.font = fuente(900, 19, FU.cond); x.fillText(pr.slice(1).join(" "), 0, 18); x.restore(); }
+  // sombra suave de los bordes (el papel no es una tarjeta plana)
+  const g = x.createRadialGradient(w / 2, h / 2, Math.min(w, h) * .35, w / 2, h / 2, Math.hypot(w, h) * .55); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, est === 3 ? "rgba(0,0,0,.25)" : "rgba(60,40,20,.12)");
+  x.fillStyle = g; x.fillRect(0, 0, w, h); x.restore();
+  return texDeCanvas(c);
 }
 function armarComisiones(oculto){
   const {Hb} = G;
@@ -1675,11 +1736,12 @@ function armarComisiones(oculto){
   { const sg = 1, piv = new THREE.Group(), geo = new THREE.BoxGeometry(HOJA_C, 5, 2 * RIM - 60); recursos.push(geo);   // r43: la hoja de adelante
     const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA_C / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); }
   // r40: tres hojas de papel con el texto de cada encargo; caen hechas bola y se desarrugan
-  COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = [];
+  COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = []; html.classList.toggle("hoja-imp", HOJA_EST > 0);
   COM.esc = 1;   // el tamaño depende de la pantalla: se fija en resolver()
   ENCARGOS.forEach((e, i) => {
     const g = new THREE.Group(), {w, h} = e, hj = hojaArrugada(w, h, i * 7.3 + 1.1);
-    const mp = granoFino(new THREE.MeshStandardMaterial({map:texPaspartu(w, h, e.n, true), roughness:.9, metalness:0, side:THREE.DoubleSide, clippingPlanes:[CLIP_I, CLIP_D]}), .05, 1.6, {nit:true});
+    const mp = HOJA_EST ? granoFino(new THREE.MeshStandardMaterial({map:texHoja(w, h, e.n, HOJA_EST), roughness:HOJA_EST === 3 ? .82 : .96, metalness:0, side:THREE.DoubleSide, alphaTest:.5, clippingPlanes:[CLIP_I, CLIP_D]}), .07, 1.6, {nit:true, arr:.35})
+                        : granoFino(new THREE.MeshStandardMaterial({map:texPaspartu(w, h, e.n, true), roughness:.9, metalness:0, side:THREE.DoubleSide, clippingPlanes:[CLIP_I, CLIP_D]}), .05, 1.6, {nit:true});
     g.add(new THREE.Mesh(hj.geo, mp)); recursos.push(hj.geo, mp); arrugar(hj, 0);
     const sg = new THREE.PlaneGeometry(1, 1), sm = new THREE.MeshBasicMaterial({map:texSombra(), color:0x000000, transparent:true, opacity:0, depthWrite:false, clippingPlanes:[CLIP_I, CLIP_D]});
     const sombra = new THREE.Mesh(sg, sm); sombra.rotation.x = -Math.PI / 2; recursos.push(sg, sm);
@@ -1979,15 +2041,15 @@ function resolver(){
   if (!lado){   // celular: en columna (título, pasos, carrusel y formulario)
     cab.classList.remove("cr-lado", "cr-1col");
     cab.classList.toggle("cr-3col", !cel);   // en tablet y computador los pasos van en tres columnas
-    cab.style.setProperty("--ft", Math.min(150, 124 * lu).toFixed(1) + "px");
-    cab.style.setProperty("--fq", Math.min(26, Math.max(19, 20 * fs * lu)).toFixed(1) + "px");
-    cab.style.setProperty("--fp", Math.min(18, Math.max(15.5, 14 * fs * lu)).toFixed(1) + "px");
+    cab.style.setProperty("--ft", ((cel ? 124 : 156) * lu).toFixed(1) + "px");   // r44: igual que Ilustraciones
+    cab.style.setProperty("--fq", (20 * fs * lu).toFixed(1) + "px");
+    cab.style.setProperty("--fp", (13 * fs * lu).toFixed(1) + "px");
     const mg = 60 * lu; cab.style.setProperty("--m", mg.toFixed(1) + "px"); cab.style.setProperty("--gc", (36 * lu).toFixed(1) + "px");
-    cabW = Math.min(vw, anchoCara, 1300); cabX = (vw - cabW) / 2; cab.style.width = cabW + "px"; G.cabH = cab.offsetHeight;
+    cabW = Math.min(vw, anchoCara); cabX = (vw - cabW) / 2; cab.style.width = cabW + "px"; G.cabH = cab.offsetHeight;
     const fw = Math.round(Math.min(vw - 28, cel ? 560 : 640)); panelCom.style.maxHeight = ""; panelCom.style.width = fw + "px"; G.formW = fw; G.formH = panelCom.offsetHeight; G.formX = (vw - fw) / 2;
     colL = 0; colR = vw;
-    const Wd = Math.min(vw, 1240) - 2 * (cel ? 12 : 24), gap = cel ? 10 : 28, hMax = vh * (cel ? .44 : .52);
-    const wFila = Math.min(360, hMax * wE / hE, (Wd - 2 * gap) / 3);
+    const Wd = Math.min(vw, 1400) - 2 * (cel ? 12 : 24), gap = cel ? 10 : 32, hMax = vh * (cel ? .44 : .68);
+    const wFila = Math.min(440, hMax * wE / hE, (Wd - 2 * gap) / 3);
     COM.fila = wFila >= 200; G.carrusel = !COM.fila;
     const wPx = COM.fila ? wFila : Math.min(vw * .54, hMax * wE / hE);
     esc = Math.min((2 * RIM - 70) / wE, wPx * uR / wE); hM = hE * esc; wM = wE * esc;
@@ -2041,7 +2103,8 @@ function resolver(){
     }
     G.yCab = yTit; COM.marcos.forEach(m => { m.fin.y = yM; });
   }
-  COM.qS = L.pa0 + (L.pa1 - L.pa0) * .6;   // las bolas empiezan a caer cuando las hojas de la caja ya casi están abiertas
+  COM.tE = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45 + 120, aScroll(yTit, vh * .62)); COM.tS = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45, COM.tE - vh * .45);   // aterriza a la vista   // r44: cae el título con los pasos
+  COM.qS = COM.tE - vh * .08;   // luego salen las bolas de papel
   if (lado){   // la sección termina llenando la pantalla; las hojas se desarrugan mientras llega
     const poseEn = f => ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - (S.B + f) / ppw});
     for (let it = 0; it < 4; it++){
@@ -2167,8 +2230,11 @@ function moverBloques(){
   const vw = VP.w, vh = VP.h, zR = G.zR;
   // el título y los pasos suben con la página, detrás de la escena (los marcos pasan por delante y no lo tapan para siempre)
   const yT = proyectar(vC.set(0, G.yCab, zR))[1], fuera = yT + G.cabH < -20 || yT > vh + 20;
-  reglasCom.classList.toggle("ver", !fuera);
-  Object.assign(reglasCom.style, {left:G.cabX + "px", transform:`translateY(${yT.toFixed(1)}px)`, opacity:1});
+  // r44: cae de la caja: empieza detrás de ella (la caja lo tapa) y baja con gravedad hasta su lugar
+  const kT = pinza((pVista - G.S.com - COM.tS) / Math.max(1, COM.tE - COM.tS)), yCaja = proyectar(vC.set(0, -G.Hb, zR - 60))[1] - G.cabH;
+  const eT = kT * kT, yV = kT >= 1 ? yT : lerp(Math.min(yCaja, yT), yT, eT), giro = (1 - kT) * -2.2 * (kT > 0 ? 1 : 0);
+  reglasCom.classList.toggle("ver", kT > 0 && yV + G.cabH > -20 && yV < vh + 20);
+  Object.assign(reglasCom.style, {left:G.cabX + "px", transform:`translateY(${yV.toFixed(1)}px) rotate(${giro.toFixed(2)}deg)`, transformOrigin:"50% 0", opacity:pinza(kT / .12).toFixed(3)});
   // el formulario: en tablet y computador se queda fijo a la derecha mientras se recorren los marcos; en el celular va debajo de ellos
   const yF = proyectar(vC.set(0, G.yForm, zR))[1];
   const vis = yF < vh + 40 && yF + G.formH > -40;
