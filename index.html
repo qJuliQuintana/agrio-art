@@ -618,7 +618,7 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  com_pre:"Encargos personalizados", com_t:"Comisiones",
  com_intro:"Una ilustración hecha solo para ti, con el trazo de Agrio. Elige el tipo de encargo, cuéntame tu idea y la dibujamos juntos.",
  com_cta:"Empezar mi encargo", com_terms_cta:"Ver condiciones",
- cat_t:"Elige tu encargo", cat_sub:"Tres tamaños de historia. Entre más mundo, más tiempo de dibujo.", mas_pedido:"El más pedido",
+ cat_t:"Elige tu encargo", cat_sub:"Tres tamaños de historia. Entre más mundo, más tiempo de dibujo.", mas_pedido:"El más pedido", seleccionado:"Seleccionado",
  c1_n:"Primer plano", c1_q:"Retrato de cabeza y hombros con fondo sencillo. Ideal para un avatar, un regalo o tu propio monstruo.", c1_a:"Una persona o personaje", c1_b:"Fondo plano o con textura", c1_p:"Desde $250.000", c1_d:"1 a 2 semanas",
  c2_n:"Cuerpo entero", c2_q:"Un personaje completo, de pies a cabeza, con fondo sencillo. La forma más agria de verte dibujado.", c2_a:"Personaje completo con su pose", c2_b:"Fondo sencillo y detalles de tu historia", c2_p:"Desde $420.000", c2_d:"2 a 3 semanas",
  c3_n:"Mundo agrio", c3_q:"Uno o varios personajes dentro de un escenario completo. Una escena con todo su universo.", c3_a:"Varios personajes", c3_b:"Escenario con ambiente y detalle", c3_p:"Desde $750.000", c3_d:"4 a 6 semanas",
@@ -649,7 +649,7 @@ en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_
  com_pre:"Custom work", com_t:"Commissions",
  com_intro:"An illustration made just for you, in Agrio's line. Pick the kind of piece, tell me your idea and we'll draw it together.",
  com_cta:"Start my commission", com_terms_cta:"See the terms",
- cat_t:"Pick your commission", cat_sub:"Three sizes of story. The more world, the more drawing time.", mas_pedido:"Most requested",
+ cat_t:"Pick your commission", cat_sub:"Three sizes of story. The more world, the more drawing time.", mas_pedido:"Most requested", seleccionado:"Selected",
  c1_n:"Close-up", c1_q:"Head and shoulders portrait with a simple background. Great for an avatar, a gift or your own monster.", c1_a:"One person or character", c1_b:"Plain or textured background", c1_p:"From $250.000", c1_d:"1 to 2 weeks",
  c2_n:"Full body", c2_q:"A complete character, head to toe, with a simple background. The sourest way to get drawn.", c2_a:"Full character with a pose", c2_b:"Simple background and details of your story", c2_p:"From $420.000", c2_d:"2 to 3 weeks",
  c3_n:"Sour world", c3_q:"One or more characters inside a full scene. A picture with its whole universe.", c3_a:"Several characters", c3_b:"Detailed setting and mood", c3_p:"From $750.000", c3_d:"4 to 6 weeks",
@@ -1161,7 +1161,7 @@ const ARRUGAS = texArrugas(), GRANO = texGrano();
    así que se ven definidos en el celular, en el computador y con zoom. En la caja y en lo impreso se usan las mismas coordenadas (las de la caja),
    así lo impreso sigue los mismos pliegues. Las octavas más pequeñas que un píxel se apagan. */
 const CAJA_INV = {value:new THREE.Matrix4()};
-const ESC_PL = 240, AMP_PL = 1, TEXV = 4;   // TEXV: 1 kraft, 2 arrugado suave, 3 acanalado, 4 lino gofrado
+const ESC_PL = 240, AMP_PL = 1, TEXV = 1;   // TEXV: 1 kraft, 2 arrugado suave, 3 acanalado, 4 lino gofrado
 function granoFino(mat, fuerza = .2, escala = 1.6, o = {}){
   const arr = o.arr || 0, enCaja = !!o.caja, nit = !!o.nit;
   mat.onBeforeCompile = sh => {
@@ -1572,9 +1572,9 @@ function doblez(y){
 }
 
 /* ---------- Comisiones: el fondo de la caja (4 hojas con bisagra), su interior oscuro y los tres marcos vacíos que caen ---------- */
-const COM = {grupo:null, tapas:null, hojas:[], interior:null, marcos:[], placas:[], piso:0, sel:[0, 0, 0], idx:1, idxT:1, carr:1, paso:0, arr:null, sinClic:0};
+const COM = {grupo:null, tapas:null, hojas:[], interior:null, marcos:[], placas:[], piso:0, sel:[0, 0, 0], bor:[0, 0, 0], idx:1, idxT:1, carr:1, paso:0, arr:null, sinClic:0};
 /* modo del panel (abajo: celular y tablet vertical; lado: pantallas anchas) y de los marcos (carrusel con el dedo salvo en computador) */
-const modoCom = () => innerWidth >= 760 ? "lado" : "abajo";   // celular: columna
+const modoCom = () => (!TACTIL && innerWidth >= 1000) ? "lado" : "abajo";   // tablet y celular: en columna, el formulario debajo
 const esCarrusel = () => true;
 /* los tres marcos son iguales (unidades de la caja), con volumen como la caja y girados de tres cuartos */
 const ENCARGOS = [{n:1, w:560, h:460}, {n:2, w:560, h:460}, {n:3, w:560, h:460}];
@@ -1624,7 +1624,7 @@ function rN(x, y, z){
 }
 function hojaArrugada(w, h, sem){
   const geo = new THREE.PlaneGeometry(w, h, 44, 36), pos = geo.attributes.position, n = pos.count;
-  const plano = new Float32Array(n * 3), bola = new Float32Array(n * 3), pl = new Float32Array(n), R = Math.min(w, h) * .3, rMax = Math.hypot(w / 2, h / 2);
+  const plano = new Float32Array(n * 3), bola = new Float32Array(n * 3), pl = new Float32Array(n), bo = new Float32Array(n), ru = new Float32Array(n), R = Math.min(w, h) * .3, rMax = Math.hypot(w / 2, h / 2);
   for (let i = 0; i < n; i++){
     const x = pos.getX(i), y = pos.getY(i); plano[i * 3] = x; plano[i * 3 + 1] = y;
     // la bola: el centro de la hoja queda adelante y las esquinas se recogen atrás, con bultos y pliegues
@@ -1634,15 +1634,24 @@ function hojaArrugada(w, h, sem){
     // los pliegues que deja el arrugado (crestas a dos tamaños)
     const a = 1 - Math.abs(rN(x / 95 + sem, y / 95, 1.7) * 2 - 1), b = 1 - Math.abs(rN(x / 38 + 4, y / 38 + sem, 5.1) * 2 - 1);
     pl[i] = (a * a - .4) + .5 * (b * b - .4);
+    // el borde que se recoge: solo la franja de papel fuera del texto (unos 46 de 560), más en las esquinas
+    const dB = Math.min(w / 2 - Math.abs(x), h / 2 - Math.abs(y)), e = Math.max(0, 1 - dB / 46);
+    bo[i] = e * e * (1 + .6 * Math.max(0, 1 - Math.max(w / 2 - Math.abs(x), h / 2 - Math.abs(y)) / 60));
+    ru[i] = rN(x / 22 + sem * 3, y / 22, 8.3) * 2 - 1;
   }
-  return {geo, plano, bola, pl, w, c:-1};
+  return {geo, plano, bola, pl, bo, ru, w, h, c:-1, b:-1};
 }
-function arrugar(hj, c){   // c: 0 bola, 1 hoja desarrugada
-  if (Math.abs(c - hj.c) < .002) return; hj.c = c;
-  const pos = hj.geo.attributes.position.array, {plano, bola, pl} = hj, s = c * c * (3 - 2 * c);
+function arrugar(hj, c, br = 0){   // c: 0 bola, 1 hoja desarrugada; br: cuánto se recogen los bordes (las no elegidas)
+  if (Math.abs(c - hj.c) < .002 && Math.abs(br - hj.b) < .002) return; hj.c = c; hj.b = br;
+  const pos = hj.geo.attributes.position.array, {plano, bola, pl, bo, ru} = hj, s = c * c * (3 - 2 * c);
   const amp = hj.w * (.016 + .09 * (1 - c) * (1 - c) + .05 * Math.sin(Math.PI * c));
   for (let i = 0; i < pl.length; i++){
     pos[i * 3] = lerp(bola[i * 3], plano[i * 3], s); pos[i * 3 + 1] = lerp(bola[i * 3 + 1], plano[i * 3 + 1], s); pos[i * 3 + 2] = lerp(bola[i * 3 + 2], pl[i] * amp, s);
+    if (br > 0 && bo[i] > 0){   // el borde se arruga y se recoge hacia el centro y hacia atrás; el centro (el texto) queda liso
+      const k = br * bo[i] * s, px = plano[i * 3], py = plano[i * 3 + 1], L = Math.hypot(px, py) || 1;
+      pos[i * 3] -= px / L * k * 30; pos[i * 3 + 1] -= py / L * k * 30;
+      pos[i * 3 + 2] += k * (ru[i] * 26 - 42) + br * bo[i] * pl[i] * 44 * s;
+    }
   }
   hj.geo.attributes.position.needsUpdate = true; hj.geo.computeVertexNormals(); hj.geo.computeBoundingSphere();
 }
@@ -1662,8 +1671,6 @@ function armarComisiones(oculto){
     const geo = new THREE.BoxGeometry(a, b, c); recursos.push(geo); const m = new THREE.Mesh(geo, mc); m.position.set(px, py, pz); tapas.add(m); });
   [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(2 * RIM - 2, 5, HOJA); recursos.push(geo);
     const m = new THREE.Mesh(geo, mc); m.position.z = -sg * HOJA / 2; piv.add(m); piv.position.set(0, 3.5, sg * RIM); tapas.add(piv); COM.hojas.push({piv, eje:"x", sg, ext:true}); });
-  [1, -1].forEach(sg => { const piv = new THREE.Group(), geo = new THREE.BoxGeometry(HOJA_C, 5, 2 * RIM - 60); recursos.push(geo);
-    const m = new THREE.Mesh(geo, mc); m.position.x = -sg * HOJA_C / 2; piv.add(m); piv.position.set(sg * RIM, 9, 0); tapas.add(piv); COM.hojas.push({piv, eje:"z", sg, ext:false}); });
   // r40: tres hojas de papel con el texto de cada encargo; caen hechas bola y se desarrugan
   COM.grupo = new THREE.Group(); escena.add(COM.grupo); COM.marcos = [];
   COM.esc = 1;   // el tamaño depende de la pantalla: se fija en resolver()
@@ -1691,7 +1698,7 @@ function armarPlacas(){
     b.addEventListener("click", () => {
       if (performance.now() - COM.sinClic < 350) return;   // fue un deslizamiento, no un toque
       if (G.carrusel && Math.round(COM.carr) !== i){ COM.idx = i; return; }   // el de un lado: primero se trae al centro
-      elegirEncargo(String(e.n), true); if (comD < .98) irA(G.S.form);
+      elegirEncargo(String(e.n), true);
     });
     capaPlacas.appendChild(b); COM.placas.push(b);
     const d = document.createElement("button"); d.type = "button"; d.setAttribute("aria-label", t(c + "_n")); d.addEventListener("click", () => { COM.idx = i; });
@@ -1963,7 +1970,7 @@ function resolver(){
   COM.tapas.position.y = -Hb; caja.updateMatrixWorld(true);
   const bb = new THREE.Box3().setFromObject(COM.tapas); let yHoja = -1e9;
   for (const x of [bb.min.x, bb.max.x]) for (const z of [bb.min.z, bb.max.z]) yHoja = Math.max(yHoja, proyectar(new THREE.Vector3(x, bb.min.y, z))[1]);
-  const yS = aMundo(yHoja) - (lado ? 48 : 56) * uR;
+  let yS = aMundo(yHoja) - (lado ? 48 : 56) * uR;
   const {w:wE, h:hE} = ENCARGOS[0];
   let colL, colR, cabW, cabX, esc, hM, wM, yTit, yM, ytop = 0;
   if (!lado){   // celular: en columna (título, pasos, carrusel y formulario)
@@ -1977,7 +1984,7 @@ function resolver(){
     colL = 0; colR = vw;
     const wPx = Math.min(vw * .62, vh * .34 * wE / hE);
     esc = Math.min((2 * RIM - 70) / wE, wPx * uR / wE); hM = hE * esc; wM = wE * esc;
-    COM.paso = wM * .89 + 12 * uR; COM.caida = Math.max(80 * uR, hM * .42);
+    COM.paso = wM * .89 + (cel ? 12 : 28) * uR; COM.caida = 24 * uR;
     yTit = yS; yM = yTit - (G.cabH + 48) * uR - COM.caida - hM / 2;
     G.yFinCol = yM - hM / 2 - (placaH + puntosH + 10) * uR; G.yForm = G.yFinCol - 30 * uR;
   } else {   // computador y tablet: todo a la vez en la pantalla
@@ -2015,12 +2022,22 @@ function resolver(){
   L.pa0 = Math.max(0, yb0 - vh * .82); L.pa1 = Math.max(L.pa0 + vh * .3, yb0 - vh * .4);
   const aScroll = (y, Y) => (enP(0, y)[1] - Y) * ppw / kR;   // cuánto hay que bajar para que una altura del mundo quede en Y
   S.A = L.pa1;
-  if (lado){   // la sección termina llenando la pantalla; los marcos caen mientras llega
-    const fin = Math.max(L.pa1 + vh * .5, aScroll(yS, ytop));
-    COM.pE = fin - 4; COM.pS = Math.max(L.pa1, fin - vh * .5);
+  COM.qS = L.pa0 + (L.pa1 - L.pa0) * .6;   // las bolas empiezan a caer cuando las hojas de la caja ya casi están abiertas
+  if (lado){   // la sección termina llenando la pantalla; las hojas se desarrugan mientras llega
+    const poseEn = f => ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - (S.B + f) / ppw});
+    for (let it = 0; it < 4; it++){
+      poseEn(Math.max(L.pa1 + vh * .5, COM.qS + vh * .85, aScroll(yS, ytop))); caja.updateMatrixWorld(true);
+      let yH = -1e9; for (const x of [bb.min.x, bb.max.x]) for (const z of [bb.min.z, bb.max.z]) yH = Math.max(yH, proyectar(new THREE.Vector3(x, bb.min.y, z))[1]);
+      const sobra = yH + 24 - proyectar(new THREE.Vector3(0, yTit, zR))[1]; poseEn(0); caja.updateMatrixWorld(true);
+      if (sobra <= 0) break;
+      const d = sobra * uR; yS -= d; yTit -= d; yM -= d; G.yForm -= d; G.yFinCol -= d;
+    }
+    G.yCab = yTit; COM.marcos.forEach(m => { m.fin.y = yM; });
+    const fin = Math.max(L.pa1 + vh * .5, COM.qS + vh * .85, aScroll(yS, ytop));
+    COM.pE = fin - 4; COM.pS = Math.max(COM.qS + vh * .5, fin - vh * .45);
     S.fin = S.com + fin; S.form = S.titulo = S.fin;
   } else {
-    COM.pS = Math.max(L.pa1, aScroll(yM, vh * .9)); COM.pE = Math.max(COM.pS + vh * .35, aScroll(yM, vh * .52));
+    COM.pS = Math.max(COM.qS + vh * .5, aScroll(yM, vh * .9)); COM.pE = Math.max(COM.pS + vh * .3, aScroll(yM, vh * .55));
     S.titulo = S.com + aScroll(yTit, 86);
     S.fin = Math.max(S.com + COM.pE + 10, S.com + aScroll(G.yForm - G.formH * uR, vh - 28));
     S.form = Math.min(S.fin, S.com + aScroll(G.yForm, vh * .1));
@@ -2103,20 +2120,24 @@ function animarCom(s){
   // las hojas giran con suavidad: primero las laterales, luego la de adelante y la de atrás (todas quedan a la vista)
   COM.hojas.forEach(h => { const k = suave3(pinza(h.ext ? a / .6 : (a - .35) / .65)), ang = k * (h.ext ? 2.15 : 1.95);
     if (h.eje === "x") h.piv.rotation.x = -h.sg * ang; else h.piv.rotation.z = h.sg * ang; });
-  // los marcos: salen por la abertura uno tras otro y bajan con suavidad hasta su lugar; solo se apartan a los lados ya fuera de la caja y de las hojas
-  const esc = COM.esc, kc = COM.carr, D = Math.max(1, COM.pE - COM.pS);
+  // las hojas de papel: salen de la caja hechas bola, caen a su lugar y se desarrugan
+  const esc = COM.esc, kc = COM.carr, D = Math.max(1, COM.pE - COM.pS), y0 = -G.Hb + 160;
   COM.marcos.forEach((m, i) => {
-    const k = pinza((p - COM.pS - D * i * .25) / (D * .5)); m.u = k;
+    // kA: la bola sale de la caja y cae hasta su lugar (girando); c: ya en su lugar, se desarruga
+    const j = [1, 0, 2][i], kA = pinza((p - COM.qS - j * VP.h * .07) / (VP.h * .36)), c = kA < 1 ? 0 : suave3(pinza((p - COM.pS - D * j * .2) / (D * .6)));
+    m.u = c;
     COM.sel[i] += ((FORM.encuadre === String(i + 1) ? 1 : 0) - COM.sel[i]) * .18;
-    m.g.visible = m.sombra.visible = abierta && k > 0;
+    m.g.visible = abierta && kA > 0; m.sombra.visible = m.g.visible && kA >= 1;
     if (!m.g.visible) return;
-    const e = salida(k), h2 = m.e.h * esc / 2, dx = i - kc, lejos = Math.min(1, Math.abs(dx));
-    const ab = suave3(pinza((k - .12) / .88)), sg = i % 2 ? -1 : 1; arrugar(m.hj, ab);
-    m.g.position.set(m.fin.x + dx * COM.paso, m.fin.y + COM.caida * (1 - e) + COM.sel[i] * 22 * esc, m.fin.z - lejos * 90 * esc); m.g.scale.setScalar(esc * (1 - .22 * lejos) * (.6 + .4 * pinza(k / .12)));
-    m.g.rotation.set((1 - ab) * 1.7 * sg, -Math.max(-1, Math.min(1, dx)) * .2 + (1 - ab) * 2.3, (1 - ab) * 1.1 * sg + (1 - e) * m.giro);
-    const op = pinza(k / .35); m.mats.forEach(mt => { mt.opacity = op; });
-    m.sombra.position.set(m.g.position.x, m.fin.y - h2 - 4, m.fin.z + 10);
-    m.sombra.material.opacity = .26 * e * e * (1 - COM.sel[i] * .35) * (1 - lejos * .5);
+    const hay = FORM.encuadre !== "", bt = hay && FORM.encuadre !== String(i + 1) ? 1 : 0; COM.bor[i] += (bt - COM.bor[i]) * .14; if (Math.abs(bt - COM.bor[i]) < .003) COM.bor[i] = bt;
+    arrugar(m.hj, c, COM.bor[i] * c);
+    const h2 = m.e.h * esc / 2, dx = i - kc, lejos = Math.min(1, Math.abs(dx)), xF = m.fin.x + dx * COM.paso, zF = m.fin.z - lejos * 90 * esc;
+    const kx = suave3(pinza((kA - .3) / .7)), sg = i % 2 ? -1 : 1, gir = (1 - c) * (1 + kA * 3);
+    m.g.position.set(lerp(0, xF, kx), lerp(y0, m.fin.y, kA * kA), lerp(0, zF, kx) + COM.sel[i] * 40 * esc);
+    m.g.scale.setScalar(esc * (1 - .22 * lejos) * (1 + .12 * COM.sel[i] * c));
+    m.g.rotation.set(gir * 1.1 * sg, -Math.max(-1, Math.min(1, dx)) * .2 + gir * 1.6, gir * .8 * sg);
+    m.sombra.position.set(xF, m.fin.y - h2 - 4, m.fin.z + 10);
+    m.sombra.material.opacity = .26 * c * c * (1 - COM.sel[i] * .35) * (1 - lejos * .5);
   });
   capa.style.visibility = a > .5 ? "hidden" : "";
 }
