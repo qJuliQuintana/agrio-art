@@ -460,6 +460,48 @@ html.con-papel .com-reglas,html.con-papel .placas,html.con-papel .carr-puntos{di
 .pf-ficha[aria-pressed="true"]::after{content:"";position:absolute;inset:-11px -12px -12px -13px;border:3px solid #C6647E;border-radius:26px 34px 30px 22px/30px 22px 34px 26px;rotate:-1.2deg;pointer-events:none}
 .pf-ficha[aria-pressed="true"]::before{content:"";position:absolute;inset:-7px -16px -9px -9px;border:1.6px solid #C6647E;border-radius:34px 22px 28px 30px/22px 32px 24px 30px;rotate:.9deg;pointer-events:none;opacity:.7}
 .pf-fichas:has([aria-pressed="true"]) .pf-ficha:not([aria-pressed="true"]){opacity:.62}
+/* r49: la hoja es papel de verdad: arrugas con luz, fibras, bordes irregulares y sombra; ocupa casi todo el ancho */
+.papel-com{background:none;box-shadow:none;padding:0;filter:drop-shadow(0 24px 26px rgba(0,0,0,.24)) drop-shadow(0 2px 3px rgba(0,0,0,.12))}
+.papel-com::before,.papel-com::after{display:none}
+.pf-hoja{position:relative;padding:var(--pp,48px 56px);background:#F0EBE0;clip-path:var(--borde,none);box-shadow:inset 0 0 60px rgba(110,88,58,.16),inset 0 0 12px rgba(110,88,58,.12)}
+.pf-hoja::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;background:
+  linear-gradient(101deg,transparent 30%,rgba(70,52,30,.09) 30.5%,rgba(255,255,255,.35) 31.2%,transparent 33%),
+  linear-gradient(79deg,transparent 57%,rgba(255,255,255,.4) 57.4%,rgba(70,52,30,.08) 58.1%,transparent 60.5%),
+  linear-gradient(172deg,transparent 41%,rgba(70,52,30,.07) 41.4%,rgba(255,255,255,.35) 42%,transparent 44.5%),
+  linear-gradient(9deg,transparent 70%,rgba(70,52,30,.08) 70.4%,transparent 72.5%),
+  linear-gradient(140deg,transparent 18%,rgba(70,52,30,.06) 18.3%,transparent 20%)}
+.pf-hoja::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.62;filter:url(#arrugaPapel);background:#fff}
+.pf-fib{position:absolute;inset:0;pointer-events:none;opacity:.28;mix-blend-mode:multiply;filter:url(#fibraPapel);background:#fff}
+.pf-hoja>*:not(.pf-fib){position:relative;z-index:1}
+.pf-tit{white-space:nowrap}
+/* las fichas: borde de marcador hecho a mano; se eligen tocándolas */
+.pf-ficha{border:0;background:rgba(255,253,247,.42);rotate:var(--rot,0deg);transition:opacity .25s,translate .2s}
+@media (hover:hover){ .pf-ficha:hover{translate:0 -3px} }
+.pf-ficha[aria-pressed="true"]::before,.pf-ficha[aria-pressed="true"]::after{display:none}
+.pf-borde,.pf-sel{position:absolute;pointer-events:none;overflow:visible}
+.pf-borde{inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);filter:url(#marcador)}
+.pf-borde path{fill:none;stroke:#1C1C1D;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pf-borde path+path{stroke-width:1.1;opacity:.45}
+.pf-sel{inset:-18px;width:calc(100% + 36px);height:calc(100% + 36px);filter:url(#marcador)}
+.pf-sel path{fill:none;stroke:#C6647E;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .7s cubic-bezier(.6,0,.3,1)}
+.pf-sel path:nth-child(2){stroke-width:1.6;opacity:.6;transition-delay:.1s}
+.pf-sel path:nth-child(3){stroke-width:4;transition-delay:.55s;transition-duration:.35s}
+.pf-ficha[aria-pressed="true"] .pf-sel path{stroke-dashoffset:0}
+.pf-banda{background:none;padding:16px 20px 12px;z-index:0}
+.pf-banda::before{content:"";position:absolute;inset:8px 8px 2px;z-index:-1;background:repeating-linear-gradient(-3deg,#1C1C1D 0 8px,#29292b 8px 10px);clip-path:var(--mancha,none)}
+.pf-talon{border-top:0;padding:2px 20px 18px}
+.pf-cu{padding:14px 20px 10px}
+/* el formulario va dentro de la hoja */
+.papel-com .panel-com{position:relative;left:auto;top:auto;transform:none!important;width:auto!important;max-height:none!important;visibility:inherit!important;margin:var(--sep,44px) 0 0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;z-index:1}
+.papel-com .pc-in{max-width:none!important;width:100%;margin:0!important;display:grid;grid-template-columns:minmax(200px,.8fr) 1.7fr;column-gap:clamp(24px,4vw,64px);align-items:start}
+.papel-com .pc-in>h2,.papel-com .pc-in>.pc-sub{grid-column:1}
+.papel-com #pcForm{grid-column:2;grid-row:1 / span 3}
+.papel-com.pf-cel .pc-in{grid-template-columns:1fr}
+.papel-com.pf-cel #pcForm{grid-column:1;grid-row:auto}
+.papel-com #panelCom h2{font-size:var(--fh,42px);color:#C6647E}
+.papel-com .pc-campo input,.papel-com .pc-campo textarea{background:rgba(255,255,255,.5);border:1.6px solid #1C1C1D;border-radius:14px 9px 12px 10px/10px 13px 9px 14px}
+.papel-com .pc-chip{border:1.6px solid #1C1C1D;border-radius:18px 14px 17px 15px/15px 18px 14px 17px;background:transparent}
+.papel-com .pc-enviar{border-radius:22px 16px 20px 18px/18px 22px 16px 20px}
 .pc-in{position:relative;max-width:620px;margin:0 auto}
 .pc-cerrar{position:absolute;top:-4px;right:-6px;width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(242,240,235,.26);border-radius:50%;background:transparent;color:#F2F0EB;cursor:pointer}
 .pc-cerrar svg{width:16px;height:16px}
@@ -538,7 +580,9 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
     <li><span><b data-t-parte="k_c3:0"></b> <span data-t-parte="k_c3:1"></span></span></li>
   </ol>
 </div>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="fibraPapel"><feTurbulence type="fractalNoise" baseFrequency=".9 .25" numOctaves="3" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".55"/></feComponentTransfer></filter></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="fibraPapel"><feTurbulence type="fractalNoise" baseFrequency=".9 .25" numOctaves="3" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".55"/></feComponentTransfer></filter>
+<filter id="arrugaPapel" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".011 .015" numOctaves="4" seed="7" result="n"/><feDiffuseLighting in="n" surfaceScale="2.6" lighting-color="#fff" result="l"><feDistantLight azimuth="230" elevation="62"/></feDiffuseLighting><feComponentTransfer><feFuncR type="linear" slope="1.08" intercept=".02"/><feFuncG type="linear" slope="1.08" intercept=".02"/><feFuncB type="linear" slope="1.08" intercept=".02"/></feComponentTransfer></filter>
+<filter id="marcador" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="3" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 <section class="papel-com" id="papelCom" aria-label="Comisiones"></section>
 <canvas id="escena" aria-hidden="true"></canvas>
 <div class="zonas" id="zonas"></div>
@@ -1678,7 +1722,7 @@ function hojaArrugada(w, h, sem, rb = .3, sx = 44, sy = 36){
     const x = pos.getX(i), y = pos.getY(i); plano[i * 3] = x; plano[i * 3 + 1] = y;
     // la bola: el centro de la hoja queda adelante y las esquinas se recogen atrás, con bultos y pliegues
     const th = Math.atan2(y, x), fi = Math.hypot(x, y) / rMax * Math.PI * .96, dx = Math.sin(fi) * Math.cos(th), dy = Math.sin(fi) * Math.sin(th), dz = Math.cos(fi);
-    const q = .7 + .55 * rN(dx * 2.2 + sem, dy * 2.2, dz * 2.2) + .3 * Math.abs(rN(dx * 6 + sem, dy * 6 + 3, dz * 6) - .5);
+    const q = .7 + .55 * rN(dx * 2.2 + sem, dy * 2.2, dz * 2.2) + .3 * Math.abs(rN(dx * 6 + sem, dy * 6 + 3, dz * 6) - .5) + .16 * Math.abs(rN(dx * 13 + sem, dy * 13, dz * 13 + 5) - .5);
     bola[i * 3] = dx * R * q; bola[i * 3 + 1] = dy * R * q; bola[i * 3 + 2] = dz * R * q;
     // los pliegues que deja el arrugado (crestas a dos tamaños)
     const a = 1 - Math.abs(rN(x / 95 + sem, y / 95, 1.7) * 2 - 1), b = 1 - Math.abs(rN(x / 38 + 4, y / 38 + sem, 5.1) * 2 - 1);
@@ -1789,8 +1833,12 @@ function armarComisiones(oculto){
   html.classList.add("con-papel"); COM.bolas = [];
   const texB = texBola();
   for (let i = 0; i < 2; i++){
-    const hj = hojaArrugada(160, 160, 11 + i * 5.7, .3, 18, 18), mb = granoFino(new THREE.MeshStandardMaterial({map:texB, roughness:.93, metalness:0, side:THREE.DoubleSide}), .06, 1.6, {});
-    arrugar(hj, 0); const g = new THREE.Group(); g.add(new THREE.Mesh(hj.geo, mb)); recursos.push(hj.geo, mb); COM.grupo.add(g);
+    const hj = hojaArrugada(160, 160, 11 + i * 5.7, .3, 44, 44), mb = granoFino(new THREE.MeshStandardMaterial({map:texB, roughness:.9, metalness:0, side:THREE.DoubleSide, vertexColors:true, envMapIntensity:.7}), .05, 1.6, {});
+    arrugar(hj, 0);
+    { const pa = hj.geo.attributes.position, col = new Float32Array(pa.count * 3); let m = 0; for (let v = 0; v < pa.count; v++) m += Math.hypot(pa.getX(v), pa.getY(v), pa.getZ(v)); m /= pa.count;
+      for (let v = 0; v < pa.count; v++){ const r0 = Math.hypot(pa.getX(v), pa.getY(v), pa.getZ(v)) / m, c = Math.max(.5, Math.min(1, .62 + (r0 - .8) * 1.3)); col[v * 3] = col[v * 3 + 1] = col[v * 3 + 2] = c; }
+      hj.geo.setAttribute("color", new THREE.BufferAttribute(col, 3)); }   /* los huecos del arrugado, más oscuros */
+    const g = new THREE.Group(); g.add(new THREE.Mesh(hj.geo, mb)); recursos.push(hj.geo, mb); COM.grupo.add(g);
     COM.bolas.push({g, giro:[.4 + i, 1.3 - i * .7, .2 + i * .5]});
   }
   COM.papel = null;   // su tamaño sale del papel de la página: se arma en resolver()
@@ -1799,12 +1847,46 @@ function armarComisiones(oculto){
 /* el papel de la página: título, pasos y las fichas (botones reales) */
 const papelDOM = document.getElementById("papelCom");
 function armarPapelDOM(){
+  const pc = document.getElementById("panelCom"); if (pc.parentElement) pc.remove();   // el formulario se guarda (con lo escrito) y vuelve dentro de la hoja
   const pasos = [1, 2, 3].map(n => { const [a, b] = t("k_c" + n).split("|"); return `<li><span><b>${a.trim()}</b>${(b || "").trim()}</span></li>`; }).join("");
-  const fichas = [1, 2, 3].map(n => `<button type="button" class="pf-ficha" data-n="${n}" aria-pressed="${FORM.encuadre === String(n)}">`
+  const fichas = [1, 2, 3].map(n => `<button type="button" class="pf-ficha" data-n="${n}" aria-pressed="${FORM.encuadre === String(n)}" style="--rot:${[-.5, .35, -.25][n - 1]}deg">`
+    + `<svg class="pf-borde" aria-hidden="true"><path/><path/></svg><svg class="pf-sel" aria-hidden="true"><path pathLength="1"/><path pathLength="1"/><path pathLength="1"/></svg>`
     + `<span class="pf-banda"><span class="pf-num">N° 0${n}</span>${n === 2 ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
     + `<span class="pf-cu">${t("c" + n + "_q")}<span class="pf-l">${t("c" + n + "_a")}</span><span class="pf-l">${t("c" + n + "_b")}</span></span>`
-    + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span><span class="pf-el"><span class="pf-no">${t("elegir")}</span><span class="pf-si">✓ ${t("elegido")}</span></span></span></button>`).join("");
-  papelDOM.innerHTML = `<h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas">${fichas}</div>`;
+    + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span></span></button>`).join("");
+  papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas">${fichas}</div><div class="pf-form"></div></div>`;
+  papelDOM.querySelector(".pf-form").appendChild(pc);
+}
+/* trazos hechos a mano (suavizados): el borde de cada ficha, la marca de la elegida y el borde de la hoja */
+function suaveD(P, cerrar){ let d = `M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`; for (let i = 1; i < P.length - 1; i++){ const m = [(P[i][0] + P[i + 1][0]) / 2, (P[i][1] + P[i + 1][1]) / 2]; d += ` Q${P[i][0].toFixed(1)} ${P[i][1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}`; } const u = P[P.length - 1]; return d + ` L${u[0].toFixed(1)} ${u[1].toFixed(1)}` + (cerrar ? " Z" : ""); }
+function trazoRect(w, h, sem, j, m){
+  const P = [], lado = (x0, y0, x1, y1, k) => { const n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / 60)); for (let i = 0; i < n; i++){ const u = i / n; P.push([x0 + (x1 - x0) * u + (rH(sem, k, i) - .5) * j, y0 + (y1 - y0) * u + (rH(k, sem, i + 9) - .5) * j]); } };
+  lado(m, m, w - m, m, 1); lado(w - m, m, w - m, h - m, 2); lado(w - m, h - m, m, h - m, 3); lado(m, h - m, m, m, 4);
+  P.push([P[0][0] + 5, P[0][1] + (rH(sem, 5, 1) - .5) * j], [P[1][0] - 8, P[1][1] + 1]);   // se pasa un poco del inicio, como a mano
+  return suaveD(P);
+}
+function trazoLazo(w, h, sem){   // la marca rosa alrededor de la elegida: un rectángulo muy redondeado, a mano, que se cruza al cerrar
+  const P = [], cx = w / 2, cy = h / 2, a = w / 2 - 6, b = h / 2 - 6, ex = 2 / 5;
+  for (let k = 0; k <= 44; k++){ const t0 = -2.2 + k / 40 * 6.283, c = Math.cos(t0), s0 = Math.sin(t0), r = 1 + (rH(sem, k, 3) - .5) * .025 + k / 44 * .02;
+    P.push([cx + Math.sign(c) * Math.pow(Math.abs(c), ex) * a * r, cy + Math.sign(s0) * Math.pow(Math.abs(s0), ex) * b * r]); }
+  return suaveD(P);
+}
+function trazosPapel(){
+  papelDOM.querySelectorAll(".pf-ficha").forEach(f => {
+    const w = f.offsetWidth, h = f.offsetHeight, n = +f.dataset.n, b = f.querySelector(".pf-borde"), sl = f.querySelector(".pf-sel");
+    b.setAttribute("viewBox", `0 0 ${w + 8} ${h + 8}`); const pb = b.querySelectorAll("path"); pb[0].setAttribute("d", trazoRect(w + 8, h + 8, n * 3.1, 3, 4)); pb[1].setAttribute("d", trazoRect(w + 8, h + 8, n * 3.1 + 1.7, 3.5, 5));
+    sl.setAttribute("viewBox", `0 0 ${w + 36} ${h + 36}`); const ps = sl.querySelectorAll("path");
+    ps[0].setAttribute("d", trazoLazo(w + 36, h + 36, n * 5.3)); ps[1].setAttribute("d", trazoLazo(w + 36, h + 36, n * 5.3 + 2.9));
+    ps[2].setAttribute("d", `M${w + 4} 6 l9 12 l22 -30`);   // la palomita
+    const bd = f.querySelector(".pf-banda"), pts = []; for (let i = 0; i <= 10; i++) pts.push(`${i * 10}% ${(rH(n, i, 2) * 7).toFixed(1)}%`); for (let i = 10; i >= 0; i--) pts.push(`${i * 10}% ${(100 - rH(n, i, 6) * 9).toFixed(1)}%`);
+    bd.style.setProperty("--mancha", `polygon(${pts.join(",")})`);
+  });
+}
+function bordePapel(W, H){   // el borde de la hoja: irregular, como papel
+  const P = [], j = 3.2, paso = 26, lado = (x0, y0, x1, y1, k) => { const n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / paso)); for (let i = 0; i < n; i++){ const u = i / n, e = rH(k, i, 4) * j;
+    P.push(`${(x0 + (x1 - x0) * u + (k === 2 ? -e : k === 4 ? e : 0)).toFixed(1)}px ${(y0 + (y1 - y0) * u + (k === 1 ? e : k === 3 ? -e : 0)).toFixed(1)}px`); } };
+  lado(0, 0, W, 0, 1); lado(W, 0, W, H, 2); lado(W, H, 0, H, 3); lado(0, H, 0, 0, 4);
+  papelDOM.querySelector(".pf-hoja").style.setProperty("--borde", `polygon(${P.join(",")})`);
 }
 papelDOM.addEventListener("click", e => { const b = e.target.closest(".pf-ficha"); if (b) elegirEncargo(b.dataset.n, true); });
 /* medidas del papel: título y pasos con las medidas de Ilustraciones; las fichas legibles en cualquier pantalla */
@@ -1815,13 +1897,25 @@ function medidasPapel(W, lu, fs, cel){
   st.setProperty("--pp", cel ? "30px 16px 30px" : `${Math.round(48 * Math.min(1.2, lu))}px ${Math.round(54 * Math.min(1.2, lu))}px`);
   st.setProperty("--cols", cel ? 1 : 3); st.setProperty("--fc", cel ? 1 : 3); st.setProperty("--fg", (cel ? 26 : Math.max(22, 30 * Math.min(1.2, lu))) + "px");
   st.setProperty("--gc", (36 * lu).toFixed(1) + "px"); st.setProperty("--sep", (cel ? 30 : 44 * Math.min(1.2, lu)).toFixed(0) + "px");
+  st.setProperty("--fh", (cel ? 34 : Math.min(56, 44 * lu)).toFixed(0) + "px"); papelDOM.classList.toggle("pf-cel", cel);
+  // el título cabe en la hoja: si no, se achica
+  const tit = papelDOM.querySelector(".pf-tit"); let ft = parseFloat(st.getPropertyValue("--ft"));
+  for (let i = 0; i < 16 && tit.scrollWidth > tit.clientWidth + 1; i++){ ft *= .95; st.setProperty("--ft", ft.toFixed(1) + "px"); }
+  trazosPapel();
 }
 /* las bolas: papel impreso arrugado */
 function texBola(){
-  const c = document.createElement("canvas"); c.width = c.height = 512; const x = c.getContext("2d");
-  x.fillStyle = "#EFEBE2"; x.fillRect(0, 0, 512, 512);
-  for (let i = 0; i < 70; i++){ x.fillStyle = `rgba(28,28,29,${.25 + rH(i, 1, 2) * .35})`; x.fillRect(rH(i, 2, 3) * 480, rH(i, 3, 4) * 500, 30 + rH(i, 4, 5) * 140, 3 + rH(i, 5, 6) * 3); }
-  x.fillStyle = "#1C1C1D"; x.fillRect(40, 60, 230, 54); x.fillRect(300, 330, 170, 40); x.fillStyle = "#C6647E"; x.fillRect(320, 120, 60, 18);
+  const N = 1024, c = document.createElement("canvas"); c.width = c.height = N; const x = c.getContext("2d");
+  x.fillStyle = "#F0EBE0"; x.fillRect(0, 0, N, N);
+  for (let i = 0; i < 900; i++){ const a = rH(i, 3, 1) * N, b = rH(i, 3, 2) * N, l = 3 + rH(i, 3, 3) * 12, an = rH(i, 3, 4) * 6.28; x.strokeStyle = `rgba(70,50,30,${.04 + rH(i, 3, 5) * .06})`; x.lineWidth = 1;
+    x.beginPath(); x.moveTo(a, b); x.lineTo(a + Math.cos(an) * l, b + Math.sin(an) * l); x.stroke(); }
+  // restos de lo impreso: títulos, líneas de texto, una franja negra y viñetas rosas
+  x.fillStyle = "#1C1C1D"; x.font = `900 120px ${FU.cond}`; x.fillText(t("nav_com").toUpperCase(), 40, 170);
+  x.fillRect(60, 560, 520, 96); x.fillStyle = "#F3F1EC"; x.font = `900 64px ${FU.cond}`; x.fillText(t("c2_n").toUpperCase(), 84, 630);
+  x.fillStyle = "#3a3a3d"; x.font = `400 30px ${FU.sans}`;
+  [t("k_como"), t("c1_q"), t("c3_q"), t("c2_q")].forEach((l, i) => x.fillText(l, 40 + (i % 2) * 30, 260 + i * 48));
+  x.font = `600 28px ${FU.sans}`; [t("c2_a"), t("c2_b"), t("c1_a")].forEach((l, i) => { x.fillStyle = "#C6647E"; x.fillRect(70, 718 + i * 50, 14, 14); x.fillStyle = "#1C1C1D"; x.fillText(l, 98, 734 + i * 50); });
+  x.font = `900 48px ${FU.cond}`; x.fillText(t("c2_p").toUpperCase(), 600, 900); x.fillText(t("c3_n").toUpperCase(), 620, 470);
   return texDeCanvas(c);
 }
 /* el papel 3D lleva lo mismo que el de la página (medido de ella), para caer y desplegarse; ya liso, se cambia por el de la página */
@@ -1833,11 +1927,14 @@ function texPapel(){
     x.beginPath(); x.moveTo(a, b); x.lineTo(a + Math.cos(an) * l, b + Math.sin(an) * l); x.stroke(); }
   const r0 = el.getBoundingClientRect(), R = e => { const r = e.getBoundingClientRect(); return {x:r.left - r0.left, y:r.top - r0.top, w:r.width, h:r.height}; };
   const rr = (a, b, w, h, r) => { x.beginPath(); x.roundRect(a, b, w, h, r); };
-  el.querySelectorAll(".pf-ficha").forEach(f => { const q = R(f); x.fillStyle = "rgba(255,255,255,.32)"; x.fillRect(q.x, q.y, q.w, q.h); x.strokeStyle = "#1C1C1D"; x.lineWidth = 2.5; x.strokeRect(q.x + 1.25, q.y + 1.25, q.w - 2.5, q.h - 2.5); });
-  el.querySelectorAll(".pf-banda").forEach(f => { const q = R(f); x.fillStyle = "#1C1C1D"; x.fillRect(q.x, q.y, q.w, q.h); });
+  el.querySelectorAll(".pf-ficha").forEach(f => { const q = R(f); x.fillStyle = "rgba(255,253,247,.42)"; x.fillRect(q.x, q.y, q.w, q.h);
+    const sv = f.querySelector(".pf-borde"), qs = R(sv); x.save(); x.translate(qs.x, qs.y); x.strokeStyle = "#1C1C1D"; x.lineCap = x.lineJoin = "round";
+    sv.querySelectorAll("path").forEach((pa, i) => { if (!pa.getAttribute("d")) return; x.globalAlpha = i ? .45 : 1; x.lineWidth = i ? 1.1 : 2.4; x.stroke(new Path2D(pa.getAttribute("d"))); }); x.restore(); x.globalAlpha = 1; });
+  el.querySelectorAll(".pf-banda").forEach(f => { const q = R(f); x.fillStyle = "#1C1C1D"; x.fillRect(q.x + 8, q.y + 8, q.w - 16, q.h - 10); });
   el.querySelectorAll(".pf-tag").forEach(f => { const q = R(f); x.fillStyle = "#C6647E"; rr(q.x, q.y, q.w, q.h, q.h / 2); x.fill(); });
-  el.querySelectorAll(".pf-talon").forEach(f => { const q = R(f); x.setLineDash([5, 5]); x.strokeStyle = "#1C1C1D"; x.lineWidth = 2; x.beginPath(); x.moveTo(q.x, q.y + 1); x.lineTo(q.x + q.w, q.y + 1); x.stroke(); x.setLineDash([]); });
-  el.querySelectorAll(".pf-el").forEach(f => { const q = R(f); x.strokeStyle = "#1C1C1D"; x.lineWidth = 2; rr(q.x + 1, q.y + 1, q.w - 2, q.h - 2, q.h / 2); x.stroke(); });
+  el.querySelectorAll(".pc-campo input, .pc-campo textarea").forEach(f => { const q = R(f); if (!q.w) return; x.fillStyle = "rgba(255,255,255,.5)"; rr(q.x, q.y, q.w, q.h, 12); x.fill(); x.strokeStyle = "#1C1C1D"; x.lineWidth = 1.6; x.stroke(); });
+  el.querySelectorAll(".pc-chip").forEach(f => { const q = R(f); if (!q.w) return; rr(q.x, q.y, q.w, q.h, q.h / 2); if (f.getAttribute("aria-pressed") === "true"){ x.fillStyle = "#1C1C1D"; x.fill(); } x.strokeStyle = "#1C1C1D"; x.lineWidth = 1.6; x.stroke(); });
+  el.querySelectorAll(".pc-enviar").forEach(f => { const q = R(f); if (!q.w) return; x.fillStyle = "#E68AA1"; rr(q.x, q.y, q.w, q.h, 20); x.fill(); });
   el.querySelectorAll(".pf-l").forEach(f => { const q = R(f), fz = parseFloat(getComputedStyle(f).fontSize); x.fillStyle = "#C6647E"; x.fillRect(q.x + 1, q.y + fz * .5, fz * .45, fz * .45); });
   el.querySelectorAll(".pf-pasos li").forEach((f, i) => { const q = R(f), cs = getComputedStyle(f); x.font = `600 ${cs.fontSize} ${cs.fontFamily}`; x.fillStyle = "#C6647E"; x.textBaseline = "top"; x.fillText((i + 1) + ".", q.x, q.y + parseFloat(cs.fontSize) * .2); });
   // el texto, palabra por palabra en el mismo lugar que en la página
@@ -2160,11 +2257,11 @@ function resolver(){
     const fw = Math.round(Math.min(vw - 28, cel ? 560 : 640)); panelCom.style.maxHeight = ""; panelCom.style.width = fw + "px"; G.formW = fw; G.formH = panelCom.offsetHeight; G.formX = (vw - fw) / 2;
     colL = 0; colR = vw;
     // r47: el papel grande: su ancho y su alto salen del papel de la página
-    const Wp = Math.round(cel ? vw - 16 : Math.min(anchoCara, 1240)); medidasPapel(Wp, lu, fs, cel); const Hp = papelDOM.offsetHeight;
+    const Wp = Math.round(Math.min(vw - (cel ? 12 : 24), Math.max(anchoCara, vw * .9))); medidasPapel(Wp, lu, fs, cel); const Hp = papelDOM.offsetHeight; bordePapel(Wp, Hp);
     G.papel = {W:Wp, H:Hp, x:(vw - Wp) / 2, esc:Wp * uR / 1000};
     esc = 1; hM = Hp * uR; wM = Wp * uR; COM.fila = true; G.carrusel = false; COM.paso = 0;
     yTit = yS; yM = yS - hM / 2;
-    G.yFinCol = yS - hM; G.yForm = G.yFinCol - 40 * uR;
+    G.yFinCol = yS - hM; G.yForm = G.yFinCol; G.formH = 0;   // el formulario va dentro de la hoja
   } else {   // computador y tablet: todo a la vez en la pantalla
     cab.classList.add("cr-lado");
     const xa = Math.max(24, (vw - 1240) / 2), xb = vw - xa, gut = Math.max(28, vw * .028);
@@ -2212,7 +2309,7 @@ function resolver(){
     G.yCab = yTit; COM.marcos.forEach(m => { m.fin.y = yM; });
   }
   COM.tE = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45 + 120, aScroll(yTit, vh * .62)); COM.tS = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45, COM.tE - vh * .45);   // aterriza a la vista   // r44: cae el título con los pasos
-  COM.qS = L.pa0 + (L.pa1 - L.pa0) * .55;   // r47: las bolas salen cuando la caja ya casi está abierta
+  COM.qS = L.pa0 + (L.pa1 - L.pa0) * .5;   // r49: las bolas salen cuando la caja se está abriendo (con la abertura a la vista)
   if (lado){   // la sección termina llenando la pantalla; las hojas se desarrugan mientras llega
     const poseEn = f => ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - (S.B + f) / ppw});
     for (let it = 0; it < 4; it++){
@@ -2340,29 +2437,31 @@ function animarCom(s){
   // r47: el papel grande: sale de la caja hecho bola, cae a su lugar y se despliega; ya liso, queda el de la página (texto nítido)
   const yB0 = -G.Hb + 160, P = G.papel;
   if (COM.papel && P){
-    const pp = COM.papel, kA = pinza((p - COM.qS) / (VP.h * .36)), c = kA < 1 ? 0 : suave3(pinza((p - COM.pS) / Math.max(1, COM.pE - COM.pS)));
+    const pp = COM.papel, kA = pinza((p - COM.qS) / (VP.h * .34)), c = kA < 1 ? 0 : suave3(pinza((p - COM.pS) / Math.max(1, COM.pE - COM.pS)));
     COM.papelC = c; pp.g.visible = abierta && kA > 0 && c < 1;
     if (pp.g.visible){
       arrugar(pp.hj, c);
       const top = G.yCab, hW = P.H * G.uR, yC = top - hW / 2, yBola = top - Math.min(hW / 2, VP.h * .28 * G.uR), kx = suave3(pinza((kA - .3) / .7)), gir = (1 - c) * (1 + kA * 3);
-      pp.g.position.set(lerp(0, G.xPapel, kx), lerp(yB0, lerp(yBola, yC, c), kA * kA), lerp(0, G.zR, kx));
+      pp.g.position.set(lerp(0, G.xPapel, kx), caer(kA, yB0, lerp(yBola, yC, c)), lerp(0, G.zR, kx));
       pp.g.scale.setScalar(P.esc); pp.g.rotation.set(gir * .9, gir * 1.4, gir * .6);
       pp.mat.opacity = 1 - pinza((c - .92) / .08);
     }
     // las otras bolas: caen detrás y se quedan arrugadas, a los lados del papel
-    const r = (G.cel ? 24 : 38), sB = r * G.uR / 48, top = G.yCab, W = P.W, H = P.H;
+    const r = (G.cel ? 28 : 44), sB = r * G.uR / 48, top = G.yCab, W = P.W, H = P.H;
     const fin = [[W / 2 - r * .2, r * 2.2], [-W / 2 + r * .1, H * .58]], tt = performance.now() / 1000;
     COM.bolas.forEach((b, i) => {
-      const k = pinza((p - COM.qS - (i + 1) * VP.h * .055) / (VP.h * .34)); b.g.visible = abierta && k > 0; if (!b.g.visible) return;
+      const k = pinza((p - COM.qS - (i + 1) * VP.h * .06) / (VP.h * .34)); b.g.visible = abierta && k > 0; if (!b.g.visible) return;
       const kx = suave3(pinza((k - .3) / .7)), [fx, fy] = fin[i], xF = G.xPapel + fx * G.uR, yF = top - fy * G.uR;
       const fl = k >= 1 ? 1 : 0;   // ya en su sitio, flotan despacio
-      b.g.position.set(lerp((i - .5) * 80, xF, kx) + fl * Math.cos(tt * .7 + i * 2.1) * r * .12 * G.uR, lerp(yB0, yF, k * k) + fl * Math.sin(tt * .9 + i * 1.7) * r * .3 * G.uR, lerp(0, G.zR + 30, kx)); b.g.scale.setScalar(sB);
+      b.g.position.set(lerp((i - .5) * 80, xF, kx) + fl * Math.cos(tt * .7 + i * 2.1) * r * .12 * G.uR, caer(k, yB0, yF) + fl * Math.sin(tt * .9 + i * 1.7) * r * .3 * G.uR, lerp(0, G.zR + 30, kx)); b.g.scale.setScalar(sB);
       b.g.rotation.set(b.giro[0] + k * 5 + fl * Math.sin(tt * .4 + i) * .35, b.giro[1] + k * 3.5 + fl * tt * .22 * (i ? -1 : 1), b.giro[2] + k * 2);
     });
   }
   capa.style.visibility = a > .5 ? "hidden" : "";
 }
 const vC = new THREE.Vector3();
+/* la caída: primero sale de la caja por detrás de la hoja de adelante (despacio) y luego cae con gravedad, rápido, a la vista */
+function caer(k, y0, y1){ const sal = -G.Hb - HOJA_C - 40; return k < .4 ? lerp(y0, sal, salida(k / .4)) : lerp(sal, y1, Math.pow((k - .4) / .6, 2)); }
 /* el título, los pasos y el formulario siguen a la caja como una página (se calculan con la misma cámara) */
 function moverBloques(){
   const vw = VP.w, vh = VP.h, zR = G.zR;
@@ -2380,8 +2479,8 @@ function moverBloques(){
   // el formulario (de vidrio), debajo del papel
   const yF = proyectar(vC.set(0, G.yForm, zR))[1];
   const vis = yF < vh + 40 && yF + G.formH > -40;
-  panelCom.style.transform = `translate(${G.formX.toFixed(1)}px, ${yF.toFixed(1)}px)`;
-  panelCom.style.visibility = vis ? "visible" : "hidden"; panelCom.inert = !vis;
+  if (papelDOM.contains(panelCom)){ panelCom.style.transform = ""; panelCom.style.visibility = ""; panelCom.inert = false; }
+  else { panelCom.style.transform = `translate(${G.formX.toFixed(1)}px, ${yF.toFixed(1)}px)`; panelCom.style.visibility = vis ? "visible" : "hidden"; panelCom.inert = !vis; }
   comD = pinza((vh - yF) / (vh * .5));
 }
 /* cada marco es un botón: adentro sus detalles (en la perspectiva del marco), debajo el nombre y el precio */
