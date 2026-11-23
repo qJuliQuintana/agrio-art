@@ -423,9 +423,13 @@ html.modo-lado .panel-com .pc-campo textarea{min-height:84px}
 #pcForm .pc-enviar{margin-top:8px}
 /* r47: de la caja cae un papel grande con el título, los pasos y las fichas; el formulario de vidrio va debajo */
 html.con-papel .com-reglas,html.con-papel .placas,html.con-papel .carr-puntos{display:none!important}
-.papel-com{position:fixed;z-index:2;left:0;top:0;box-sizing:border-box;visibility:hidden;opacity:0;will-change:transform,opacity;color:#1C1C1D;background:#F2EEE5;
+.papel-com{position:fixed;z-index:2;left:0;top:0;box-sizing:border-box;visibility:hidden;opacity:0;color:#1C1C1D;background:#F2EEE5;
   padding:var(--pp,48px 56px);box-shadow:0 34px 60px -30px rgba(0,0,0,.42),0 2px 5px rgba(0,0,0,.08);font-family:var(--texto)}
-.papel-com.ver{visibility:visible}
+.papel-com.ver{visibility:visible;will-change:transform}
+html.tactil .papel-com{filter:none}
+html.tactil .pf-hoja::after,html.tactil .pf-fib{display:none}
+html.tactil .pf-hoja{background:#F0EBE0 var(--arrugas,none) 0 0/var(--arrT,600px) repeat}
+html.tactil .pf-borde,html.tactil .pf-sel{filter:none}
 .papel-com::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.6;background:
   linear-gradient(103deg,transparent 31%,rgba(60,45,30,.05) 31.4%,transparent 33%),linear-gradient(77deg,transparent 58%,rgba(60,45,30,.045) 58.3%,transparent 60.5%),
   linear-gradient(171deg,transparent 44%,rgba(255,255,255,.55) 44.3%,rgba(60,45,30,.04) 45%,transparent 47%),linear-gradient(8deg,transparent 71%,rgba(60,45,30,.05) 71.3%,transparent 73%),
@@ -459,7 +463,7 @@ html.con-papel .com-reglas,html.con-papel .placas,html.con-papel .carr-puntos{di
 @media (hover:hover){ .pf-ficha:hover .pf-el{background:#1C1C1D;color:#F3F1EC} .pf-ficha[aria-pressed="true"]:hover .pf-el{background:#E68AA1;color:#1C1C1D} }
 .pf-ficha[aria-pressed="true"]::after{content:"";position:absolute;inset:-11px -12px -12px -13px;border:3px solid #C6647E;border-radius:26px 34px 30px 22px/30px 22px 34px 26px;rotate:-1.2deg;pointer-events:none}
 .pf-ficha[aria-pressed="true"]::before{content:"";position:absolute;inset:-7px -16px -9px -9px;border:1.6px solid #C6647E;border-radius:34px 22px 28px 30px/22px 32px 24px 30px;rotate:.9deg;pointer-events:none;opacity:.7}
-.pf-fichas:has([aria-pressed="true"]) .pf-ficha:not([aria-pressed="true"]){opacity:.62}
+
 /* r49: la hoja es papel de verdad: arrugas con luz, fibras, bordes irregulares y sombra; ocupa casi todo el ancho */
 .papel-com{background:none;box-shadow:none;padding:0;filter:drop-shadow(0 24px 26px rgba(0,0,0,.24)) drop-shadow(0 2px 3px rgba(0,0,0,.12))}
 .papel-com::before,.papel-com::after{display:none}
@@ -497,6 +501,18 @@ html.con-papel .com-reglas,html.con-papel .placas,html.con-papel .carr-puntos{di
 .papel-com .pc-in>h2,.papel-com .pc-in>.pc-sub{grid-column:1}
 .papel-com #pcForm{grid-column:2;grid-row:1 / span 3}
 .papel-com.pf-cel .pc-in{grid-template-columns:1fr}
+/* r50: título, texto y campos juntos (proximidad); en computador nombre, correo y formato en una fila */
+.papel-com .panel-com{margin-top:clamp(26px,3vw,40px)}
+.papel-com .pc-in{display:block}
+.papel-com #panelCom h2{margin:0 0 4px}
+.papel-com .pc-sub{margin:0 0 16px}
+.papel-com:not(.pf-cel) #pcForm{grid-template-columns:1fr 1fr auto;column-gap:18px;align-items:end}
+.papel-com:not(.pf-cel) #pcForm>.f-nom{grid-column:1;grid-row:1}
+.papel-com:not(.pf-cel) #pcForm>.f-cor{grid-column:2;grid-row:1}
+.papel-com:not(.pf-cel) #pcForm>.f-for{grid-column:3;grid-row:1;margin-bottom:12px}
+.papel-com:not(.pf-cel) #pcForm>.f-esp{grid-row:2}
+.papel-com:not(.pf-cel) #pcForm>.f-env{grid-column:1;grid-row:3;margin-top:4px}
+.papel-com:not(.pf-cel) #pcForm>.f-ref{grid-column:2 / -1;grid-row:3;margin:4px 0 0;align-self:center}
 .papel-com.pf-cel #pcForm{grid-column:1;grid-row:auto}
 .papel-com #panelCom h2{font-size:var(--fh,42px);color:#C6647E}
 .papel-com .pc-campo input,.papel-com .pc-campo textarea{background:rgba(255,255,255,.5);border:1.6px solid #1C1C1D;border-radius:14px 9px 12px 10px/10px 13px 9px 14px}
@@ -1151,7 +1167,8 @@ try {
   renderer = new THREE.WebGLRenderer({canvas:lienzoGL, antialias:true, alpha:true, powerPreference:"high-performance"});
 } catch(e){ html.classList.add("no3d"); cajaLista(); throw e; }
 
-let DPR = Math.min(devicePixelRatio || 1, 4);
+const MAXDPR = matchMedia("(pointer:coarse)").matches ? 2 : 4;   // r51: en pantallas táctiles, 2 bastan (con zoom se dibuja más)
+let DPR = Math.min(devicePixelRatio || 1, MAXDPR);
 renderer.setPixelRatio(DPR);
 /* medidas de la vista: en pantallas táctiles se usa el alto mayor (sin la barra del navegador), así al bajar nada salta */
 const TACTIL = matchMedia("(pointer:coarse)").matches, VP = {w:innerWidth, h:innerHeight};
@@ -1273,9 +1290,9 @@ float gfO(float px, float tam){ return 1. - smoothstep(.35, 1., px / tam); }   /
 float gfFib(vec2 p, float px, float z){   // fibras: ruido alargado en una dirección que cambia despacio, con cuatro tamaños
   float an = (gfN(vec3(p / 300., z)) - .5) * .5; vec2 d = vec2(cos(an), sin(an)), q = vec2(dot(p, d), dot(p, vec2(-d.y, d.x)));
   float h = (gfN(vec3(q.x / 24., q.y / 2., z + 1.)) - .5) * gfO(px, 2.);
-  h += (gfN(vec3(q.x / 9., q.y / .75, z + 2.)) - .5) * .37 * gfO(px, .75);
-  h += (gfN(vec3(q.x / 3.4, q.y / .28, z + 3.)) - .5) * .14 * gfO(px, .28);
-  h += (gfN(vec3(q.x / 1.3, q.y / .11, z + 4.)) - .5) * .055 * gfO(px, .11);
+  float w2 = gfO(px, .75); if (w2 > 0.) h += (gfN(vec3(q.x / 9., q.y / .75, z + 2.)) - .5) * .37 * w2;
+  float w3 = gfO(px, .28); if (w3 > 0.) h += (gfN(vec3(q.x / 3.4, q.y / .28, z + 3.)) - .5) * .14 * w3;
+  float w4 = gfO(px, .11); if (w4 > 0.) h += (gfN(vec3(q.x / 1.3, q.y / .11, z + 4.)) - .5) * .055 * w4;
   return h; }
 float gfTex(vec3 p3){
   vec2 p = gfPlano(p3), fw = fwidth(p); float px = max(fw.x, fw.y);
@@ -1717,11 +1734,11 @@ function rN(x, y, z){
 }
 function hojaArrugada(w, h, sem, rb = .3, sx = 44, sy = 36){
   const geo = new THREE.PlaneGeometry(w, h, sx, sy), pos = geo.attributes.position, n = pos.count;
-  const plano = new Float32Array(n * 3), bola = new Float32Array(n * 3), pl = new Float32Array(n), bo = new Float32Array(n), ru = new Float32Array(n), R = Math.min(w, h) * rb, rMax = Math.hypot(w / 2, h / 2);
+  const plano = new Float32Array(n * 3), bola = new Float32Array(n * 3), pl = new Float32Array(n), bo = new Float32Array(n), ru = new Float32Array(n), dc = new Float32Array(n), R = Math.min(w, h) * rb, rMax = Math.hypot(w / 2, h / 2);
   for (let i = 0; i < n; i++){
     const x = pos.getX(i), y = pos.getY(i); plano[i * 3] = x; plano[i * 3 + 1] = y;
     // la bola: el centro de la hoja queda adelante y las esquinas se recogen atrás, con bultos y pliegues
-    const th = Math.atan2(y, x), fi = Math.hypot(x, y) / rMax * Math.PI * .96, dx = Math.sin(fi) * Math.cos(th), dy = Math.sin(fi) * Math.sin(th), dz = Math.cos(fi);
+    const nx = x / (w / 2), ny = y / (h / 2), th = Math.atan2(ny, nx), fi = Math.min(1, Math.hypot(nx, ny) / 1.414) * Math.PI * .96, dx = Math.sin(fi) * Math.cos(th), dy = Math.sin(fi) * Math.sin(th), dz = Math.cos(fi);
     const q = .7 + .55 * rN(dx * 2.2 + sem, dy * 2.2, dz * 2.2) + .3 * Math.abs(rN(dx * 6 + sem, dy * 6 + 3, dz * 6) - .5) + .16 * Math.abs(rN(dx * 13 + sem, dy * 13, dz * 13 + 5) - .5);
     bola[i * 3] = dx * R * q; bola[i * 3 + 1] = dy * R * q; bola[i * 3 + 2] = dz * R * q;
     // los pliegues que deja el arrugado (crestas a dos tamaños)
@@ -1730,16 +1747,17 @@ function hojaArrugada(w, h, sem, rb = .3, sx = 44, sy = 36){
     // el borde que se recoge: solo la franja de papel fuera del texto (unos 46 de 560), más en las esquinas
     const dB = Math.min(w / 2 - Math.abs(x), h / 2 - Math.abs(y)), e = Math.max(0, 1 - dB / 46);
     bo[i] = e * e * (1 + .6 * Math.max(0, 1 - Math.max(w / 2 - Math.abs(x), h / 2 - Math.abs(y)) / 60));
-    ru[i] = rN(x / 22 + sem * 3, y / 22, 8.3) * 2 - 1;
+    ru[i] = rN(x / 22 + sem * 3, y / 22, 8.3) * 2 - 1; dc[i] = Math.min(1, Math.hypot(x / (w / 2), y / (h / 2)) / 1.414) * (.85 + .3 * rN(x / 120, y / 120, 2.2));
   }
-  return {geo, plano, bola, pl, bo, ru, w, h, c:-1, b:-1};
+  return {geo, plano, bola, pl, bo, ru, dc, w, h, c:-1, b:-1, org:0};
 }
 function arrugar(hj, c, br = 0){   // c: 0 bola, 1 hoja desarrugada; br: cuánto se recogen los bordes (las no elegidas)
   if (Math.abs(c - hj.c) < .002 && Math.abs(br - hj.b) < .002) return; hj.c = c; hj.b = br;
   const pos = hj.geo.attributes.position.array, {plano, bola, pl, bo, ru} = hj, s = c * c * (3 - 2 * c);
   const amp = hj.w * ((HOJA_EST ? .006 + .014 * br : .016) + .09 * (1 - c) * (1 - c) + .05 * Math.sin(Math.PI * c));
   for (let i = 0; i < pl.length; i++){
-    pos[i * 3] = lerp(bola[i * 3], plano[i * 3], s); pos[i * 3 + 1] = lerp(bola[i * 3 + 1], plano[i * 3 + 1], s); pos[i * 3 + 2] = lerp(bola[i * 3 + 2], pl[i] * amp, s);
+    const si = hj.org ? (v => v * v * (3 - 2 * v))(Math.max(0, Math.min(1, (c - hj.org * Math.min(1, hj.dc[i])) / (1 - hj.org)))) : s;
+    pos[i * 3] = lerp(bola[i * 3], plano[i * 3], si); pos[i * 3 + 1] = lerp(bola[i * 3 + 1], plano[i * 3 + 1], si); pos[i * 3 + 2] = lerp(bola[i * 3 + 2], pl[i] * amp, si);
     if (br > 0 && bo[i] > 0){   // el borde se arruga y se recoge hacia el centro y hacia atrás; el centro (el texto) queda liso
       const k = br * bo[i] * s, px = plano[i * 3], py = plano[i * 3 + 1], L = Math.hypot(px, py) || 1;
       pos[i * 3] -= px / L * k * 30; pos[i * 3 + 1] -= py / L * k * 30;
@@ -1846,6 +1864,23 @@ function armarComisiones(oculto){
 }
 /* el papel de la página: título, pasos y las fichas (botones reales) */
 const papelDOM = document.getElementById("papelCom");
+/* r51: arrugas y fibras del papel en una imagen (para pantallas táctiles): relieve de ruido con luz, hecho una vez */
+let ARRUGAS_URL = "";
+function imagenArrugas(){
+  if (ARRUGAS_URL) return ARRUGAS_URL;
+  const N = 384, c = document.createElement("canvas"); c.width = c.height = N; const x = c.getContext("2d"), im = x.createImageData(N, N), H = new Float32Array(N * N);
+  const vn = (u, v, q, sd) => { const X = u * q, Y = v * q, i = Math.floor(X), j = Math.floor(Y), fx = X - i, fy = Y - j, sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy), L = (a, b) => rH((i + a) % q, (j + b) % q, sd);
+    return lerp(lerp(L(0, 0), L(1, 0), sx), lerp(L(0, 1), L(1, 1), sx), sy); };   // ruido que se repite sin costura
+  const per = (u, v, f) => { let a = 0, s0 = 1; for (let o = 0; o < 4; o++){ a += (vn(u, v, f * (1 << o), o * 7.1) - .5) * s0; s0 *= .5; } return a; };
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) H[j * N + i] = per(i / N, j / N, 5);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++){
+    const dx = H[j * N + (i + 1) % N] - H[j * N + (i + N - 1) % N], dy = H[((j + 1) % N) * N + i] - H[((j + N - 1) % N) * N + i], l = Math.max(0, Math.min(1, .82 + (dx * .7 - dy * .7) * 6));
+    const f = (rH(i, j, 3) - .5) * .06, v = Math.max(0, Math.min(255, 255 * (.9 + .1 * l + f))), o = (j * N + i) * 4;
+    im.data[o] = v; im.data[o + 1] = v * .985; im.data[o + 2] = v * .955; im.data[o + 3] = Math.round(255 * (.5 - .5 * l + .08));
+  }
+  x.putImageData(im, 0, 0); ARRUGAS_URL = c.toDataURL("image/png"); return ARRUGAS_URL;
+}
+if (matchMedia("(pointer:coarse)").matches){ html.classList.add("tactil"); }
 function armarPapelDOM(){
   const pc = document.getElementById("panelCom"); if (pc.parentElement) pc.remove();   // el formulario se guarda (con lo escrito) y vuelve dentro de la hoja
   const pasos = [1, 2, 3].map(n => { const [a, b] = t("k_c" + n).split("|"); return `<li><span><b>${a.trim()}</b>${(b || "").trim()}</span></li>`; }).join("");
@@ -1856,6 +1891,7 @@ function armarPapelDOM(){
     + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span></span></button>`).join("");
   papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas">${fichas}</div><div class="pf-form"></div></div>`;
   papelDOM.querySelector(".pf-form").appendChild(pc);
+  if (html.classList.contains("tactil")) papelDOM.querySelector(".pf-hoja").style.setProperty("--arrugas", `url(${imagenArrugas()})`);
 }
 /* trazos hechos a mano (suavizados): el borde de cada ficha, la marca de la elegida y el borde de la hoja */
 function suaveD(P, cerrar){ let d = `M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`; for (let i = 1; i < P.length - 1; i++){ const m = [(P[i][0] + P[i + 1][0]) / 2, (P[i][1] + P[i + 1][1]) / 2]; d += ` Q${P[i][0].toFixed(1)} ${P[i][1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}`; } const u = P[P.length - 1]; return d + ` L${u[0].toFixed(1)} ${u[1].toFixed(1)}` + (cerrar ? " Z" : ""); }
@@ -1953,7 +1989,7 @@ function armarPapel3D(){
   const P = G.papel, hU = 1000 * P.H / P.W, sy = Math.min(150, Math.max(60, Math.round(64 * P.H / P.W)));
   if (COM.papel){ COM.grupo.remove(COM.papel.g); COM.papel.hj.geo.dispose(); COM.papel.mat.map.dispose(); COM.papel.mat.dispose(); }
   const hj = hojaArrugada(1000, hU, 3.3, .13, 64, sy), mat = nitido(new THREE.MeshStandardMaterial({map:texPapel(), roughness:.95, metalness:0, side:THREE.DoubleSide, transparent:true}));
-  arrugar(hj, 0); const g = new THREE.Group(); g.add(new THREE.Mesh(hj.geo, mat)); COM.grupo.add(g);
+  hj.org = .5; arrugar(hj, 0); const g = new THREE.Group(); g.add(new THREE.Mesh(hj.geo, mat)); COM.grupo.add(g);
   COM.papel = {g, hj, mat};
 }
 const capaPlacas = document.getElementById("placas"), puntosCarr = document.getElementById("carrPuntos");
@@ -2033,6 +2069,7 @@ function matrizCuadro(w, h, [p0, p1, p2, p3]){
   return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${p0[0]},${p0[1]},0,1)`;
 }
 function construir(){
+  G.forzar = performance.now() + 1500;   // se vuelve a dibujar aunque no haya scroll
   if (caja){ escena.remove(caja); recursos.splice(0).forEach(r => r.dispose && r.dispose()); }
   if (COM.grupo){ escena.remove(COM.grupo); COM.grupo = null; }
   const cel = G.cel = esCel(), {Wb, Db, r} = G, F = Wb - 2 * r; G.carrusel = esCarrusel(); G.modo = modoCom();
@@ -2196,6 +2233,7 @@ function alinearY(q, punto, yPx){
   return q;
 }
 function resolver(){
+  G.forzar = performance.now() + 1500;
   caja.position.y = 0; caja.updateMatrixWorld(true);
   const vw = VP.w, vh = VP.h, cel = G.cel, {Wb, Db} = G;
   camara.aspect = vw / vh; camara.updateProjectionMatrix();
@@ -2243,7 +2281,7 @@ function resolver(){
   COM.tapas.position.y = -Hb; caja.updateMatrixWorld(true);
   const bb = new THREE.Box3().setFromObject(COM.tapas); let yHoja = -1e9;
   for (const x of [bb.min.x, bb.max.x]) for (const z of [bb.min.z, bb.max.z]) yHoja = Math.max(yHoja, proyectar(new THREE.Vector3(x, bb.min.y, z))[1]);
-  let yS = aMundo(yHoja) - (lado ? 48 : 56) * uR;
+  let yS = aMundo(yHoja) - (lado ? 48 : 56) * uR; const yS0 = yS;
   const {w:wE, h:hE} = ENCARGOS[0];
   let colL, colR, cabW, cabX, esc, hM, wM, yTit, yM, ytop = 0;
   if (!lado){   // celular: en columna (título, pasos, carrusel y formulario)
@@ -2308,6 +2346,10 @@ function resolver(){
     }
     G.yCab = yTit; COM.marcos.forEach(m => { m.fin.y = yM; });
   }
+  // r50: el papel empieza justo debajo de las hojas de la caja (sin espacio muerto); el título baja dentro del papel lo necesario
+  if (!lado && G.papel){ const yP = yS0 + 36 * uR, extra = Math.max(0, (yP - yTit) / uR), hoja = papelDOM.querySelector(".pf-hoja");
+    hoja.style.paddingTop = ""; hoja.style.paddingTop = (parseFloat(getComputedStyle(hoja).paddingTop) + extra) + "px";
+    G.papel.H = papelDOM.offsetHeight; bordePapel(G.papel.W, G.papel.H); G.yCab = yP; }
   COM.tE = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45 + 120, aScroll(yTit, vh * .62)); COM.tS = Math.max(L.pa0 + (L.pa1 - L.pa0) * .45, COM.tE - vh * .45);   // aterriza a la vista   // r44: cae el título con los pasos
   COM.qS = L.pa0 + (L.pa1 - L.pa0) * .5;   // r49: las bolas salen cuando la caja se está abriendo (con la abertura a la vista)
   if (lado){   // la sección termina llenando la pantalla; las hojas se desarrugan mientras llega
@@ -2324,7 +2366,7 @@ function resolver(){
     COM.pE = fin - 4; COM.pS = Math.max(COM.qS + vh * .5, fin - vh * .45);
     S.fin = S.com + fin; S.form = S.titulo = S.fin;
   } else {
-    COM.pS = Math.max(COM.qS + vh * .5, aScroll(yTit, vh * .8)); COM.pE = Math.max(COM.pS + vh * .3, aScroll(yTit, vh * .2));   // el papel se despliega mientras sube a la vista
+    COM.pS = COM.qS + vh * .3; COM.pE = Math.max(COM.pS + vh * .75, aScroll(yTit, vh * .15));   // r50: se abre apenas cae, despacio   // el papel se despliega mientras sube a la vista
     S.titulo = S.com + aScroll(yTit, 86);
     S.fin = Math.max(S.com + COM.pE + 10, S.com + aScroll(G.yForm - G.formH * uR, vh - 28));
     S.form = Math.min(S.fin, S.com + aScroll(G.yForm, vh * .1));
@@ -2441,18 +2483,21 @@ function animarCom(s){
     COM.papelC = c; pp.g.visible = abierta && kA > 0 && c < 1;
     if (pp.g.visible){
       arrugar(pp.hj, c);
-      const top = G.yCab, hW = P.H * G.uR, yC = top - hW / 2, yBola = top - Math.min(hW / 2, VP.h * .28 * G.uR), kx = suave3(pinza((kA - .3) / .7)), gir = (1 - c) * (1 + kA * 3);
+      const top = G.yCab, hW = P.H * G.uR, yC = top - hW / 2, yBola = top - P.W * .17 * G.uR, kx = suave3(pinza((kA - .3) / .7)), gir = (1 - c) * (1 + kA * 3);
       pp.g.position.set(lerp(0, G.xPapel, kx), caer(kA, yB0, lerp(yBola, yC, c)), lerp(0, G.zR, kx));
-      pp.g.scale.setScalar(P.esc); pp.g.rotation.set(gir * .9, gir * 1.4, gir * .6);
-      pp.mat.opacity = 1 - pinza((c - .92) / .08);
+      pp.g.scale.setScalar(P.esc);
+      { const g0 = 1 + kA * 3, e = suave3(Math.min(1, c * 1.6)), des = v => v * (1 - e) + Math.round(v / 6.2832) * 6.2832 * e;   // al abrirse, deja de girar por el camino más corto
+        pp.g.rotation.set(des(g0 * .9), des(g0 * 1.4), des(g0 * .6)); }
+      pp.mat.opacity = 1 - pinza((c - .965) / .035);
     }
     // las otras bolas: caen detrás y se quedan arrugadas, a los lados del papel
     const r = (G.cel ? 28 : 44), sB = r * G.uR / 48, top = G.yCab, W = P.W, H = P.H;
-    const fin = [[W / 2 - r * .2, r * 2.2], [-W / 2 + r * .1, H * .58]], tt = performance.now() / 1000;
+    const fin = [[W / 2 - r * .2, r * 2.2], [-W / 2 + r * .1, H * .58]], tt = performance.now() / 1000; COM.flotando = false;
     COM.bolas.forEach((b, i) => {
       const k = pinza((p - COM.qS - (i + 1) * VP.h * .06) / (VP.h * .34)); b.g.visible = abierta && k > 0; if (!b.g.visible) return;
       const kx = suave3(pinza((k - .3) / .7)), [fx, fy] = fin[i], xF = G.xPapel + fx * G.uR, yF = top - fy * G.uR;
       const fl = k >= 1 ? 1 : 0;   // ya en su sitio, flotan despacio
+      if (fl){ const yv = proyectar(b.g.position)[1]; if (yv > -120 && yv < VP.h + 120) COM.flotando = true; }
       b.g.position.set(lerp((i - .5) * 80, xF, kx) + fl * Math.cos(tt * .7 + i * 2.1) * r * .12 * G.uR, caer(k, yB0, yF) + fl * Math.sin(tt * .9 + i * 1.7) * r * .3 * G.uR, lerp(0, G.zR + 30, kx)); b.g.scale.setScalar(sB);
       b.g.rotation.set(b.giro[0] + k * 5 + fl * Math.sin(tt * .4 + i) * .35, b.giro[1] + k * 3.5 + fl * tt * .22 * (i ? -1 : 1), b.giro[2] + k * 2);
     });
@@ -2473,9 +2518,9 @@ function moverBloques(){
   reglasCom.classList.toggle("ver", kT > 0 && yV + G.cabH > -20 && yV < vh + 20);
   Object.assign(reglasCom.style, {left:G.cabX + "px", transform:`translateY(${yV.toFixed(1)}px) rotate(${giro.toFixed(2)}deg)`, transformOrigin:"50% 0", opacity:pinza(kT / .12).toFixed(3)});
   // r47: el papel de la página, en el mismo lugar que el papel 3D; aparece cuando este ya quedó liso
-  if (G.papel){ const yP = proyectar(vC.set(0, G.yCab, zR))[1], c = COM.papelC || 0, vis = c > .9 && yP < vh + 20 && yP + G.papel.H > -20;
+  if (G.papel){ const yP = proyectar(vC.set(0, G.yCab, zR))[1], c = COM.papelC || 0, vis = c > .96 && yP < vh + 20 && yP + G.papel.H > -20;
     papelDOM.classList.toggle("ver", vis); papelDOM.inert = !vis;
-    Object.assign(papelDOM.style, {transform:`translate(${G.papel.x.toFixed(1)}px, ${yP.toFixed(1)}px)`, opacity:pinza((c - .9) / .1).toFixed(3)}); }
+    Object.assign(papelDOM.style, {transform:`translate(${G.papel.x.toFixed(1)}px, ${yP.toFixed(1)}px)`, opacity:pinza((c - .96) / .04).toFixed(3)}); }
   // el formulario (de vidrio), debajo del papel
   const yF = proyectar(vC.set(0, G.yForm, zR))[1];
   const vis = yF < vh + 40 && yF + G.formH > -40;
@@ -2504,13 +2549,16 @@ function moverPlacas(){
   else { puntosCarr.classList.remove("ver"); puntosCarr.style.opacity = 0; }
 
 }
-let tPrev = 0;
+let tPrev = 0, pDib = -1e9, forzarHasta = 0;
+["resize", "click", "keydown", "touchend", "pointerup", "wheel"].forEach(ev => addEventListener(ev, () => { forzarHasta = performance.now() + 1500; }, {passive:true}));
+if (window.visualViewport) ["resize", "scroll"].forEach(ev => visualViewport.addEventListener(ev, () => { forzarHasta = performance.now() + 800; }));
 function cuadro(now){
   const dt = Math.min(64, now - (tPrev || now)); tPrev = now;
   const meta = recorrido(), k = reducido ? 1 : 1 - Math.pow(.9, dt / 16.7);
   pVista += (meta - pVista) * k; if (Math.abs(meta - pVista) < .3) pVista = meta;
-  if (G.poses){
-    const sV = pVista;
+  const sV = pVista, quieto = Math.abs(sV - pDib) < .01 && !COM.flotando && entrada >= 1 && now > Math.max(forzarHasta, G.forzar || 0);
+  if (G.poses && !quieto){
+    pDib = sV;
     ponerPose(poseActual(sV)); ajustarLargo(sV); CAJA_INV.value.copy(caja.matrixWorld).invert(); animarCom(sV);
     if (zoomV) camara.setViewOffset(VP.w, VP.h, zoomV.x, zoomV.y, zoomV.w, zoomV.h);
     renderer.render(escena, camara);
@@ -2539,7 +2587,7 @@ function irA(meta){
 ["wheel", "touchstart", "keydown"].forEach(ev => addEventListener(ev, () => { viaje++; }, {passive:true}));
 
 /* ---------- Tamaño y arranque ---------- */
-function medirLienzo(){ medirVista(); DPR = Math.min(devicePixelRatio || 1, 4); zoomK = ""; ajustarNitidez(); }
+function medirLienzo(){ medirVista(); DPR = Math.min(devicePixelRatio || 1, MAXDPR); zoomK = ""; ajustarNitidez(); }
 let rsT;
 let anchoRs = innerWidth;
 /* en pantallas táctiles solo cuenta el cambio de ancho (girar el aparato): la barra del navegador y el teclado no reacomodan la caja */
