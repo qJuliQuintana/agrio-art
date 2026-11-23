@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#C3C2BE">
 <title>Agrio Art · Galería de ilustraciones y arte</title>
 <meta name="description" content="Galería de ilustraciones y arte de Agrio, tattoo artist e ilustrador en Bogotá, Colombia.">
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@500;600;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -430,6 +431,7 @@ html.tactil .papel-com{filter:none}
 html.tactil .pf-hoja::after,html.tactil .pf-fib{display:none}
 html.tactil .pf-hoja{background:#F0EBE0 var(--arrugas,none) 0 0/var(--arrT,600px) repeat}
 html.tactil .pf-borde,html.tactil .pf-sel{filter:none}
+html.tactil .pf-hoja{box-shadow:inset 0 0 18px rgba(110,88,58,.14)}
 .papel-com::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.6;background:
   linear-gradient(103deg,transparent 31%,rgba(60,45,30,.05) 31.4%,transparent 33%),linear-gradient(77deg,transparent 58%,rgba(60,45,30,.045) 58.3%,transparent 60.5%),
   linear-gradient(171deg,transparent 44%,rgba(255,255,255,.55) 44.3%,rgba(60,45,30,.04) 45%,transparent 47%),linear-gradient(8deg,transparent 71%,rgba(60,45,30,.05) 71.3%,transparent 73%),
@@ -465,9 +467,9 @@ html.tactil .pf-borde,html.tactil .pf-sel{filter:none}
 .pf-ficha[aria-pressed="true"]::before{content:"";position:absolute;inset:-7px -16px -9px -9px;border:1.6px solid #C6647E;border-radius:34px 22px 28px 30px/22px 32px 24px 30px;rotate:.9deg;pointer-events:none;opacity:.7}
 
 /* r49: la hoja es papel de verdad: arrugas con luz, fibras, bordes irregulares y sombra; ocupa casi todo el ancho */
-.papel-com{background:none;box-shadow:none;padding:0;filter:drop-shadow(0 24px 26px rgba(0,0,0,.24)) drop-shadow(0 2px 3px rgba(0,0,0,.12))}
+.papel-com{background:none;box-shadow:0 26px 40px -22px rgba(0,0,0,.35),0 2px 4px rgba(0,0,0,.08);padding:0}
 .papel-com::before,.papel-com::after{display:none}
-.pf-hoja{position:relative;padding:var(--pp,48px 56px);background:#F0EBE0;clip-path:var(--borde,none);box-shadow:inset 0 0 60px rgba(110,88,58,.16),inset 0 0 12px rgba(110,88,58,.12)}
+.pf-hoja{position:relative;padding:var(--pp,48px 56px);background:#F0EBE0;clip-path:var(--borde,none);box-shadow:inset 0 0 22px rgba(110,88,58,.15)}
 .pf-hoja::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;background:
   linear-gradient(101deg,transparent 30%,rgba(70,52,30,.09) 30.5%,rgba(255,255,255,.35) 31.2%,transparent 33%),
   linear-gradient(79deg,transparent 57%,rgba(255,255,255,.4) 57.4%,rgba(70,52,30,.08) 58.1%,transparent 60.5%),
@@ -502,7 +504,8 @@ html.tactil .pf-borde,html.tactil .pf-sel{filter:none}
 .papel-com #pcForm{grid-column:2;grid-row:1 / span 3}
 .papel-com.pf-cel .pc-in{grid-template-columns:1fr}
 /* r50: título, texto y campos juntos (proximidad); en computador nombre, correo y formato en una fila */
-.papel-com .panel-com{margin-top:clamp(26px,3vw,40px)}
+.papel-com .panel-com{margin-top:clamp(56px,7vw,104px)}
+.papel-com:not(.pf-cel) .panel-com{max-width:min(860px,100%);margin-left:auto;margin-right:auto}
 .papel-com .pc-in{display:block}
 .papel-com #panelCom h2{margin:0 0 4px}
 .papel-com .pc-sub{margin:0 0 16px}
@@ -1612,7 +1615,18 @@ function nitido(mat){
   mat.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace("#include <map_fragment>", THREE.ShaderChunk.map_fragment.replace("texture2D( map, vMapUv )", "texture2D( map, vMapUv, -.8 )")); };
   mat.customProgramCacheKey = () => "nitido"; return mat;
 }
-function texDeCanvas(cv){ const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = ANISO; tx.generateMipmaps = true; tx.minFilter = THREE.LinearMipmapLinearFilter; tx.magFilter = THREE.LinearFilter; recursos.push(tx); return tx; }
+/* r52: todo lo que puede aparecer al bajar se prepara antes (materiales compilados y texturas en la tarjeta gráfica) */
+function precompilar(){
+  const vis = []; escena.traverse(o => { vis.push([o, o.visible]); o.visible = true; });
+  try {
+    renderer.compile(escena, camara);
+    escena.traverse(o => { if (!o.material) return; [].concat(o.material).forEach(m => ["map", "bumpMap", "normalMap"].forEach(k => { if (m[k] && m[k].image) renderer.initTexture(m[k]); })); });
+  } catch(e){ console.error(e); }
+  vis.forEach(([o, v]) => { o.visible = v; });
+}
+/* el lienzo de cada textura se libera apenas sube a la tarjeta gráfica (en el iPhone la memoria de lienzos es poca: si se acaba, lo nuevo no se dibuja) */
+if (!CanvasRenderingContext2D.prototype.roundRect) CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r){ r = Math.min(+r || 0, w / 2, h / 2); this.moveTo(x + r, y); this.arcTo(x + w, y, x + w, y + h, r); this.arcTo(x + w, y + h, x, y + h, r); this.arcTo(x, y + h, x, y, r); this.arcTo(x, y, x + w, y, r); this.closePath(); };
+function texDeCanvas(cv){ const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = ANISO; tx.generateMipmaps = true; tx.minFilter = THREE.LinearMipmapLinearFilter; tx.magFilter = THREE.LinearFilter; recursos.push(tx); tx.onUpdate = () => { if (tx.image && tx.image.width > 1){ tx.image.width = tx.image.height = 1; } }; return tx; }
 function relieve(){ return {}; }   // el relieve de lo impreso ahora lo dan los pliegues del sombreador (impreso)
 function imprimirFranja(marco, dibujar, y0, anchoLU, altoLU, s, fijo){
   const grupo = new THREE.Group(); marco.add(grupo); if (!fijo) G.franjaG = grupo;
@@ -1919,7 +1933,7 @@ function trazosPapel(){
   });
 }
 function bordePapel(W, H){   // el borde de la hoja: irregular, como papel
-  const P = [], j = 3.2, paso = 26, lado = (x0, y0, x1, y1, k) => { const n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / paso)); for (let i = 0; i < n; i++){ const u = i / n, e = rH(k, i, 4) * j;
+  const P = [], j = 3.2, paso = html.classList.contains("tactil") ? 64 : 26, lado = (x0, y0, x1, y1, k) => { const n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / paso)); for (let i = 0; i < n; i++){ const u = i / n, e = rH(k, i, 4) * j;
     P.push(`${(x0 + (x1 - x0) * u + (k === 2 ? -e : k === 4 ? e : 0)).toFixed(1)}px ${(y0 + (y1 - y0) * u + (k === 1 ? e : k === 3 ? -e : 0)).toFixed(1)}px`); } };
   lado(0, 0, W, 0, 1); lado(W, 0, W, H, 2); lado(W, H, 0, H, 3); lado(0, H, 0, 0, 4);
   papelDOM.querySelector(".pf-hoja").style.setProperty("--borde", `polygon(${P.join(",")})`);
@@ -2373,13 +2387,15 @@ function resolver(){
     const poseF = f => ponerPose({ry:G.poses.PF.ry, pitch:G.poses.P2.pitch, roll:G.poses.PF.roll, x:G.poses.PF.x, z:G.poses.P2.z, y:G.poses.P2.y - (S.B + f) / ppw});
     const exacto = (y, Y, f) => { for (let it = 0; it < 4; it++){ poseF(f); f += (proyectar(new THREE.Vector3(0, y, zR))[1] - Y) * ppw / kR; } return f; };
     const fF = exacto(G.yForm - G.formH * uR, vh - 24, S.fin - S.com);
+    COM.pE = Math.max(COM.pS + vh * .35, Math.min(COM.pE, fF - vh * .55));   // r52: abierto del todo al menos media pantalla antes del final
     S.fin = Math.max(S.com + COM.pE + 10, S.com + fF); S.form = Math.min(S.fin, S.com + exacto(G.yForm, vh * .1, S.form - S.com));
     S.titulo = S.com + exacto(yTit, 86, S.titulo - S.com);
     poseF(0); caja.updateMatrixWorld(true);
   }
   S.marcos = S.com + COM.pE; S.C = S.marcos - S.com - S.A;
   S.D = S.fin - S.marcos;
-  if (G.papel) armarPapel3D();
+  if (G.papel){ try { armarPapel3D(); } catch(e){ console.error(e); COM.papel = null; } }   // si el papel 3D falla, el de la página aparece igual
+  precompilar();
   document.getElementById("inicio").style.height = (G.S.fin + vh) + "px";
 }
 /* largo visible de la caja: en el celular arranca en un cubo (alto = ancho) y llega a su largo completo al terminar el giro.
@@ -2478,6 +2494,7 @@ function animarCom(s){
   });
   // r47: el papel grande: sale de la caja hecho bola, cae a su lugar y se despliega; ya liso, queda el de la página (texto nítido)
   const yB0 = -G.Hb + 160, P = G.papel;
+  if (P && !COM.papel) COM.papelC = suave3(pinza((p - COM.pS) / Math.max(1, COM.pE - COM.pS)));
   if (COM.papel && P){
     const pp = COM.papel, kA = pinza((p - COM.qS) / (VP.h * .34)), c = kA < 1 ? 0 : suave3(pinza((p - COM.pS) / Math.max(1, COM.pE - COM.pS)));
     COM.papelC = c; pp.g.visible = abierta && kA > 0 && c < 1;
@@ -2518,8 +2535,8 @@ function moverBloques(){
   reglasCom.classList.toggle("ver", kT > 0 && yV + G.cabH > -20 && yV < vh + 20);
   Object.assign(reglasCom.style, {left:G.cabX + "px", transform:`translateY(${yV.toFixed(1)}px) rotate(${giro.toFixed(2)}deg)`, transformOrigin:"50% 0", opacity:pinza(kT / .12).toFixed(3)});
   // r47: el papel de la página, en el mismo lugar que el papel 3D; aparece cuando este ya quedó liso
-  if (G.papel){ const yP = proyectar(vC.set(0, G.yCab, zR))[1], c = COM.papelC || 0, vis = c > .96 && yP < vh + 20 && yP + G.papel.H > -20;
-    papelDOM.classList.toggle("ver", vis); papelDOM.inert = !vis;
+  if (G.papel){ const yP = proyectar(vC.set(0, G.yCab, zR))[1], c = COM.papelC || 0, vis = c > .7 && yP < vh + 60 && yP + G.papel.H > -60;
+    papelDOM.classList.toggle("ver", vis); papelDOM.inert = c < .96;
     Object.assign(papelDOM.style, {transform:`translate(${G.papel.x.toFixed(1)}px, ${yP.toFixed(1)}px)`, opacity:pinza((c - .96) / .04).toFixed(3)}); }
   // el formulario (de vidrio), debajo del papel
   const yF = proyectar(vC.set(0, G.yForm, zR))[1];
