@@ -30,7 +30,7 @@ document.documentElement.classList.add("cargando");
 </script>
 <style>
 /* V5 (ref11, rehecha en 3D real): una caja negra granulada, con aristas redondeadas y sin tapa, sobre fondo blanco granulado.
-   Todo el contenido está impreso en la caja: la cara 1 es el Inicio; en la cara 2 están Sobre mí, el texto de las tandas
+   Todo el contenido está impreso en la caja: la cara 1 es el Inicio; en la cara 2 están Sobre mí, el texto de la galería
    y las ilustraciones. Al bajar, la caja gira, la cámara se acerca hasta que la cara 2 llena la pantalla y luego la
    recorre hacia abajo. Al subir, todo vuelve. Títulos en salmón y texto gris granulado. */
 
@@ -129,11 +129,6 @@ html.no3d #escena,html.no3d .zonas{display:none}
 .pre{margin:0 0 12px;font:800 11px/1.2 var(--texto);letter-spacing:.24em;text-transform:uppercase;color:var(--gris)}
 .h-grande{margin:0 0 18px;font:600 clamp(42px,4.6vw,72px)/.95 var(--titulo);letter-spacing:-.04em}
 .entrada{margin:0 0 22px;font-size:15.5px;color:var(--claro)}
-.leyenda{margin:0 0 24px;padding:0;list-style:none;display:grid;gap:8px;font-size:14px;color:var(--claro)}
-.leyenda li{display:flex;align-items:center;gap:10px}
-.pila{display:inline-flex;gap:3px}
-.pila s{width:9px;height:12px;background:rgba(242,240,235,.2);text-decoration:none}
-.pila s.si{background:var(--acento)}
 /* Bento en filas justificadas: en cada fila las ilustraciones comparten altura y llenan todo el ancho, completas y sin huecos */
 .bento{display:grid;gap:var(--g);--g:clamp(14px,1.5vw,20px)}
 .fila-b{display:flex;align-items:stretch;gap:var(--g)}
@@ -149,14 +144,11 @@ html.no3d #escena,html.no3d .zonas{display:none}
 .cap .fila{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 10px}
 .cap b{font:600 21px/1.05 var(--titulo);letter-spacing:-.02em}
 .cap .precio-c{font-weight:800;font-size:14px;white-space:nowrap}
-.cap .tanda{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:#5c5c5e}
-.cap .pila s{background:rgba(34,34,35,.15)}
-.cap .pila s.si{background:var(--acento)}
 .cap .accion{margin-top:auto;display:inline-flex;justify-content:center;padding:10px 14px;background:var(--negro);color:var(--papel);font-weight:800;font-size:13.5px;transition:background-color .15s,color .15s}
 .cap .accion:hover{background:var(--acento);color:var(--negro)}
 .cap .accion.en-carrito{background:var(--acento);color:var(--negro)}
-.cap .accion.separar{background:transparent;color:var(--negro);box-shadow:inset 0 0 0 2px var(--negro)}
-.cap .accion.separar:hover{background:var(--negro);color:var(--papel)}
+.cap .accion.consultar{background:transparent;color:var(--negro);box-shadow:inset 0 0 0 2px var(--negro)}
+.cap .accion.consultar:hover{background:var(--negro);color:var(--papel)}
 /* Entrada y salida de las cards con el scroll: suben si bajas, bajan si subes */
 .obra.espera{opacity:0;translate:0 70px}
 .obra.espera.arriba{translate:0 -70px}
@@ -189,13 +181,12 @@ html.no3d .ilustraciones{display:grid;background:#1C1C1D;color:var(--papel)}
 .visor-pie .vt{display:grid;gap:2px;max-width:46ch}
 .visor-pie .vt b{font:600 24px/1.1 var(--titulo);letter-spacing:-.02em}
 .visor-pie .vt span{font-size:13px;color:var(--claro)}
-.visor-pie .tanda{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;color:var(--claro)}
 .visor-pie .precio-v{font-weight:800;font-size:16px;white-space:nowrap}
 .visor-pie .accion{padding:11px 18px;background:var(--acento);color:var(--negro);font-weight:800;font-size:14px;transition:background-color .15s,color .15s}
 .visor-pie .accion:hover{background:var(--papel)}
 .visor-pie .accion.en-carrito{background:var(--papel)}
-.visor-pie .accion.separar{background:transparent;color:var(--papel);box-shadow:inset 0 0 0 2px var(--papel)}
-.visor-pie .accion.separar:hover{background:var(--papel);color:var(--negro)}
+.visor-pie .accion.consultar{background:transparent;color:var(--papel);box-shadow:inset 0 0 0 2px var(--papel)}
+.visor-pie .accion.consultar:hover{background:var(--papel);color:var(--negro)}
 
 /* ---------- Comisiones: franja impresa en la caja; los campos del formulario son controles reales encima de lo impreso ---------- */
 .zona.campo{margin:0;border:0;border-radius:6px;padding:0 .75em;background:transparent;color:#E6E4DF;font-family:var(--texto);line-height:1.3;outline:none;-webkit-appearance:none;appearance:none}
@@ -643,11 +634,7 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
   <div class="lado">
     <p class="pre" data-t="ilu_pre">Obra disponible</p>
     <h2 class="h-grande" id="tIlu" data-t="ilu_t">Ilustraciones</h2>
-    <p class="entrada" data-t="ilu_intro">Cada ilustración no es una edición limitada, realizo impresiones en tandas de 5 unidades. Cuando se agoten las unidades y haya suficientes peticiones, prepararé una nueva tanda. Puedes solicitar o separar una unidad mediante la opción de “separar ilustración”.</p>
-    <ul class="leyenda">
-      <li><span class="pila" aria-hidden="true"><s class="si"></s><s class="si"></s><s class="si"></s><s></s><s></s></span><span data-t="ley_disp">Unidades disponibles de la tanda actual</span></li>
-      <li><span class="pila" aria-hidden="true"><s></s><s></s><s></s><s></s><s></s></span><span data-t="ley_agot">Agotada: puedes separar la próxima</span></li>
-    </ul>
+    <p class="entrada" data-t="ilu_intro">Cada ilustración es una obra original del autor. Si la obra que te gusta está agotada, puedes consultarla por WhatsApp.</p>
     <a class="btn linea" href="#comisiones" data-t="ver_com">¿Algo hecho para ti? Comisiones</a>
   </div>
   <div class="bento" id="bento" aria-label="Ilustraciones" data-t-aria="obras"></div>
@@ -695,25 +682,24 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
 
 <script>
 "use strict";
-/* ============ Datos (muestra: títulos, precios, formatos y unidades por confirmar con Nicolás) ============
-   stock: unidades disponibles de la tanda actual de 5. color: el tono que más resalta de la ilustración,
+/* ============ Datos (muestra: títulos, precios y formatos por confirmar con Nicolás) ============
+   agotada: true = agotada (no hay límite de copias). color: el tono que más resalta de la ilustración,
    oscurecido y apagado para teñir el fondo sin competir con el salmón. */
 const WHATSAPP = "573028510223"; // confirmado por la usuaria el 2026-11-12
-const TANDA = 5;
 const OBRAS = [
-  {id:"tigre", img:"img/tigre.jpg", foco:"50% 36%", precio:400000, stock:2, color:"#4A2A70",
+  {id:"tigre", img:"img/tigre.jpg", foco:"50% 36%", precio:400000, agotada:false, color:"#4A2A70",
    t:{es:"Tigre", en:"Tiger"}, d:{es:"Un tigre morado con alas de insecto. Es la única obra a color.", en:"A purple tiger with insect wings. It's the only piece in color."},
    fmt:{es:"Impresión fine art firmada · 30 × 70 cm", en:"Signed fine art print · 30 × 70 cm"}},
-  {id:"oni", img:"img/oni.jpg", foco:"50% 62%", precio:420000, stock:3, color:"#5E1F27",
+  {id:"oni", img:"img/oni.jpg", foco:"50% 62%", precio:420000, agotada:false, color:"#5E1F27",
    t:{es:"Máscara oni", en:"Oni mask"}, d:{es:"Un oni entre máscaras, cuentas y tinta roja.", en:"An oni among masks, beads and red ink."},
    fmt:{es:"Impresión fine art firmada · 30 × 72 cm", en:"Signed fine art print · 30 × 72 cm"}},
-  {id:"humo", img:"img/humo.jpg", foco:"50% 58%", precio:380000, stock:0, color:"#2D4458",
+  {id:"humo", img:"img/humo.jpg", foco:"50% 58%", precio:380000, agotada:true, color:"#2D4458",
    t:{es:"Humo blanco", en:"White smoke"}, d:{es:"Una mujer de pelo blanco fuma frente a la boca de la bestia.", en:"A white-haired woman smokes in front of the beast's mouth."},
    fmt:{es:"Impresión fine art firmada · 40 × 62 cm", en:"Signed fine art print · 40 × 62 cm"}},
-  {id:"katana", img:"img/katana.jpg", foco:"50% 30%", precio:350000, stock:5, color:"#553C30",
+  {id:"katana", img:"img/katana.jpg", foco:"50% 30%", precio:350000, agotada:false, color:"#553C30",
    t:{es:"Katana", en:"Katana"}, d:{es:"Un pequeño guerrero de capa negra, con su katana y las medias caídas.", en:"A small warrior in a black cape, with his katana and slouchy socks."},
    fmt:{es:"Impresión fine art firmada · 42 × 58 cm", en:"Signed fine art print · 42 × 58 cm"}},
-  {id:"espinas", img:"img/espinas.jpg", foco:"50% 30%", precio:450000, stock:1, color:"#4A3B4C",
+  {id:"espinas", img:"img/espinas.jpg", foco:"50% 30%", precio:450000, agotada:false, color:"#4A3B4C",
    t:{es:"Espinas", en:"Thorns"}, d:{es:"Entre espinas y flores, con curitas y lágrimas.", en:"Among thorns and flowers, with band-aids and tears."},
    fmt:{es:"Impresión fine art firmada · 46 × 60 cm", en:"Signed fine art print · 46 × 60 cm"}}
 ];
@@ -721,13 +707,13 @@ const TEC = {es:"Ilustración digital", en:"Digital illustration"};
 
 /* ============ Textos ES / EN ============ */
 const T = {
-es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", ver_grande:"Ver en grande", anterior:"Anterior", siguiente:"Siguiente", visor_pista:"Toca la ilustración para acercar · ← → para pasar", nav_ilu:"Ilustraciones", cerrar:"Cerrar", cta_eti:"Tienda · tandas de 5", cta_t:"Ilustraciones firmadas, en tandas de 5", cta_btn:"Comprar ilustraciones", oficio1:"Tattoo artist", oficio2:"Ilustrador", bajar:"Baja ↓", ley_disp:"Unidades disponibles de la tanda actual", ley_agot:"Agotada: puedes separar la próxima", ver_com:"¿Algo hecho para ti? Comisiones", nav_com:"Comisiones", f_correo:"Tu correo", f_encuadre:"Tipo de encuadre", f_specs:"Especificaciones", ph_specs:"Concepto, referencias y ese toque ácido o retorcido que buscas…", f_formato2:"Formato", fmc_dig:"Digital", fmc_imp:"Impreso", fmc_enm:"Enmarcado", f_enviar2:"Enviar solicitud", form_sub2:"Tu solicitud me llega por correo; te respondo con el precio final y la fecha de entrega.", f_enviando:"Enviando tu solicitud…", f_ok:"¡Listo! Tu solicitud le llegó a Agrio. Te responderá a tu correo.", f_error:"No se pudo enviar. Intenta de nuevo en un momento.", f_sin_correo:"El envío por correo aún no está configurado.", e_correo_mal:"Escribe un correo válido.", mail_asunto:"Nueva solicitud de comisión de {n}", pie_agrio:"Agrio es un artista de Bogotá, Colombia. Su arte llega a lo análogo, creando conceptos profundos; a lo digital, siendo divertido y sarcástico; y hasta el tatuaje, plasmando ideas en proyectos completos y de calidad.", e_correo:"Escribe tu correo.", k_elegir:"Elegir este encargo →", nav_sob:"Sobre mí",
+es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", ver_grande:"Ver en grande", anterior:"Anterior", siguiente:"Siguiente", visor_pista:"Toca la ilustración para acercar · ← → para pasar", nav_ilu:"Ilustraciones", cerrar:"Cerrar", oficio1:"Tattoo artist", oficio2:"Ilustrador", bajar:"Baja ↓", ver_com:"¿Algo hecho para ti? Comisiones", nav_com:"Comisiones", f_correo:"Tu correo", f_encuadre:"Tipo de encuadre", f_specs:"Especificaciones", ph_specs:"Concepto, referencias y ese toque ácido o retorcido que buscas…", f_formato2:"Formato", fmc_dig:"Digital", fmc_imp:"Impreso", fmc_enm:"Enmarcado", f_enviar2:"Enviar solicitud", form_sub2:"Tu solicitud me llega por correo; te respondo con el precio final y la fecha de entrega.", f_enviando:"Enviando tu solicitud…", f_ok:"¡Listo! Tu solicitud le llegó a Agrio. Te responderá a tu correo.", f_error:"No se pudo enviar. Intenta de nuevo en un momento.", f_sin_correo:"El envío por correo aún no está configurado.", e_correo_mal:"Escribe un correo válido.", mail_asunto:"Nueva solicitud de comisión de {n}", pie_agrio:"Agrio es un artista de Bogotá, Colombia. Su arte llega a lo análogo, creando conceptos profundos; a lo digital, siendo divertido y sarcástico; y hasta el tatuaje, plasmando ideas en proyectos completos y de calidad.", e_correo:"Escribe tu correo.", k_elegir:"Elegir este encargo →", nav_sob:"Sobre mí",
  ilu_pre:"Obra disponible", ilu_t:"Ilustraciones",
- ilu_intro:"Cada ilustración no es una edición limitada, realizo impresiones en tandas de 5 unidades. Cuando se agoten las unidades y haya suficientes peticiones, prepararé una nueva tanda. Puedes solicitar o separar una unidad mediante la opción de “separar ilustración”.",
+ ilu_intro:"Cada ilustración es una obra original del autor. Si la obra que te gusta está agotada, puedes consultarla por WhatsApp.",
  enc_pre:"Encargos personalizados", enc_t:"¿Quieres una ilustración solo para ti?", enc_txt:"Busto, cuerpo entero o un mundo agrio completo. Cuéntame tu idea y la dibujamos juntos.", enc_btn:"Pide tu comisión", libro:"Libro de ilustraciones", anterior:"Ilustración anterior", siguiente:"Ilustración siguiente", ir_a:"Ir a",
- completa:"Ilustración completa", disponible:"Disponible", agotada:"Agotada", de:"de", quedan:"{n} de 5 disponibles", agotada_larga:"Agotada · se abrirá una nueva tanda",
- d_tec:"Técnica", d_fmt:"Formato", d_tanda:"Tanda actual",
- comprar:"Comprar ilustración", en_carrito:"En el carrito", separar:"Separar ilustración",
+ completa:"Ilustración completa", disponible:"Disponible", agotada:"Agotada", de:"de", 
+ d_tec:"Técnica", d_fmt:"Formato", 
+ comprar:"Comprar ilustración", en_carrito:"En el carrito", consultar:"Consultar ilustración",
  com_pre:"Encargos personalizados", com_t:"Comisiones",
  com_intro:"Una ilustración hecha solo para ti, con el trazo de Agrio. Elige el tipo de encargo, cuéntame tu idea y la dibujamos juntos.",
  com_cta:"Empezar mi encargo", com_terms_cta:"Ver condiciones",
@@ -749,16 +735,16 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  ca_t:"Carrito", ca_cerrar:"Cerrar el carrito", ca_abrir:"Abrir el carrito", ca_total:"Total", ca_pagar:"Pagar", ca_wa:"Comprar por WhatsApp",
  ca_nota:"Pagas con PSE, tarjeta o Nequi, sin crear cuenta.", ca_vacio:"Tu carrito está vacío. Pasa las hojas del libro y elige una ilustración.", ca_quitar:"Quitar",
  av_agregada:"Agregada al carrito", av_quitada:"Quitada del carrito", av_pagar:"El pago en línea con Wompi está pendiente. Por ahora puedes comprar por WhatsApp.",
- wa_hola:"Hola Agrio, vi tu web y quiero hablar contigo.", wa_separar:"Hola Agrio, quiero separar una unidad de la ilustración «{t}» para la próxima tanda.",
+ wa_hola:"Hola Agrio, vi tu web y quiero hablar contigo.", wa_consultar:"Hola Agrio, me interesa la ilustración «{t}», que aparece agotada.",
  wa_carrito:"Hola Agrio, quiero comprar estas ilustraciones:",
  wa_com:"Hola Agrio, soy {n} y quiero pedirte una comisión.", wa_cat:"Encargo", wa_idea:"Idea", wa_ref:"Referencias", wa_formato:"Formato", wa_fecha:"Fecha ideal", wa_contacto:"Contacto"},
-en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_grande:"View larger", anterior:"Previous", siguiente:"Next", visor_pista:"Tap the illustration to zoom in · ← → to browse", nav_ilu:"Illustrations", cerrar:"Close", cta_eti:"Shop · batches of 5", cta_t:"Signed illustrations, in batches of 5", cta_btn:"Buy illustrations", oficio1:"Tattoo artist", oficio2:"Illustrator", bajar:"Scroll ↓", ley_disp:"Units available in the current batch", ley_agot:"Sold out: you can reserve the next one", ver_com:"Something made for you? Commissions", nav_com:"Commissions", f_correo:"Your email", f_encuadre:"Framing", f_specs:"Specifications", ph_specs:"Concept, references and that sour or twisted touch you're after…", f_formato2:"Format", fmc_dig:"Digital", fmc_imp:"Printed", fmc_enm:"Framed", f_enviar2:"Send request", form_sub2:"Your request reaches me by email; I'll reply with the final price and delivery date.", f_enviando:"Sending your request…", f_ok:"Done! Your request reached Agrio. You'll get a reply by email.", f_error:"It couldn't be sent. Please try again in a moment.", f_sin_correo:"Email sending isn't set up yet.", e_correo_mal:"Enter a valid email.", mail_asunto:"New commission request from {n}", pie_agrio:"Agrio is an artist from Bogotá, Colombia. Agrio's art reaches the analog, creating deep concepts; the digital, being fun and sarcastic; and even tattooing, turning ideas into complete, high-quality projects.", e_correo:"Enter your email.", k_elegir:"Choose this one →", nav_sob:"About me",
+en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_grande:"View larger", anterior:"Previous", siguiente:"Next", visor_pista:"Tap the illustration to zoom in · ← → to browse", nav_ilu:"Illustrations", cerrar:"Close", oficio1:"Tattoo artist", oficio2:"Illustrator", bajar:"Scroll ↓", ver_com:"Something made for you? Commissions", nav_com:"Commissions", f_correo:"Your email", f_encuadre:"Framing", f_specs:"Specifications", ph_specs:"Concept, references and that sour or twisted touch you're after…", f_formato2:"Format", fmc_dig:"Digital", fmc_imp:"Printed", fmc_enm:"Framed", f_enviar2:"Send request", form_sub2:"Your request reaches me by email; I'll reply with the final price and delivery date.", f_enviando:"Sending your request…", f_ok:"Done! Your request reached Agrio. You'll get a reply by email.", f_error:"It couldn't be sent. Please try again in a moment.", f_sin_correo:"Email sending isn't set up yet.", e_correo_mal:"Enter a valid email.", mail_asunto:"New commission request from {n}", pie_agrio:"Agrio is an artist from Bogotá, Colombia. Agrio's art reaches the analog, creating deep concepts; the digital, being fun and sarcastic; and even tattooing, turning ideas into complete, high-quality projects.", e_correo:"Enter your email.", k_elegir:"Choose this one →", nav_sob:"About me",
  ilu_pre:"Available work", ilu_t:"Illustrations",
- ilu_intro:"Each illustration is not a limited edition: I print in batches of 5 units. When the units run out and there are enough requests, I will prepare a new batch. You can request or reserve a unit with the “reserve illustration” option.",
+ ilu_intro:"Every illustration is an original work by the artist. If the one you like is sold out, you can ask about it on WhatsApp.",
  enc_pre:"Custom work", enc_t:"Want an illustration made just for you?", enc_txt:"A bust, a full body or a whole sour world. Tell me your idea and we'll draw it together.", enc_btn:"Request a commission", libro:"Illustration book", anterior:"Previous illustration", siguiente:"Next illustration", ir_a:"Go to",
- completa:"Full illustration", disponible:"Available", agotada:"Sold out", de:"of", quedan:"{n} of 5 available", agotada_larga:"Sold out · a new batch will open",
- d_tec:"Technique", d_fmt:"Format", d_tanda:"Current batch",
- comprar:"Buy illustration", en_carrito:"In your cart", separar:"Reserve illustration",
+ completa:"Full illustration", disponible:"Available", agotada:"Sold out", de:"of", 
+ d_tec:"Technique", d_fmt:"Format", 
+ comprar:"Buy illustration", en_carrito:"In your cart", consultar:"Ask about it",
  com_pre:"Custom work", com_t:"Commissions",
  com_intro:"An illustration made just for you, in Agrio's line. Pick the kind of piece, tell me your idea and we'll draw it together.",
  com_cta:"Start my commission", com_terms_cta:"See the terms",
@@ -780,7 +766,7 @@ en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_
  ca_t:"Cart", ca_cerrar:"Close the cart", ca_abrir:"Open the cart", ca_total:"Total", ca_pagar:"Pay", ca_wa:"Buy on WhatsApp",
  ca_nota:"Pay with PSE, card or Nequi, no account needed.", ca_vacio:"Your cart is empty. Turn the pages of the book and pick an illustration.", ca_quitar:"Remove",
  av_agregada:"Added to cart", av_quitada:"Removed from cart", av_pagar:"Online payment with Wompi is coming soon. For now you can buy on WhatsApp.",
- wa_hola:"Hi Agrio, I saw your website and I'd like to talk to you.", wa_separar:"Hi Agrio, I'd like to reserve a print of the illustration “{t}” for the next batch.",
+ wa_hola:"Hi Agrio, I saw your website and I'd like to talk to you.", wa_consultar:"Hi Agrio, I'm interested in the illustration “{t}”, which shows as sold out.",
  wa_carrito:"Hi Agrio, I'd like to buy these illustrations:",
  wa_com:"Hi Agrio, I'm {n} and I'd like to request a commission.", wa_cat:"Commission", wa_idea:"Idea", wa_ref:"References", wa_formato:"Format", wa_fecha:"Ideal date", wa_contacto:"Contact"}
 };
@@ -800,7 +786,7 @@ function avisar(msg){
 
 /* ============ Carrito ============ */
 let carrito = [];
-try { carrito = JSON.parse(localStorage.getItem("agrio-v3-carrito") || "[]").filter(id => OBRAS.some(o => o.id === id && o.stock > 0)); } catch(e){ carrito = []; }
+try { carrito = JSON.parse(localStorage.getItem("agrio-v3-carrito") || "[]").filter(id => OBRAS.some(o => o.id === id && !o.agotada)); } catch(e){ carrito = []; }
 const guardar = () => { try{ localStorage.setItem("agrio-v3-carrito", JSON.stringify(carrito)); }catch(e){} };
 const obra = id => OBRAS.find(o => o.id === id);
 const descDe = o => (o.panel && o.d[LANG]) || t("k_desc_ej");
@@ -845,11 +831,11 @@ const html = document.documentElement;
 const espera = ms => new Promise(r => setTimeout(r, ms));
 Object.assign(T.es, {
   k_gal:"Galería de|ilustraciones|y arte", ficha_desc:"Ilustración y tatuaje de autor. Explora la galería o encarga una pieza hecha a tu medida.", ficha_pie:"Hecho a mano",
-  cab_oficio:"Tattoo artist · Ilustrador", desliza:"Desliza para navegar", carga_pie:"Tattoo artist e ilustrador · Bogotá", k_tandas_m:"Continúa bajando", k_ilu_m:"(Ilustraciones)", k_fin:"Hecho a mano en Bogotá", k_lote:"Lote 01 · AGR-2026",
+  cab_oficio:"Tattoo artist · Ilustrador", desliza:"Desliza para navegar", carga_pie:"Tattoo artist e ilustrador · Bogotá", k_gale_m:"Continúa bajando", k_ilu_m:"(Ilustraciones)", k_fin:"Hecho a mano en Bogotá", 
   cargando:"Cargando", 
   cab_l2:"Galería de ilustraciones", cab_l3:"y arte", nav_sobre:"Sobre mí", ficha_esq:"Agrio Art · tattoo artist e ilustrador · galería de ilustraciones",
   hecho_bog:"Hecho en Bogotá", bajar5:"Desliza hacia abajo ↓", top1a:"Galería de ilustraciones y arte de", top1b:", tattoo artist e ilustrador.",
-  top2:"Cada pieza se imprime en tandas de 5 y viaja empacada a mano.", c1_sub:"Galería de ilustraciones y arte",
+  c1_sub:"Galería de ilustraciones y arte",
   ilu_marca:"(03 — Ilustraciones)",
   form_sub:"Tu solicitud me llega por WhatsApp. Las comisiones se atienden en orden de llegada; te respondo con el precio final y el tiempo estimado.",
   /* textos impresos en la caja */
@@ -859,19 +845,19 @@ Object.assign(T.es, {
   k_meta2:"(02 — Sobre mí)|Contenido: 1 artista", k_nodoblar:"No doblar", k_marca:"Tattoo artist · Ilustrador · Bogotá", k_intro:"(01—N introducción)",
   k_resumen:"Resumen|del artista", k_pend:"Texto pendiente",
   
-  k_tandas:"Esta es una galería donde lo agrio se vuelve divertido. Explora un universo de ilustraciones 100 % originales del autor o solicita con un encargo personalizado.",
-  k_tandas_hl:"lo agrio", k_spec:"Arte digital|y análogo·Impresiones|firmadas·Comisiones|abiertas",
-  k_como:"¿Cómo puedes encargar una comisión?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Comprar", k_b_separar:"Separar", k_b_en:"En carrito", k_c1:"Define el encuadre|Elige el nivel de detalle de tu pieza (retrato, plano medio o cuerpo completo con escenario).", k_c2:"Suelta tu idea|Cuéntanos el concepto, añade referencias y especifica ese toque ácido o retorcido que buscas.", k_c3:"Aprueba y recibe|Revisamos juntos el boceto inicial, damos los últimos retoques y te entregamos tu obra 100 % original.", k_compra:"¿Cómo puedes comprar una ilustración?", k_desde:"Desde", k_ref_compra:"* Los precios son de referencia: el valor final depende de las especificaciones de tu pedido (tamaño, acabado y envío).", k_ref_com:"* Los precios son de referencia: el valor final depende de las especificaciones de tu encargo (nivel de detalle, personajes y escenario).", k_p1:"Elige tu obra|Explora la galería y selecciona la ilustración que más conecte con tu lado oscuro.", k_p2:"Configura el acabado|Define el tamaño y elige cómo quieres llevarla: archivo digital, lámina impresa o cuadro enmarcado.", k_p3:"Confirma y coordina|Los pedidos se gestionan por orden de llegada. Si eliges formato físico, te contactaremos por correo para ajustar costos de envío y cuadrar la fecha exacta de entrega según tu ubicación.",
+  k_gale:"Esta es una galería donde lo agrio se vuelve divertido. Explora un universo de ilustraciones 100 % originales del autor o solicita con un encargo personalizado.",
+  k_gale_hl:"lo agrio", k_spec:"Arte digital|y análogo·Impresiones|firmadas·Comisiones|abiertas",
+  k_como:"¿Cómo puedes encargar una comisión?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Comprar", k_b_consultar:"Consultar", k_b_en:"En carrito", k_c1:"Define el encuadre|Elige el nivel de detalle de tu pieza (retrato, plano medio o cuerpo completo con escenario).", k_c2:"Suelta tu idea|Cuéntanos el concepto, añade referencias y especifica ese toque ácido o retorcido que buscas.", k_c3:"Aprueba y recibe|Revisamos juntos el boceto inicial, damos los últimos retoques y te entregamos tu obra 100 % original.", k_compra:"¿Cómo puedes comprar una ilustración?", k_desde:"Desde", k_ref_compra:"* Los precios son de referencia: el valor final depende de las especificaciones de tu pedido (tamaño, acabado y envío).", k_ref_com:"* Los precios son de referencia: el valor final depende de las especificaciones de tu encargo (nivel de detalle, personajes y escenario).", k_p1:"Elige tu obra|Explora la galería y selecciona la ilustración que más conecte con tu lado oscuro.", k_p2:"Configura el acabado|Define el tamaño y elige cómo quieres llevarla: archivo digital, lámina impresa o cuadro enmarcado.", k_p3:"Confirma y coordina|Los pedidos se gestionan por orden de llegada. Si eliges formato físico, te contactaremos por correo para ajustar costos de envío y cuadrar la fecha exacta de entrega según tu ubicación.",
    k_ilu:"Ilustraciones", 
   k_disp:"Disponible", k_agot:"Agotada", k_fragil2:"Frágil", k_arriba2:"Esta cara arriba"
 });
 Object.assign(T.en, {
   k_gal:"Gallery of|illustration|and art", ficha_desc:"Original illustration and tattoo art. Explore the gallery or commission a piece made to measure.", ficha_pie:"Handmade",
-  cab_oficio:"Tattoo artist · Illustrator", desliza:"Scroll to explore", carga_pie:"Tattoo artist and illustrator · Bogotá", k_tandas_m:"Keep scrolling", k_ilu_m:"(Illustrations)", k_fin:"Handmade in Bogotá", k_lote:"Batch 01 · AGR-2026",
+  cab_oficio:"Tattoo artist · Illustrator", desliza:"Scroll to explore", carga_pie:"Tattoo artist and illustrator · Bogotá", k_gale_m:"Keep scrolling", k_ilu_m:"(Illustrations)", k_fin:"Handmade in Bogotá", 
   cargando:"Loading", 
   cab_l2:"Gallery of illustration", cab_l3:"and art", nav_sobre:"About", ficha_esq:"Agrio Art · tattoo artist and illustrator · illustration gallery",
   hecho_bog:"Made in Bogotá", bajar5:"Scroll down ↓", top1a:"Gallery of illustration and art by", top1b:", tattoo artist and illustrator.",
-  top2:"Every piece is printed in batches of 5 and ships packed by hand.", c1_sub:"Gallery of illustration and art",
+  c1_sub:"Gallery of illustration and art",
   ilu_marca:"(03 — Illustrations)",
   form_sub:"Your request reaches me on WhatsApp. Commissions are taken in order of arrival; I'll reply with the final price and an estimated time.",
   k_meta1:"Gallery of|illustration|and art", k_arriba:"This side|up", k_sub:"Gallery of illustration and art",
@@ -880,9 +866,9 @@ Object.assign(T.en, {
   k_meta2:"(02 — About)|Contents: 1 artist", k_nodoblar:"Do not bend", k_marca:"Tattoo artist · Illustrator · Bogotá", k_intro:"(01—N introduction)",
   k_resumen:"Artist|summary", k_pend:"Text pending",
   
-  k_tandas:"This is a gallery where the sour turns fun. Explore a universe of 100 % original illustrations by the artist or request a custom commission.",
-  k_tandas_hl:"the sour", k_spec:"Digital and|analog art·Signed|prints·Commissions|open",
-  k_como:"How can you commission a piece?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Buy", k_b_separar:"Reserve", k_b_en:"In cart", k_c1:"Set the framing|Choose your piece's level of detail (portrait, medium shot or full body with a setting).", k_c2:"Drop your idea|Tell us the concept, add references and describe that sour or twisted touch you're after.", k_c3:"Approve and receive|We review the first sketch together, add the final touches and deliver your 100 % original piece.", k_compra:"How can you buy an illustration?", k_desde:"From", k_ref_compra:"* Prices are a reference: the final cost depends on your order's specifications (size, finish and shipping).", k_ref_com:"* Prices are a reference: the final cost depends on your commission's specifications (level of detail, characters and setting).", k_p1:"Choose your piece|Explore the gallery and pick the illustration that best connects with your dark side.", k_p2:"Set the finish|Choose the size and how you want it: digital file, printed sheet or framed piece.", k_p3:"Confirm and coordinate|Orders are handled in order of arrival. If you choose a physical format, we'll email you to settle shipping costs and the exact delivery date for your location.",
+  k_gale:"This is a gallery where the sour turns fun. Explore a universe of 100 % original illustrations by the artist or request a custom commission.",
+  k_gale_hl:"the sour", k_spec:"Digital and|analog art·Signed|prints·Commissions|open",
+  k_como:"How can you commission a piece?", k_desc_ej:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", k_b_comprar:"Buy", k_b_consultar:"Ask", k_b_en:"In cart", k_c1:"Set the framing|Choose your piece's level of detail (portrait, medium shot or full body with a setting).", k_c2:"Drop your idea|Tell us the concept, add references and describe that sour or twisted touch you're after.", k_c3:"Approve and receive|We review the first sketch together, add the final touches and deliver your 100 % original piece.", k_compra:"How can you buy an illustration?", k_desde:"From", k_ref_compra:"* Prices are a reference: the final cost depends on your order's specifications (size, finish and shipping).", k_ref_com:"* Prices are a reference: the final cost depends on your commission's specifications (level of detail, characters and setting).", k_p1:"Choose your piece|Explore the gallery and pick the illustration that best connects with your dark side.", k_p2:"Set the finish|Choose the size and how you want it: digital file, printed sheet or framed piece.", k_p3:"Confirm and coordinate|Orders are handled in order of arrival. If you choose a physical format, we'll email you to settle shipping costs and the exact delivery date for your location.",
    k_ilu:"Illustrations", 
   k_disp:"Available", k_agot:"Sold out", k_fragil2:"Fragile", k_arriba2:"This side up"
 });
@@ -932,19 +918,18 @@ function repartir(){
   const filas = []; for (let j = n; j > 0; j = antes[j]) filas.unshift([antes[j], j]);
   return {filas, g};
 }
-const pila = n => `<span class="pila" aria-hidden="true">${Array.from({length:TANDA}, (_, k) => `<s class="${k < n ? "si" : ""}"></s>`).join("")}</span>`;
 function armarBento(){
   const b = $("#bento"), {filas, g} = repartir();
   claveBento = JSON.stringify(filas);
   b.innerHTML = filas.map(([i, j]) => {
     const fila = OBRAS.slice(i, j), suma = fila.reduce((x, o) => x + proporcion(o), 0), huecos = (fila.length - 1) * g;
     return `<div class="fila-b">${fila.map(o => {
-      const disp = o.stock > 0;
+      const disp = !o.agotada;
       return `<article class="obra" data-id="${o.id}" style="flex:0 0 calc((100% - ${huecos}px) * ${(proporcion(o) / suma).toFixed(5)})">
       <button class="lam" type="button" data-ver="${o.id}" aria-label="${t("ver_grande")}: ${o.t[LANG]}"><img src="${o.img}" alt="${o.t[LANG]}" style="aspect-ratio:${o.ancho} / ${o.alto}" loading="lazy" decoding="async">
       <span class="estado ${disp ? "" : "agotada"}"><i aria-hidden="true"></i>${disp ? t("disponible") : t("agotada")}</span></button>
       <span class="cap"><span class="fila"><b>${o.t[LANG]}</b><span class="precio-c">${precio(o.precio)}</span></span>
-      <button class="accion ${disp ? "" : "separar"}" type="button" data-id="${o.id}"></button></span></article>`;
+      <button class="accion ${disp ? "" : "consultar"}" type="button" data-id="${o.id}"></button></span></article>`;
     }).join("")}</div>`;
   }).join("");
   pintarBotonCompra();
@@ -953,8 +938,8 @@ function armarBento(){
 var pintarBotonCompra = function(){
   document.querySelectorAll("#bento .accion").forEach(b => {
     const o = obra(b.dataset.id);
-    if (o.stock > 0){ const en = carrito.includes(o.id); b.textContent = en ? t("en_carrito") : t("comprar"); b.classList.toggle("en-carrito", en); }
-    else b.textContent = t("separar");
+    if (!o.agotada){ const en = carrito.includes(o.id); b.textContent = en ? t("en_carrito") : t("comprar"); b.classList.toggle("en-carrito", en); }
+    else b.textContent = t("consultar");
   });
   const vis = document.getElementById("visor"); if (vis && vis.open) pintarVisor();
 }
@@ -964,7 +949,7 @@ $("#bento").addEventListener("click", e => {
   comprar(obra(b.dataset.id), b.closest(".obra").querySelector(".lam img"));
 });
 function comprar(o, img){
-  if (o.stock <= 0){ window.open(waURL(t("wa_separar", {t:o.t[LANG]})), "_blank", "noopener"); return; }
+  if (o.agotada){ window.open(waURL(t("wa_consultar", {t:o.t[LANG]})), "_blank", "noopener"); return; }
   const nueva = !carrito.includes(o.id);
   alternar(o.id);
   if (nueva) volarAlCarrito(o, img);
@@ -1018,14 +1003,14 @@ function volarAlCarrito(o, img){
 const visor = $("#visor"), vImg = $("#vImg"), vEscena = $("#vEscena");
 let vIdx = 0, vZoom = false, vBase = null, vArrastre = null, vMovido = false;
 function pintarVisor(){
-  const o = OBRAS[vIdx], disp = o.stock > 0;
+  const o = OBRAS[vIdx], disp = !o.agotada;
   $("#vN").textContent = (vIdx + 1) + " / " + OBRAS.length;
   $("#vTitulo").textContent = o.t[LANG];
   $("#vDesc").textContent = descDe(o);   // la misma descripción de la ficha; el tamaño se elige en el flujo de compra
   $("#vPrecio").textContent = precio(o.precio);
   const b = $("#vAccion"), en = carrito.includes(o.id);
-  b.className = "accion" + (disp ? (en ? " en-carrito" : "") : " separar");
-  b.textContent = disp ? (en ? t("en_carrito") : t("comprar")) : t("separar");
+  b.className = "accion" + (disp ? (en ? " en-carrito" : "") : " consultar");
+  b.textContent = disp ? (en ? t("en_carrito") : t("comprar")) : t("consultar");
   vImg.alt = o.t[LANG]; vImg.style.filter = "";
 }
 function quitarZoom(){ vZoom = false; visor.classList.remove("zoom"); }
@@ -1158,7 +1143,7 @@ cargar();
 <script type="module">
 /* ============ La caja en 3D real (three.js) ============
    Una caja negra granulada con aristas redondeadas y sin tapa. Todo el contenido está impreso en ella como texturas
-   de alta resolución: la cara 1 es el Inicio; la cara 2 tiene Sobre mí, el texto de las tandas y las ilustraciones.
+   de alta resolución: la cara 1 es el Inicio; la cara 2 tiene Sobre mí, el texto de la galería y las ilustraciones.
    El scroll mueve la cámara: primero la caja gira y la cámara se acerca hasta que la cara 2 llena la pantalla;
    luego la cámara baja por la cara 2. Al subir, todo vuelve por el mismo camino. */
 import * as THREE from "three";
@@ -1421,7 +1406,6 @@ function P(x, dib){
     img(im, px, py, w, h){ if (dib && im) x.drawImage(im, px, py, w, h); },
     barras(px, py, w, h, color){ if (!dib) return; x.fillStyle = color; let xx = px, i = 0; const pat = [3, 5, 2, 3, 7, 2, 4, 3, 2, 6]; while (xx < px + w){ const b = pat[i++ % pat.length]; x.fillRect(xx, py, b, h); xx += b + pat[(i + 3) % pat.length]; } },
     girar(px, py, ang, fn){ x.save(); x.translate(px, py); x.rotate(ang); fn(); x.restore(); },
-    pila(px, py, n, s, vacio){ for (let k = 0; k < TANDA; k++) api.rect(px + k * (s + 5), py, s, s * 1.3, k < n ? COL.salmon : vacio); return TANDA * (s + 5); },
     envolver(s, w, font){ const pal = s.split(" "), ls = []; let l = ""; for (const p of pal){ const tst = l ? l + " " + p : p; if (api.ancho(tst, font) > w && l){ ls.push(l); l = p; } else l = tst; } if (l) ls.push(l); return ls; }
   };
   return api;
@@ -1455,8 +1439,8 @@ function cara1(x, dib, alto, cel){
   [[.14, 905, 48], [.88, 880, 40]].forEach(([f, yy, sz]) => p.estrella(f * 1000 - sz / 2, yy, sz));   // solo dos estrellas en la cara 1
   return [];
 }
-/* Parte 1 de la cara de al lado: el texto de las tandas e impresiones (solo texto, como ref11) y el botón de comisión. */
-function caraTandas(x, dib, cel){
+/* Parte 1 de la cara de al lado: el texto de la galería (solo texto, como ref11) y el botón de comisión. */
+function caraGaleria(x, dib, cel){
   const p = P(x, dib), M = 70, AN = 1000 - 2 * M, fs = cel ? 1.45 : 1, zonas = [];
   let y = 80;
   // título apilado, como "PEOPLE / BRAND / PLEASURE" en la referencia
@@ -1467,9 +1451,9 @@ function caraTandas(x, dib, cel){
   y += 70;
   [[.12, 30, 40], [.5, 0, 50], [.86, 40, 42]].forEach(([f, dy, sz]) => p.estrella(f * 1000 - sz / 2, y + dy, sz));
   y += 150;
-  p.txt(t("k_tandas_m").toUpperCase(), 500, y, `400 ${15 * fs}px ${FU.mono}`, COL.gris, "center", 1.5); y += 70;
+  p.txt(t("k_gale_m").toUpperCase(), 500, y, `400 ${15 * fs}px ${FU.mono}`, COL.gris, "center", 1.5); y += 70;
   // texto largo justificado de lado a lado; donde queda un hueco grande va un ícono, como en bpco.kr
-  const PT = cel ? 46 : 52, fT = `500 ${PT}px ${FU.sans}`, palabras = t("k_tandas").toUpperCase().split(" "), hl = t("k_tandas_hl").toUpperCase().split(" ");
+  const PT = cel ? 46 : 52, fT = `500 ${PT}px ${FU.sans}`, palabras = t("k_gale").toUpperCase().split(" "), hl = t("k_gale_hl").toUpperCase().split(" ");
   // la frase resaltada va como una sola pieza, con espacios normales y aire a los lados para el óvalo
   let ini = -1; for (let i = 0; i + hl.length <= palabras.length; i++) if (hl.every((h, k) => palabras[i + k].replace(/[.,;:]/g, "") === h)){ ini = i; break; }
   const piezas = [];
@@ -1477,7 +1461,7 @@ function caraTandas(x, dib, cel){
     if (i === ini){ piezas.push({w:palabras.slice(i, i + hl.length).join(" "), hl:true}); i += hl.length - 1; }
     else piezas.push({w:palabras[i], hl:false});
   }
-  x.font = fT; x.textBaseline = "top"; const mg = x.measureText("TANDAS DE 5"), gArr = -mg.actualBoundingBoxAscent, gAb = mg.actualBoundingBoxDescent;
+  x.font = fT; x.textBaseline = "top"; const mg = x.measureText("MEDIDA 5"), gArr = -mg.actualBoundingBoxAscent, gAb = mg.actualBoundingBoxDescent;
   const cy0 = (gArr + gAb) / 2, mitadAlto = (gAb - gArr) / 2;   // centro y media altura reales de las mayúsculas
   const esp = p.ancho(" ", fT), lineas = []; let lin = [], an = 0;
   piezas.forEach(o => { o.tw = p.ancho(o.w, fT); if (o.hl) o.rx = o.tw * .6 + PT * .12; o.ww = o.hl ? 2 * o.rx + PT * .08 : o.tw; if (lin.length && an + esp + o.ww > AN){ lineas.push(lin); lin = []; an = 0; } lin.push(o); an += (lin.length > 1 ? esp : 0) + o.ww; });
@@ -1515,9 +1499,9 @@ function caraTandas(x, dib, cel){
   y += 62 * fs + 150;
   return {alto:y, zonas};
 }
-/* La cara de al lado completa: tandas y comisión arriba; al seguir bajando, las ilustraciones. Por aquí baja la cámara. */
+/* La cara de al lado completa: texto de la galería y comisión arriba; al seguir bajando, las ilustraciones. Por aquí baja la cámara. */
 function cara2(x, dib, cel){
-  const a = caraTandas(x, dib, cel);
+  const a = caraGaleria(x, dib, cel);
   x.save(); x.translate(0, a.alto); const b = caraIlus(x, dib, cel); x.restore();
   return {alto:a.alto + b.alto, zonas:a.zonas.concat(b.zonas.map(z => ({...z, y:z.y + a.alto}))), marcas:{ilu:a.alto}};
 }
@@ -1554,12 +1538,12 @@ function caraIlus(x, dib, cel){
     const obras = OBRAS.slice(i0, i0 + COLS);
     let x0 = 500 - (obras.length * cw + (obras.length - 1) * G2) / 2;
     obras.forEach(o => {
-      const disp = o.stock > 0, en = carrito.includes(o.id), im = IMG[o.id], xi = x0 + PI, wi = cw - 2 * PI;
+      const disp = !o.agotada, en = carrito.includes(o.id), im = IMG[o.id], xi = x0 + PI, wi = cw - 2 * PI;
       p.rect(x0, y, cw, altoFicha, "#28282a");
       if (im){ const iw = im.width, ih = im.height, k = Math.min(wi / iw, (fh - 2 * PI) / ih), w = iw * k, h = ih * k; p.img(im, x0 + (cw - w) / 2, y + PI + (fh - 2 * PI - h) / 2, w, h); }
       zonas.push({tipo:"ver", id:o.id, x:x0, y, w:cw, h:fh, etq:t("ver_grande") + ": " + o.t[LANG]});
-      // disponible: etiqueta con cuadrito, estado y número; agotada: banda gris carbón translúcida cruzada, sin etiqueta
-      const est = (disp ? t("k_disp") : t("k_agot")).toUpperCase(), num = (disp ? o.stock : 0) + "/" + TANDA;
+      // disponible: sin etiqueta; agotada: banda gris carbón translúcida cruzada, sin etiqueta
+      const est = (disp ? t("k_disp") : t("k_agot")).toUpperCase();
       if (!disp && dib){
         x.save(); x.beginPath(); x.rect(x0, y, cw, fh); x.clip();
         x.translate(x0 + cw / 2, y + fh / 2); x.rotate(rad(-14));
@@ -1578,7 +1562,7 @@ function caraIlus(x, dib, cel){
         if (ls.length > 3){ ls = ls.slice(0, 3); let u = ls[2]; while (u.length && p.ancho(u + "…", fdF) > wi) u = u.slice(0, -1).trimEnd(); ls[2] = u + "…"; }
         yc -= 2; ls.forEach((l, k) => p.txt(l, xi, yc + k * lhD, fdF, COL.gris)); yc += 3 * lhD + 16 + 2; }
       // precio y botón en la misma línea: es lo más importante de la ficha
-      const lab = (disp ? (en ? t("k_b_en") : t("k_b_comprar")) : t("k_b_separar")).toUpperCase();
+      const lab = (disp ? (en ? t("k_b_en") : t("k_b_comprar")) : t("k_b_consultar")).toUpperCase();
       const cifra = "$" + o.precio.toLocaleString("es-CO"); let pz = 26 * f2;
       const anchoPrecio = () => p.ancho(cifra, `700 ${pz}px ${FU.sans}`) + 5 + p.ancho("COP", `700 ${pz * .45}px ${FU.mono}`);
       while (pz > 15 && anchoPrecio() > wi * .5) pz -= .5;
@@ -2626,9 +2610,9 @@ async function cargarDeNube(){
   if (obras && obras.length){
     OBRAS.length = 0;
     obras.forEach(o => { const img = /^(https:|data:image\/)/.test(o.imagen_url || "") ? o.imagen_url.replace(/["'<>]/g, "") : "img/" + encodeURIComponent(o.id) + ".jpg", es = limpio(o.nombre_es), des = limpio(o.descripcion_es);
-      const ob = {id:limpio(o.id), img, nube:img === o.imagen_url, panel:true, precio:+o.precio || 0, stock:(o.agotada != null ? o.agotada : !(+o.copias > 0)) ? 0 : 1, color:"#3a3a3d", t:{es, en:limpio(o.nombre_en) || es}, d:{es:des, en:limpio(o.descripcion_en) || des}};
+      const ob = {id:limpio(o.id), img, nube:img === o.imagen_url, panel:true, precio:+o.precio || 0, agotada:!!o.agotada, color:"#3a3a3d", t:{es, en:limpio(o.nombre_en) || es}, d:{es:des, en:limpio(o.descripcion_en) || des}};
       [ob.ancho, ob.alto] = DIM[o.id] || [3, 4]; OBRAS.push(ob); });
-    carrito = carrito.filter(id => OBRAS.some(o => o.id === id && o.stock > 0)); guardar(); armarBento(); pintarCarrito();
+    carrito = carrito.filter(id => OBRAS.some(o => o.id === id && !o.agotada)); guardar(); armarBento(); pintarCarrito();
   }
   if (tipos && tipos.length){
     tipos.forEach(c => ["es", "en"].forEach(l => { const D = T[l], k = "c" + c.n, v = (a, b) => limpio(c[a + "_" + l] || c[a + "_es"]) || D[k + b];
