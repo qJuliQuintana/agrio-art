@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel · Agrio Art</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@600;800;900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="../nube.js"></script>
+<style>
+:root{--ink:#1C1C1D;--papel:#F2EEE5;--blanco:#FBFAF7;--sub:#66666b;--linea:rgba(28,28,29,.12);--rosa:#C6647E;--rosa2:#E68AA1;--ok:#2A7548;--mal:#C02B3A;--cond:"Fira Sans Extra Condensed",sans-serif;--txt:"Instrument Sans",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:400 14px/1.45 var(--txt);color:var(--ink);background:var(--papel)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* ---------- entrada ---------- */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#2e2e31,#141416 70%)}
+.tarjeta{width:min(420px,100%);background:var(--papel);border-radius:22px;padding:32px 28px 26px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.marca{font:900 32px/.9 var(--cond);text-transform:uppercase}
+.marca span{color:var(--rosa)}
+.tarjeta .s{margin:8px 0 20px;color:var(--sub)}
+.pestanas{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:99px;background:rgba(28,28,29,.07);margin-bottom:18px}
+.pestanas button{padding:9px 6px;border:0;border-radius:99px;background:none;font-weight:600;font-size:13px;color:var(--sub)}
+.pestanas button[aria-selected="true"]{background:var(--ink);color:var(--papel)}
+.campo{display:block;margin-bottom:13px}
+.linSw{display:flex!important;align-items:center;gap:10px;min-height:44px;margin:0!important;font:600 14px/1 var(--txt)!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink)!important}
+.campo>span{display:block;margin-bottom:6px;font:600 11px/1.3 var(--txt);letter-spacing:.07em;text-transform:uppercase;color:#55565a}
+.entrada{width:100%;padding:11px 13px;border:1px solid rgba(28,28,29,.2);border-radius:11px;background:var(--blanco);font-size:15px;outline:none}
+.entrada:focus{border-color:var(--rosa);box-shadow:0 0 0 1px var(--rosa)}
+textarea.entrada{min-height:84px;resize:vertical}
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;border-radius:99px;background:var(--ok);color:#fff;font:900 16px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;transition:filter .15s}
+.boton:hover{filter:brightness(1.1)}
+.boton.linea{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.boton.peligro{background:var(--mal)}
+.boton:focus-visible,.nav:focus-visible,.chip:focus-visible,.icono:focus-visible,.sw:focus-visible,.x:focus-visible,.menuB:focus-visible{outline:3px solid var(--rosa2);outline-offset:2px}
+.boton.ancho{width:100%}
+.boton:disabled{opacity:.5;cursor:default}
+.nota{margin:12px 0 0;font-size:12px;color:var(--sub);text-align:center}
+.demo{margin:0 0 16px;padding:10px 12px;border-radius:12px;background:#FFF4DC;border:1px solid #F0D79C;font-size:12.5px;color:#6b5420}
+/* ---------- panel ---------- */
+.app{display:flex;min-height:100vh}
+.lateral{position:sticky;top:20px;height:calc(100vh - 40px);width:232px;flex:none;margin:20px 0 20px 20px;background:var(--blanco);border:1.5px solid var(--ink);border-radius:26px;box-shadow:0 18px 34px -26px rgba(0,0,0,.45);padding:22px 14px 14px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.lateral .marca{font-size:28px;margin:0 10px 20px}
+.nav{display:flex;align-items:center;gap:11px;width:100%;padding:11px 13px;border:1.5px solid transparent;border-radius:15px;background:none;font-weight:600;color:#55565a;text-align:left}
+.nav:hover{border-color:rgba(28,28,29,.18)}
+.nav[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.nav svg{width:18px;height:18px;flex:none}
+.nav em{margin-left:auto;font-style:normal;font-size:11px;padding:1px 8px;border-radius:99px;background:var(--rosa);color:#fff}
+.pieS{margin-top:auto;padding:12px 13px;border:1.5px solid var(--linea);border-radius:15px;font-size:12px;color:var(--sub)}
+.pieS b{display:block;color:var(--ink);font-size:13px;word-break:break-all}
+.pieS button{margin-top:6px;padding:0;border:0;background:none;color:#A9425E;font-weight:600;font-size:12.5px;text-decoration:underline}
+.movil{display:none}
+.contenido{flex:1;min-width:0;padding:26px 32px 60px}
+.cabeza{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.cabeza h1{margin:0;font:900 48px/.86 var(--cond);text-transform:uppercase}
+.cabeza p{margin:6px 0 0;color:var(--sub)}
+.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.cifra{background:var(--blanco);border:1px solid var(--linea);border-radius:16px;padding:14px 16px}
+.cifra span{display:block;font:600 11px/1.3 var(--txt);letter-spacing:.07em;text-transform:uppercase;color:var(--sub)}
+.cifra b{display:block;margin-top:6px;font:900 32px/1 var(--cond)}
+.cifra small{font-size:12px;color:var(--sub)}
+.bloque{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;overflow:hidden;margin-bottom:18px}
+.bloque h2{margin:0;padding:14px 18px;font:900 22px/1 var(--cond);text-transform:uppercase;border-bottom:1px solid var(--linea)}
+.vacio{padding:22px 18px;color:var(--sub)}
+.filtros{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.chip{padding:7px 13px;border:1px solid rgba(28,28,29,.2);border-radius:99px;background:transparent;font-weight:600;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--papel)}
+.chip b{font-weight:700;opacity:.6;margin-left:4px}
+.buscar{margin-left:auto;width:min(280px,100%);padding:8px 14px;border:1px solid rgba(28,28,29,.18);border-radius:99px;background:var(--blanco);outline:none}
+.fila{display:grid;align-items:center;gap:14px;padding:11px 18px;border-top:1px solid var(--linea)}
+.fila:first-child{border-top:0}
+.fila.click{cursor:pointer}
+.fila.click:hover{background:#F7F4EE}
+.titulos{background:#F6F3EC;font:600 11px/1.3 var(--txt);letter-spacing:.07em;text-transform:uppercase;color:var(--sub)}
+.fo{grid-template-columns:56px minmax(170px,1.8fr) 110px 150px 150px 92px}
+.fp{grid-template-columns:44px minmax(140px,1.4fr) 96px 100px 196px 150px}
+.fc{grid-template-columns:minmax(150px,1.3fr) 1.3fr 120px 80px 110px}
+.mini{width:56px;height:70px;border-radius:8px;background:#ddd center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.nombre b{display:block;font:900 20px/1 var(--cond);text-transform:uppercase}
+.nombre span{display:block;margin-top:3px;font-size:12.5px;color:var(--sub);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.peq{font-size:12.5px;color:var(--sub)}
+.precio{font-weight:700}
+.sw{position:relative;width:40px;height:23px;border:0;border-radius:99px;background:#cfccc5;flex:none;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
+.sw[aria-checked="true"]{background:var(--ok)}
+.sw[aria-checked="true"]::after{left:20px}
+.sw.agot[aria-checked="true"]{background:var(--mal)}
+.estadoObra{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px}
+.acc{display:flex;gap:6px;justify-content:flex-end}
+.icono{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(28,28,29,.15);background:none}
+.icono svg{width:15px;height:15px}
+.etq{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.etq::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.etq.espera{background:#FFF0CF;color:#805408}
+.etq.proceso{background:#DDE9FA;color:#1F4E96}
+.etq.finalizado{background:#D9EFE1;color:#1F6340}
+.pago{font-size:11.5px;font-weight:700;color:var(--sub)}.pago.si{color:#1F6340}
+.tipo{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+.tablero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.col{background:#ece8df;border-radius:16px;padding:10px;min-height:120px}
+.col h3{margin:4px 6px 10px;font:900 18px/1 var(--cond);text-transform:uppercase;display:flex;justify-content:space-between}
+.tarjetaP{display:block;width:100%;margin-bottom:8px;padding:11px 12px;border:1px solid var(--linea);border-radius:12px;background:var(--blanco);text-align:left}
+.tarjetaP:hover{border-color:rgba(28,28,29,.35)}
+.tarjetaP b{display:block;font-size:14px}
+.tarjetaP .peq{display:block;margin-top:2px}
+.tarjetaP .pie{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+/* panel lateral de edición */
+.capa{position:fixed;inset:0;background:rgba(20,20,22,.38);z-index:20}
+.editor{position:fixed;top:0;right:0;bottom:0;z-index:21;width:min(500px,100%);background:var(--papel);box-shadow:-30px 0 60px -20px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.editor .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 22px 12px}
+.editor h2{margin:0;font:900 30px/.92 var(--cond);text-transform:uppercase}
+.editor .cuerpo{flex:1;overflow:auto;padding:4px 22px 20px}
+.editor .botones{display:flex;gap:10px;padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--linea);background:var(--papel)}
+.editor .botones .boton:last-child{flex:1}
+.x{width:36px;height:36px;border:0;border-radius:50%;background:rgba(28,28,29,.08);font-size:16px}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.idioma{display:inline-flex;gap:2px;padding:3px;border-radius:99px;background:rgba(28,28,29,.07);margin:2px 0 12px}
+.idioma button{padding:5px 12px;border:0;border-radius:99px;background:none;font-size:12px;font-weight:600;color:var(--sub)}
+.idioma button[aria-pressed="true"]{background:var(--blanco);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.foto{display:grid;grid-template-columns:140px 1fr;gap:14px;margin-bottom:14px}
+.foto .img{position:relative;height:176px;border-radius:12px;background:#ddd center/contain no-repeat;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.foto .lado{display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--sub)}
+.historia{margin:6px 0 0;padding:0;list-style:none;border-left:2px solid var(--linea)}
+.historia li{position:relative;padding:0 0 10px 14px;font-size:12.5px}
+.historia li::before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--rosa2)}
+.historia time{display:block;color:var(--sub);font-size:11.5px}
+.contacto{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.contacto a{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid rgba(28,28,29,.2);border-radius:99px;color:inherit;text-decoration:none;font-weight:600;font-size:12.5px}
+.ctipos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.ctipo{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:16px}
+.ctipo h3{margin:0 0 4px;font:900 24px/1 var(--cond);text-transform:uppercase}
+.aviso{position:fixed;left:50%;bottom:24px;z-index:40;translate:-50% 0;padding:11px 18px;border-radius:99px;background:var(--ink);color:#fff;font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);transition:opacity .25s,translate .25s}
+.aviso[hidden]{display:block!important;opacity:0;translate:-50% 20px;pointer-events:none}
+@media (max-width:820px){
+  .lateral{display:none}
+  .app{display:block}
+  .movil{position:sticky;top:10px;z-index:12;display:block;margin:10px 12px 0}
+  .movilB{display:flex;align-items:center;gap:10px;padding:9px 9px 9px 16px;border:1.5px solid var(--ink);border-radius:20px;background:var(--blanco)}
+  .movilB .marca{font-size:22px}
+  .movilB .donde{margin-left:auto;font-weight:600;font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .menuB{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 15px;border:0;border-radius:14px;background:var(--ink);color:#fff;font-weight:600;font-size:14px}
+  .menuB svg{width:18px;height:18px}
+  .menuM{margin-top:8px;padding:10px;border:1.5px solid var(--ink);border-radius:20px;background:var(--blanco);box-shadow:0 24px 40px -20px rgba(0,0,0,.5);max-height:calc(100dvh - 90px);overflow:auto}
+  .menuM .nav{padding:13px;font-size:15px}
+  .menuM .pieS{margin-top:8px}
+  .contenido{padding:20px 14px 60px}
+  .cabeza h1{font-size:38px}
+  .titulos{display:none}
+  .fp,.fc{grid-template-columns:1fr auto;gap:6px 12px}
+  .fo{grid-template-columns:56px 1fr auto;gap:8px 12px}
+  .fo .mini{grid-row:span 3}
+  .fo .estadoObra{grid-column:2 / -1}
+  .fp>.peq.ocultaCel{display:none}
+  .tablero{grid-template-columns:1fr}
+  .foto{grid-template-columns:110px 1fr}
+  .buscar{margin-left:0;width:100%}
+}
+</style></head>
+<body>
+<!-- entrada -->
+<section class="login" id="vLogin" hidden>
+  <form class="tarjeta" id="fLogin" novalidate>
+    <div class="marca">Agrio <span>Art</span> · Panel</div>
+    <p class="s">Entra para gestionar la galería, las comisiones y los pedidos.</p>
+    <p class="demo" id="avisoDemo" hidden>Modo demostración: aún no hay base de datos conectada. Los cambios se guardan solo en este navegador. Entra con cualquier correo y el código <b>123456</b>.</p>
+    <div class="pestanas" role="tablist"><button type="button" role="tab" aria-selected="true" data-modo="codigo">Código al correo</button><button type="button" role="tab" aria-selected="false" data-modo="clave">Usuario y contraseña</button></div>
+    <label class="campo"><span>Correo</span><input class="entrada" id="lCorreo" type="email" autocomplete="email" required></label>
+    <label class="campo" id="lClaveC" hidden><span>Contraseña</span><input class="entrada" id="lClave" type="password" autocomplete="current-password"></label>
+    <label class="campo" id="lCodigoC" hidden><span>Código</span><input class="entrada" id="lCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]*"></label>
+    <button class="boton ancho" id="lBoton">Enviarme el código</button>
+    <p class="nota" id="lNota"></p>
+  </form>
+</section>
+
+<!-- panel -->
+<div class="app" id="vApp" hidden>
+  <aside class="lateral">
+    <div class="marca">Agrio <span>Art</span></div>
+    <nav id="nav" aria-label="Módulos" style="display:grid;gap:4px"></nav>
+    <div class="pieS"><span data-modo-txt></span><b data-quien></b><button type="button" data-salir>Cerrar sesión</button></div>
+  </aside>
+  <header class="movil"><div class="movilB"><div class="marca">Agrio <span>Art</span></div><span class="donde" id="donde"></span><button class="menuB" type="button" id="menuB" aria-expanded="false" aria-controls="menuM"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menú</button></div>
+    <div class="menuM" id="menuM" hidden><nav id="navM" aria-label="Módulos"></nav><div class="pieS"><span data-modo-txt></span><b data-quien></b><button type="button" data-salir>Cerrar sesión</button></div></div></header>
+  <main class="contenido" id="contenido"></main>
+</div>
+<div class="capa" id="capa" hidden></div>
+<aside class="editor" id="editor" hidden role="dialog" aria-modal="true" aria-labelledby="edT"></aside>
+<div class="aviso" id="aviso" hidden role="status"></div>
+
+<script type="module">
+/* ============================================================
+   Panel de gestión de Agrio Art.
+   Con window.AGRIO_NUBE (url y clave de Supabase) trabaja con la base de datos real;
+   sin ella, en modo demostración: guarda en este navegador.
+   ============================================================ */
+const NUBE = window.AGRIO_NUBE || {}, DEMO = !(NUBE.url && NUBE.clave);
+const $ = s => document.querySelector(s), esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pesos = n => n == null || n === "" ? "—" : "$" + Math.round(+n).toLocaleString("es-CO").replace(/,/g, ".");
+const fecha = d => d ? new Date(d).toLocaleDateString("es-CO", {day:"numeric", month:"short", year:"numeric"}) : "—";
+const fechaHora = d => d ? new Date(d).toLocaleString("es-CO", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}) : "";
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+function avisar(t){ const a = $("#aviso"); a.textContent = t; a.hidden = false; clearTimeout(avisar.t); avisar.t = setTimeout(() => { a.hidden = true; }, 2600); }
+
+/* ---------- estados de los pedidos ---------- */
+const ESTADOS = [["espera", "En espera por confirmar"], ["proceso", "En proceso"], ["finalizado", "Finalizado"]];
+const est = e => ESTADOS.find(x => x[0] === e) || ESTADOS[0];
+const etq = e => `<span class="etq ${est(e)[0]}">${est(e)[1]}</span>`;
+const FORMATOS = {dig:"Digital", imp:"Impreso", enm:"Enmarcado"};
+
+/* ---------- datos: base real (Supabase) o demostración (este navegador) ---------- */
+const TABLAS = {obras:"id", comision_tipos:"n", clientes:"id", pedidos:"id", pedido_eventos:"id"};
+let sb = null;
+const LS = "agrio-panel-demo";
+function semilla(){
+  const ahora = Date.now(), dia = 864e5, c1 = uid(), c2 = uid(), c3 = uid(), p1 = uid(), p2 = uid(), p3 = uid(), p4 = uid();
+  const o = (id, orden, nes, nen, des, den, precio, agotada) => ({id, orden, nombre_es:nes, nombre_en:nen, descripcion_es:des, descripcion_en:den, precio, agotada:!!agotada, imagen_url:null, visible:true});
+  return {
+    obras:[o("tigre", 1, "Tigre", "Tiger", "Un tigre morado con alas de insecto. Es la única obra a color.", "A purple tiger with insect wings. It's the only piece in color.", 400000),
+      o("oni", 2, "Máscara oni", "Oni mask", "Un oni entre máscaras, cuentas y tinta roja.", "An oni among masks, beads and red ink.", 420000),
+      o("humo", 3, "Humo blanco", "White smoke", "Una mujer de pelo blanco fuma frente a la boca de la bestia.", "A white-haired woman smokes in front of the beast's mouth.", 380000, true),
+      o("katana", 4, "Katana", "Katana", "Un pequeño guerrero de capa negra, con su katana y las medias caídas.", "A small warrior in a black cape, with his katana and slouchy socks.", 350000),
+      o("espinas", 5, "Espinas", "Thorns", "Entre espinas y flores, con curitas y lágrimas.", "Among thorns and flowers, with band-aids and tears.", 450000)],
+    comision_tipos:[
+      {n:1, nombre_es:"Primer plano", nombre_en:"Close-up", descripcion_es:"Retrato de cabeza y hombros con fondo sencillo. Ideal para un avatar, un regalo o tu propio monstruo.", descripcion_en:"Head and shoulders portrait with a simple background. Great for an avatar, a gift or your own monster.", punto1_es:"Una persona o personaje", punto1_en:"One person or character", punto2_es:"Fondo plano o con textura", punto2_en:"Plain or textured background", precio:250000, destacado:false},
+      {n:2, nombre_es:"Cuerpo entero", nombre_en:"Full body", descripcion_es:"Un personaje completo, de pies a cabeza, con fondo sencillo. La forma más agria de verte dibujado.", descripcion_en:"A complete character, head to toe, with a simple background. The sourest way to get drawn.", punto1_es:"Personaje completo con su pose", punto1_en:"Full character with a pose", punto2_es:"Fondo sencillo y detalles de tu historia", punto2_en:"Simple background and details of your story", precio:420000, destacado:true},
+      {n:3, nombre_es:"Mundo agrio", nombre_en:"Sour world", descripcion_es:"Uno o varios personajes dentro de un escenario completo. Una escena con todo su universo.", descripcion_en:"One or more characters inside a full scene. A picture with its whole universe.", punto1_es:"Varios personajes", punto1_en:"Several characters", punto2_es:"Escenario con ambiente y detalle", punto2_en:"Detailed setting and mood", precio:750000, destacado:false}],
+    clientes:[{id:c1, nombre:"Cliente de ejemplo 1", correo:"cliente1@ejemplo.com", whatsapp:"", ciudad:"Bogotá", direccion:"", instagram:"", notas:"Dato de ejemplo del modo demostración.", creado:new Date(ahora - 20 * dia).toISOString()},
+      {id:c2, nombre:"Cliente de ejemplo 2", correo:"cliente2@ejemplo.com", whatsapp:"", ciudad:"Medellín", direccion:"", instagram:"", notas:"", creado:new Date(ahora - 9 * dia).toISOString()},
+      {id:c3, nombre:"Cliente de ejemplo 3", correo:"cliente3@ejemplo.com", whatsapp:"", ciudad:"Cali", direccion:"", instagram:"", notas:"", creado:new Date(ahora - 2 * dia).toISOString()}],
+    pedidos:[{id:p1, numero:1, tipo:"comision", estado:"proceso", cliente_id:c1, comision_n:2, formato:"dig", especificaciones:"Ejemplo: personaje con capa y su gato.", monto:420000, pagado:true, pagado_en:new Date(ahora - 10 * dia).toISOString(), fecha_entrega:new Date(ahora + 6 * dia).toISOString().slice(0, 10), notas:"", creado:new Date(ahora - 18 * dia).toISOString()},
+      {id:p2, numero:2, tipo:"compra", estado:"proceso", cliente_id:c2, obra_id:"katana", formato:"imp", monto:350000, pagado:true, pagado_en:new Date(ahora - 8 * dia).toISOString(), notas:"", creado:new Date(ahora - 8 * dia).toISOString()},
+      {id:p3, numero:3, tipo:"comision", estado:"espera", cliente_id:c3, comision_n:1, formato:"dig", especificaciones:"Ejemplo: retrato para avatar.", pagado:false, notas:"Llegó desde la web (es)", creado:new Date(ahora - 2 * dia).toISOString()},
+      {id:p4, numero:4, tipo:"compra", estado:"finalizado", cliente_id:c1, obra_id:"tigre", formato:"enm", monto:400000, pagado:true, pagado_en:new Date(ahora - 30 * dia).toISOString(), notas:"", creado:new Date(ahora - 30 * dia).toISOString()}],
+    pedido_eventos:[{id:uid(), pedido_id:p1, estado:"espera", nota:"Solicitud recibida desde la web", creado:new Date(ahora - 18 * dia).toISOString()}, {id:uid(), pedido_id:p1, estado:"proceso", nota:"", creado:new Date(ahora - 10 * dia).toISOString()}],
+    v:2
+  };
+}
+const VIEJOS = {nueva:"espera", cotizada:"espera", pendiente:"espera", cancelada:"espera", anticipo:"proceso", boceto:"proceso", pagada:"proceso", enviada:"proceso", entregada:"finalizado"};
+function migrar(d){   // datos de una demostración anterior
+  d.obras.forEach(o => { if (o.agotada == null) o.agotada = !(+o.copias > 0); delete o.copias; });
+  (d.pedidos || []).forEach(p => { p.estado = VIEJOS[p.estado] || p.estado; if (typeof p.pagado !== "boolean") p.pagado = +p.pagado > 0; delete p.anticipo; });
+  (d.pedido_eventos || []).forEach(e => { if (e.estado) e.estado = VIEJOS[e.estado] || e.estado; }); delete d.ajustes; d.v = 2;
+}
+const demo = {
+  leer(){ try { const d = JSON.parse(localStorage.getItem(LS)); if (d && d.obras){ if (d.v !== 2){ migrar(d); this.escribir(d); } return d; } } catch(e){} const d = semilla(); this.escribir(d); return d; },
+  escribir(d){ try { localStorage.setItem(LS, JSON.stringify(d)); } catch(e){ avisar("No hay espacio en este navegador: usa imágenes más livianas."); throw e; } }
+};
+const db = {
+  async lista(t){
+    if (DEMO) return structuredClone(demo.leer()[t] || []);
+    const {data, error} = await sb.from(t).select("*"); if (error) throw error; return data;
+  },
+  async guardar(t, fila){
+    const k = TABLAS[t];
+    if (DEMO){ const d = demo.leer(), arr = d[t] = d[t] || [];
+      if (t === "pedidos" && !fila.numero) fila.numero = arr.reduce((m, x) => Math.max(m, x.numero || 0), 0) + 1;
+      if (fila[k] == null || fila[k] === "") fila[k] = t === "comision_tipos" ? arr.length + 1 : uid();
+      if (!fila.creado && ["clientes", "pedidos", "pedido_eventos"].includes(t)) fila.creado = new Date().toISOString();
+      fila.actualizado = new Date().toISOString();
+      const i = arr.findIndex(x => x[k] === fila[k]); if (i >= 0) arr[i] = {...arr[i], ...fila}; else arr.push(fila); demo.escribir(d); return fila; }
+    const f = {...fila}; if (f[k] == null || f[k] === "") delete f[k]; if (["obras", "comision_tipos", "pedidos"].includes(t)) f.actualizado = new Date().toISOString();
+    const {data, error} = await sb.from(t).upsert(f).select().single(); if (error) throw error; return data;
+  },
+  async borrar(t, id){
+    const k = TABLAS[t];
+    if (DEMO){ const d = demo.leer(); d[t] = (d[t] || []).filter(x => x[k] !== id); if (t === "pedidos") d.pedido_eventos = d.pedido_eventos.filter(e => e.pedido_id !== id); demo.escribir(d); return; }
+    const {error} = await sb.from(t).delete().eq(k, id); if (error) throw error;
+  },
+  async subirImagen(archivo, nombre){
+    const blob = await achicar(archivo, DEMO ? 1400 : 2400, DEMO ? .8 : .9);
+    if (DEMO) return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); });
+    const ruta = `${nombre}-${Date.now()}.jpg`, {error} = await sb.storage.from("obras").upload(ruta, blob, {contentType:"image/jpeg", upsert:true}); if (error) throw error;
+    return sb.storage.from("obras").getPublicUrl(ruta).data.publicUrl;
+  }
+};
+async function achicar(archivo, maxLado, calidad){
+  const url = URL.createObjectURL(archivo), im = await new Promise((r, x) => { const i = new Image(); i.onload = () => r(i); i.onerror = x; i.src = url; });
+  const k = Math.min(1, maxLado / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas"); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+  c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+  return await new Promise(r => c.toBlob(r, "image/jpeg", calidad));
+}
+
+/* ---------- entrar ---------- */
+let modoLogin = "codigo", codigoEnviado = false, usuario = "";
+function pintarLogin(){
+  $("#lClaveC").hidden = modoLogin !== "clave"; $("#lCodigoC").hidden = !(modoLogin === "codigo" && codigoEnviado);
+  $("#lBoton").textContent = modoLogin === "clave" ? "Entrar" : codigoEnviado ? "Entrar" : "Enviarme el código";
+  document.querySelectorAll(".pestanas button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.modo === modoLogin)));
+}
+document.querySelectorAll(".pestanas button").forEach(b => b.addEventListener("click", () => { modoLogin = b.dataset.modo; codigoEnviado = false; $("#lNota").textContent = ""; pintarLogin(); }));
+$("#fLogin").addEventListener("submit", async ev => {
+  ev.preventDefault(); const correo = $("#lCorreo").value.trim().toLowerCase(), nota = $("#lNota"), bt = $("#lBoton");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)){ nota.textContent = "Escribe un correo válido."; return; }
+  bt.disabled = true;
+  try {
+    if (modoLogin === "codigo" && !codigoEnviado){
+      if (!DEMO){ const {error} = await sb.auth.signInWithOtp({email:correo, options:{shouldCreateUser:false}}); if (error) throw error; }
+      codigoEnviado = true; nota.textContent = DEMO ? "Modo demostración: el código es 123456." : "Te enviamos un código a tu correo. Vence en unos minutos."; pintarLogin(); $("#lCodigo").focus();
+    } else if (modoLogin === "codigo"){
+      const cod = $("#lCodigo").value.trim();
+      if (DEMO){ if (cod !== "123456") throw new Error("Código incorrecto."); entrar(correo); }
+      else { const {error} = await sb.auth.verifyOtp({email:correo, token:cod, type:"email"}); if (error) throw error; await comprobarAdmin(correo); }
+    } else {
+      const clave = $("#lClave").value; if (!clave) throw new Error("Escribe la contraseña.");
+      if (DEMO) entrar(correo);
+      else { const {error} = await sb.auth.signInWithPassword({email:correo, password:clave}); if (error) throw error; await comprobarAdmin(correo); }
+    }
+  } catch(e){ nota.textContent = /Invalid login|invalid/i.test(e.message) ? "Correo, contraseña o código incorrectos." : e.message || "No se pudo entrar."; }
+  bt.disabled = false;
+});
+async function comprobarAdmin(correo){
+  const {data, error} = await sb.from("administradores").select("correo").limit(1);
+  if (error || !data || !data.length){ await sb.auth.signOut(); throw new Error("Este correo no tiene permiso para el panel."); }
+  entrar(correo);
+}
+function entrar(correo){ usuario = correo; if (DEMO) sessionStorage.setItem("agrio-panel-demo-sesion", correo); $("#vLogin").hidden = true; $("#vApp").hidden = false; document.querySelectorAll("[data-quien]").forEach(e => { e.textContent = correo; }); document.querySelectorAll("[data-modo-txt]").forEach(e => { e.textContent = DEMO ? "Modo demostración" : "Sesión iniciada"; }); ir(location.hash.slice(1) || "resumen"); }
+document.querySelectorAll("[data-salir]").forEach(b => b.onclick = async () => { if (DEMO) sessionStorage.removeItem("agrio-panel-demo-sesion"); else await sb.auth.signOut(); location.hash = ""; location.reload(); });
+
+/* ---------- navegación ---------- */
+const I = {
+  resumen:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  pedidos:'<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+  clientes:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.4.3 4 1.9 4.5 4.5"/>',
+  obras:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 16l5-5 4 4 2-2 5 5"/><circle cx="15" cy="8" r="1.6"/>',
+  comisiones:'<path d="M14 4l6 6-9.5 9.5H4.5v-6z"/><path d="M12 6l6 6"/>',
+  ajustes:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'
+};
+const SECC = [["resumen", "Resumen"], ["pedidos", "Pedidos"], ["clientes", "Clientes"], ["obras", "Ilustraciones"], ["comisiones", "Comisiones"], ["ajustes", "Ajustes"]];
+let seccion = "resumen", nuevos = 0;
+function pintarNav(){
+  const ico = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+  const lista = SECC.map(([k, n]) => `<button class="nav" data-s="${k}" ${k === seccion ? 'aria-current="page"' : ""}>${ico(k)}${n}${k === "pedidos" && nuevos ? `<em>${nuevos}</em>` : ""}</button>`).join("");
+  $("#nav").innerHTML = lista; $("#navM").innerHTML = lista; $("#donde").textContent = SECC.find(x => x[0] === seccion)[1]; abrirMenu(false);
+  document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => ir(b.dataset.s));
+}
+function abrirMenu(si){ $("#menuM").hidden = !si; $("#menuB").setAttribute("aria-expanded", String(si)); }
+$("#menuB").onclick = () => abrirMenu($("#menuM").hidden);
+document.addEventListener("click", e => { if (!e.target.closest(".movil")) abrirMenu(false); });
+async function ir(s){
+  seccion = SECC.some(x => x[0] === s) ? s : "resumen"; location.hash = seccion; cerrarEditor();
+  const p = await db.lista("pedidos").catch(() => []); nuevos = p.filter(x => x.estado === "espera").length; pintarNav();
+  const c = $("#contenido"); c.innerHTML = '<p class="peq">Cargando…</p>';
+  try { await VISTAS[seccion](c); } catch(e){ console.error(e); c.innerHTML = `<div class="bloque"><div class="vacio">No se pudo cargar: ${esc(e.message)}</div></div>`; }
+  window.scrollTo(0, 0);
+}
+addEventListener("hashchange", () => { const s = location.hash.slice(1); if (s && s !== seccion && !$("#vApp").hidden) ir(s); });
+
+/* ---------- editor lateral ---------- */
+function abrirEditor(html, alGuardar, extra){
+  const ed = $("#editor"); ed.innerHTML = html; ed.hidden = false; $("#capa").hidden = false;
+  ed.querySelector(".x").onclick = cerrarEditor; $("#capa").onclick = cerrarEditor;
+  const g = ed.querySelector("[data-guardar]"); if (g) g.onclick = async () => { g.disabled = true; try { await alGuardar(ed); } catch(e){ console.error(e); avisar("No se pudo guardar: " + (e.message || e)); } g.disabled = false; };
+  if (extra) extra(ed); setTimeout(() => { const f = ed.querySelector("input,textarea,select"); if (f && matchMedia("(pointer:fine)").matches) f.focus(); }, 50);
+}
+function cerrarEditor(){ $("#editor").hidden = true; $("#capa").hidden = true; }
+addEventListener("keydown", e => { if (e.key === "Escape"){ cerrarEditor(); abrirMenu(false); } });
+const val = (ed, n) => { const el = ed.querySelector(`[name="${n}"]`); return el ? el.value.trim() : ""; };
+const num = (ed, n) => { const v = val(ed, n).replace(/[^\d]/g, ""); return v === "" ? null : +v; };
+
+/* ---------- vistas ---------- */
+const VISTAS = {};
+const cab = (t, sub, boton) => `<div class="cabeza"><div><h1>${t}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${boton || ""}</div>${DEMO ? '<p class="demo">Modo demostración: los cambios se guardan solo en este navegador. Para que se vean en la web hay que conectar la base de datos (Ajustes).</p>' : ""}`;
+
+/* RESUMEN */
+VISTAS.resumen = async c => {
+  const [P, C, O, T] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos")]), cli = Object.fromEntries(C.map(x => [x.id, x]));
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
+  const mes = new Date(); mes.setDate(1); mes.setHours(0, 0, 0, 0);
+  const ingresos = P.filter(p => p.pagado && new Date(p.pagado_en || p.creado) >= mes).reduce((s, p) => s + (+p.monto || 0), 0);
+  const prox = P.filter(p => p.estado !== "finalizado" && p.fecha_entrega).sort((a, b) => a.fecha_entrega.localeCompare(b.fecha_entrega)).slice(0, 6);
+  const rec = [...P].sort((a, b) => (b.creado || "").localeCompare(a.creado || "")).slice(0, 6);
+  c.innerHTML = cab("Resumen", "Lo que pasa hoy con tus comisiones y ventas.") + `
+    <div class="cifras">
+      <div class="cifra"><span>En espera por confirmar</span><b>${P.filter(p => p.estado === "espera").length}</b></div>
+      <div class="cifra"><span>En proceso</span><b>${P.filter(p => p.estado === "proceso").length}</b></div>
+      <div class="cifra"><span>Finalizados</span><b>${P.filter(p => p.estado === "finalizado").length}</b></div>
+      <div class="cifra"><span>Pagado este mes</span><b>${pesos(ingresos)}</b></div>
+      <div class="cifra"><span>Clientes</span><b>${C.length}</b></div>
+      <div class="cifra"><span>Obras agotadas</span><b>${O.filter(o => o.agotada).length}<small> de ${O.length}</small></b></div>
+    </div>
+    <div class="bloque"><h2>Próximas entregas</h2>${prox.length ? prox.map(p => filaPedido(p, cli)).join("") : '<div class="vacio">No hay pedidos pendientes con fecha de entrega.</div>'}</div>
+    <div class="bloque"><h2>Lo más reciente</h2>${rec.length ? rec.map(p => filaPedido(p, cli)).join("") : '<div class="vacio">Aún no hay pedidos.</div>'}</div>`;
+  c.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => editarPedido(f.dataset.pedido));
+};
+const tipoCom = {};
+function detallePedido(p, O){
+  if (p.tipo === "comision") return "Comisión · " + (tipoCom[p.comision_n] || "sin tipo");
+  const o = (O || []).find(x => x.id === p.obra_id); return "Compra · " + (o ? o.nombre_es : p.obra_id || "obra");
+}
+let CACHE_O = [];
+const dia = f => f ? new Date(f + "T12:00:00") : null;   // las fechas de entrega son días, sin hora
+const entregaTxt = p => p.fecha_entrega ? "Entrega " + fecha(dia(p.fecha_entrega)) : "Sin fecha de entrega";
+const pagoTxt = p => `<span class="pago ${p.pagado ? "si" : ""}">${p.pagado ? "Pagado" : "Sin pagar"}</span>`;
+function filaPedido(p, cli){
+  const c = cli[p.cliente_id];
+  return `<div class="fila fp click" data-pedido="${p.id}"><span class="peq">#${p.numero || "—"}</span><div class="nombre"><b>${esc(c ? c.nombre : "Sin cliente")}</b><span>${esc(detallePedido(p, CACHE_O))}</span></div><span class="peq ocultaCel">${fecha(p.creado)}</span><span><span class="precio">${pesos(p.monto)}</span><br>${pagoTxt(p)}</span><span>${etq(p.estado)}</span><span class="peq ocultaCel">${entregaTxt(p)}</span></div>`;
+}
+
+/* PEDIDOS */
+let fTipo = "todos", fVista = "tablero", fBusca = "";
+VISTAS.pedidos = async c => {
+  const [P, C, O, T] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos")]);
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
+  const cli = Object.fromEntries(C.map(x => [x.id, x])), q = fBusca.toLowerCase();
+  const L = P.filter(p => (fTipo === "todos" || p.tipo === fTipo) && (!q || [cli[p.cliente_id]?.nombre, cli[p.cliente_id]?.correo, "#" + p.numero, detallePedido(p, O)].join(" ").toLowerCase().includes(q)))
+    .sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
+  const col = (k, t) => { const l = L.filter(p => p.estado === k); return `<div class="col"><h3>${t}<span>${l.length}</span></h3>${l.map(p => { const cl = cli[p.cliente_id];
+    return `<button class="tarjetaP" data-pedido="${p.id}"><span class="tipo">${p.tipo === "comision" ? "Comisión" : "Compra"} · #${p.numero || "—"}</span><b>${esc(cl ? cl.nombre : "Sin cliente")}</b><span class="peq">${esc(detallePedido(p, O).replace(/^(Comisión|Compra) · /, ""))}</span><span class="peq">${entregaTxt(p)}</span><span class="pie">${etq(p.estado)}<span style="text-align:right"><span class="precio">${pesos(p.monto)}</span><br>${pagoTxt(p)}</span></span></button>`; }).join("") || '<p class="peq" style="margin:6px">Nada por aquí.</p>'}</div>`; };
+  c.innerHTML = cab("Pedidos", "Comisiones y compras de ilustraciones, de la solicitud a la entrega.", '<button class="boton" id="nuevoP">+ Nuevo pedido</button>') + `
+    <div class="filtros">${[["todos", "Todos"], ["comision", "Comisiones"], ["compra", "Compras"]].map(([k, n]) => `<button class="chip" data-ft="${k}" aria-pressed="${fTipo === k}">${n}</button>`).join("")}
+      <button class="chip" data-fv="tablero" aria-pressed="${fVista === "tablero"}">Tablero</button><button class="chip" data-fv="lista" aria-pressed="${fVista === "lista"}">Lista</button>
+      <input class="buscar" id="bP" placeholder="Buscar cliente, número u obra…" value="${esc(fBusca)}"></div>
+    ${fVista === "tablero" ? `<div class="tablero">${ESTADOS.map(([k, n]) => col(k, n)).join("")}</div>`
+      : `<div class="bloque">${L.length ? L.map(p => filaPedido(p, cli)).join("") : '<div class="vacio">No hay pedidos con ese filtro.</div>'}</div>`}`;
+  c.querySelectorAll("[data-ft]").forEach(b => b.onclick = () => { fTipo = b.dataset.ft; ir("pedidos"); });
+  c.querySelectorAll("[data-fv]").forEach(b => b.onclick = () => { fVista = b.dataset.fv; ir("pedidos"); });
+  const bp = c.querySelector("#bP"); bp.oninput = () => { fBusca = bp.value; clearTimeout(bp.t); bp.t = setTimeout(async () => { await VISTAS.pedidos(c); const n = c.querySelector("#bP"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+  c.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => editarPedido(f.dataset.pedido));
+  c.querySelector("#nuevoP").onclick = () => editarPedido(null);
+};
+async function editarPedido(id, clientePre){
+  const [P, C, O, T, E] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos"), db.lista("pedido_eventos")]);
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
+  const p = {...(P.find(x => x.id === id) || {tipo:"comision", estado:"espera", formato:"dig", pagado:false})}; if (clientePre) p.cliente_id = clientePre;
+  const cl = C.find(x => x.id === p.cliente_id);
+  const ev = E.filter(e => e.pedido_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
+  const opc = (arr, v) => arr.map(([k, n]) => `<option value="${esc(k)}" ${String(k) === String(v ?? "") ? "selected" : ""}>${esc(n)}</option>`).join("");
+  const wa = cl && cl.whatsapp ? cl.whatsapp.replace(/\D/g, "") : "";
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? "Pedido #" + (p.numero || "") : "Nuevo pedido"}</h2><button class="x" aria-label="Cerrar">✕</button></div>
+    <div class="cuerpo">
+      ${cl ? `<div class="contacto">${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}${cl.correo ? `<a href="mailto:${esc(cl.correo)}?subject=${encodeURIComponent("Tu pedido Agrio Art #" + (p.numero || ""))}">Correo</a>` : ""}<a href="#clientes" data-vercli="${cl.id}">Ver cliente</a></div>` : ""}
+      <label class="campo"><span>Fecha de entrega</span><input class="entrada" type="date" name="fecha_entrega" value="${esc(p.fecha_entrega || "")}"><small class="peq">La que acordaron por correo. Puedes dejarla vacía.</small></label>
+      <div class="dos"><label class="campo"><span>Tipo</span><select class="entrada" name="tipo">${opc([["comision", "Comisión"], ["compra", "Compra de ilustración"]], p.tipo)}</select></label>
+        <label class="campo"><span>Estado</span><select class="entrada" name="estado">${opc(ESTADOS, p.estado)}</select></label></div>
+      <label class="campo"><span>Cliente</span><select class="entrada" name="cliente_id"><option value="">— Elegir —</option>${opc(C.sort((a, b) => a.nombre.localeCompare(b.nombre)).map(x => [x.id, x.nombre + (x.correo ? " · " + x.correo : "")]), p.cliente_id)}<option value="__nuevo">+ Cliente nuevo…</option></select></label>
+      <div class="dos"><label class="campo" data-solo="comision"><span>Tipo de comisión</span><select class="entrada" name="comision_n"><option value="">—</option>${opc(T.sort((a, b) => a.n - b.n).map(t => [t.n, t.nombre_es]), p.comision_n)}</select></label>
+        <label class="campo" data-solo="compra"><span>Ilustración</span><select class="entrada" name="obra_id"><option value="">—</option>${opc(O.map(o => [o.id, o.nombre_es]), p.obra_id)}</select></label>
+        <label class="campo"><span>Formato</span><select class="entrada" name="formato">${opc(Object.entries(FORMATOS), p.formato)}</select></label></div>
+      <label class="campo" data-solo="comision"><span>Especificaciones</span><textarea class="entrada" name="especificaciones">${esc(p.especificaciones)}</textarea></label>
+      <div class="dos"><label class="campo"><span>Valor total (COP)</span><input class="entrada" name="monto" inputmode="numeric" value="${p.monto ?? ""}"></label>
+        <div class="campo"><span>Pago total recibido</span><span class="linSw"><button type="button" class="sw" role="switch" aria-checked="${!!p.pagado}" aria-label="Pago total recibido" id="eSwPago"></button><b id="eTxPago">${p.pagado ? "Pagado" : "Sin pagar"}</b></span></div></div>
+      <div class="dos"><label class="campo"><span>Envío / dirección</span><input class="entrada" name="envio" value="${esc(p.envio)}"></label>
+        <label class="campo"><span>Guía de envío</span><input class="entrada" name="guia" value="${esc(p.guia)}"></label></div>
+      <label class="campo"><span>Notas internas</span><textarea class="entrada" name="notas">${esc(p.notas)}</textarea></label>
+      ${id ? `<label class="campo"><span>Agregar al historial</span><input class="entrada" name="nota_evento" placeholder="Ej.: envié el boceto por WhatsApp"></label>
+      <span class="campo"><span>Historial</span></span><ul class="historia">${ev.map(e => `<li><b>${e.estado ? esc(est(e.estado)[1]) : "Nota"}</b>${e.nota ? " · " + esc(e.nota) : ""}<time>${fechaHora(e.creado)}</time></li>`).join("") || '<li class="peq">Sin movimientos todavía.</li>'}</ul>` : ""}
+    </div>
+    <div class="botones">${id ? '<button class="boton peligro" data-borrar>Borrar</button>' : ""}<button class="boton" data-guardar>Guardar</button></div>`,
+  async ed => {
+    let cliente_id = val(ed, "cliente_id");
+    if (cliente_id === "__nuevo"){ avisar("Primero crea el cliente."); return; }
+    const tipo = val(ed, "tipo"), pagado = ed.querySelector("#eSwPago").getAttribute("aria-checked") === "true", fila = {id:id || null, tipo, estado:val(ed, "estado"), cliente_id:cliente_id || null, comision_n:tipo === "comision" ? num(ed, "comision_n") : null, obra_id:tipo === "compra" ? (val(ed, "obra_id") || null) : null,
+      formato:val(ed, "formato"), especificaciones:val(ed, "especificaciones"), monto:num(ed, "monto"), pagado, pagado_en:pagado ? p.pagado_en || new Date().toISOString() : null, fecha_entrega:val(ed, "fecha_entrega") || null, envio:val(ed, "envio"), guia:val(ed, "guia"), notas:val(ed, "notas")};
+    if (id) fila.numero = p.numero;
+    const g = await db.guardar("pedidos", fila), nota = val(ed, "nota_evento");
+    if (!id || p.estado !== fila.estado || nota) await db.guardar("pedido_eventos", {pedido_id:g.id, estado:!id || p.estado !== fila.estado ? fila.estado : null, nota:!id ? "Pedido creado en el panel" : nota});
+    avisar("Pedido guardado"); cerrarEditor(); ir(seccion);
+  },
+  ed => {
+    const tipoSel = ed.querySelector('[name="tipo"]'), sinc = () => ed.querySelectorAll("[data-solo]").forEach(e => { e.hidden = e.dataset.solo !== tipoSel.value; });
+    tipoSel.onchange = sinc; sinc();
+    const sp = ed.querySelector("#eSwPago"); sp.onclick = () => { const si = sp.getAttribute("aria-checked") !== "true"; sp.setAttribute("aria-checked", String(si)); ed.querySelector("#eTxPago").textContent = si ? "Pagado" : "Sin pagar"; };
+    ed.querySelector('[name="cliente_id"]').onchange = e => { if (e.target.value === "__nuevo") editarCliente(null, {pedido:id}); };
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm("¿Borrar este pedido y su historial? No se puede deshacer.")) return; await db.borrar("pedidos", id); avisar("Pedido borrado"); cerrarEditor(); ir(seccion); };
+    const vc = ed.querySelector("[data-vercli]"); if (vc) vc.onclick = e => { e.preventDefault(); editarCliente(vc.dataset.vercli); };
+  });
+}
+
+/* CLIENTES */
+let cBusca = "";
+VISTAS.clientes = async c => {
+  const [C, P] = await Promise.all([db.lista("clientes"), db.lista("pedidos")]), q = cBusca.toLowerCase();
+  const tot = id => P.filter(p => p.cliente_id === id), suma = l => l.reduce((s, p) => s + (p.pagado ? +p.monto || 0 : 0), 0), L = C.filter(x => !q || [x.nombre, x.correo, x.whatsapp, x.ciudad, x.instagram].join(" ").toLowerCase().includes(q)).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
+  c.innerHTML = cab("Clientes", `${C.length} en la base de datos.`, '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="boton linea" id="csv">Exportar CSV</button><button class="boton" id="nuevoC">+ Nuevo cliente</button></div>') + `
+    <div class="filtros"><input class="buscar" style="margin-left:0" id="bC" placeholder="Buscar por nombre, correo, ciudad…" value="${esc(cBusca)}"></div>
+    <div class="bloque"><div class="fila fc titulos"><span>Cliente</span><span>Contacto</span><span>Ciudad</span><span>Pedidos</span><span>Total pagado</span></div>
+    ${L.map(x => { const t = tot(x.id); return `<div class="fila fc click" data-cli="${x.id}"><div class="nombre"><b>${esc(x.nombre)}</b><span>Desde ${fecha(x.creado)}</span></div><span class="peq">${esc(x.correo || "")}${x.whatsapp ? "<br>" + esc(x.whatsapp) : ""}</span><span class="peq">${esc(x.ciudad || "—")}</span><span>${t.length}</span><span class="precio">${pesos(suma(t))}</span></div>`; }).join("") || '<div class="vacio">No hay clientes con esa búsqueda.</div>'}</div>`;
+  c.querySelectorAll("[data-cli]").forEach(f => f.onclick = () => editarCliente(f.dataset.cli));
+  c.querySelector("#nuevoC").onclick = () => editarCliente(null);
+  const b = c.querySelector("#bC"); b.oninput = () => { cBusca = b.value; clearTimeout(b.t); b.t = setTimeout(async () => { await VISTAS.clientes(c); const n = c.querySelector("#bC"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+  c.querySelector("#csv").onclick = () => {
+    const filas = [["Nombre", "Correo", "WhatsApp", "Ciudad", "Dirección", "Instagram", "Pedidos", "Total pagado", "Cliente desde", "Notas"]].concat(C.map(x => { const t = tot(x.id); return [x.nombre, x.correo, x.whatsapp, x.ciudad, x.direccion, x.instagram, t.length, suma(t), (x.creado || "").slice(0, 10), x.notas]; }));
+    const csv = "﻿" + filas.map(f => f.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\n"), a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"})); a.download = `clientes-agrio-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  };
+};
+async function editarCliente(id, desdePedido){
+  const [C, P] = await Promise.all([db.lista("clientes"), db.lista("pedidos")]), x = C.find(y => y.id === id) || {}, ped = P.filter(p => p.cliente_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
+  const wa = (x.whatsapp || "").replace(/\D/g, "");
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? esc(x.nombre) : "Nuevo cliente"}</h2><button class="x" aria-label="Cerrar">✕</button></div>
+    <div class="cuerpo">
+      ${id ? `<div class="contacto">${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}${x.correo ? `<a href="mailto:${esc(x.correo)}">Correo</a>` : ""}${x.instagram ? `<a href="https://instagram.com/${esc(x.instagram.replace(/^@/, ""))}" target="_blank" rel="noopener">Instagram</a>` : ""}</div>` : ""}
+      <label class="campo"><span>Nombre</span><input class="entrada" name="nombre" value="${esc(x.nombre)}"></label>
+      <div class="dos"><label class="campo"><span>Correo</span><input class="entrada" name="correo" type="email" value="${esc(x.correo)}"></label><label class="campo"><span>WhatsApp</span><input class="entrada" name="whatsapp" inputmode="tel" placeholder="57 300 000 0000" value="${esc(x.whatsapp)}"></label></div>
+      <div class="dos"><label class="campo"><span>Ciudad</span><input class="entrada" name="ciudad" value="${esc(x.ciudad)}"></label><label class="campo"><span>Instagram</span><input class="entrada" name="instagram" value="${esc(x.instagram)}"></label></div>
+      <label class="campo"><span>Dirección de envío</span><input class="entrada" name="direccion" value="${esc(x.direccion)}"></label>
+      <label class="campo"><span>Notas</span><textarea class="entrada" name="notas">${esc(x.notas)}</textarea></label>
+      ${id ? `<span class="campo"><span>Pedidos (${ped.length})</span></span><div class="bloque">${ped.map(p => `<div class="fila click" style="grid-template-columns:1fr auto" data-pedido="${p.id}"><div class="nombre"><b style="font-size:16px">#${p.numero} · ${esc(detallePedido(p, CACHE_O))}</b><span>${fecha(p.creado)} · ${pesos(p.monto)}</span></div>${etq(p.estado)}</div>`).join("") || '<div class="vacio">Sin pedidos.</div>'}</div>
+      <button class="boton linea" data-nuevo-pedido style="margin-top:4px">+ Nuevo pedido para este cliente</button>` : ""}
+    </div>
+    <div class="botones">${id ? '<button class="boton peligro" data-borrar>Borrar</button>' : ""}<button class="boton" data-guardar>Guardar</button></div>`,
+  async ed => {
+    const fila = {id:id || null, nombre:val(ed, "nombre"), correo:val(ed, "correo").toLowerCase() || null, whatsapp:val(ed, "whatsapp"), ciudad:val(ed, "ciudad"), instagram:val(ed, "instagram"), direccion:val(ed, "direccion"), notas:val(ed, "notas")};
+    if (!fila.nombre){ avisar("Escribe el nombre."); return; }
+    const g = await db.guardar("clientes", fila); avisar("Cliente guardado");
+    if (desdePedido){ editarPedido(desdePedido.pedido, g.id); return; }
+    cerrarEditor(); ir(seccion);
+  },
+  ed => {
+    ed.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => editarPedido(f.dataset.pedido));
+    const n = ed.querySelector("[data-nuevo-pedido]"); if (n) n.onclick = () => editarPedido(null, id);
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm("¿Borrar este cliente? Sus pedidos se conservan, sin cliente. No se puede deshacer.")) return; await db.borrar("clientes", id); avisar("Cliente borrado"); cerrarEditor(); ir(seccion); };
+  });
+}
+
+/* ILUSTRACIONES */
+let oFiltro = "todas";
+VISTAS.obras = async c => {
+  const O = (await db.lista("obras")).sort((a, b) => (a.orden || 0) - (b.orden || 0)); CACHE_O = O;
+  const L = O.filter(o => oFiltro === "todas" || (oFiltro === "disp" ? !o.agotada && o.visible !== false : oFiltro === "agot" ? o.agotada : o.visible === false));
+  c.innerHTML = cab("Ilustraciones", "Lo que cambies aquí se ve en la galería de la web al guardar.", '<button class="boton" id="nuevaO">+ Subir ilustración</button>') + `
+    <div class="filtros">${[["todas", "Todas"], ["disp", "Disponibles"], ["agot", "Agotadas"], ["ocultas", "Ocultas"]].map(([k, n]) => `<button class="chip" data-fo="${k}" aria-pressed="${oFiltro === k}">${n}</button>`).join("")}</div>
+    <div class="bloque"><div class="fila fo titulos"><span></span><span>Obra</span><span>Precio</span><span>Estado</span><span>En la web</span><span></span></div>
+    ${L.map(o => `<div class="fila fo" data-o="${esc(o.id)}"><div class="mini" style="background-image:url('${esc(imgDe(o))}')"></div>
+      <div class="nombre"><b>${esc(o.nombre_es)}</b><span>${esc(o.descripcion_es)}</span></div>
+      <span class="precio">${pesos(o.precio)}</span>
+      <span class="estadoObra"><button class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="Marcar como agotada: ${esc(o.nombre_es)}" data-agotada></button>${o.agotada ? '<span style="color:var(--mal)">Agotada</span>' : "Disponible"}</span>
+      <span class="estadoObra"><button class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="Mostrar en la web: ${esc(o.nombre_es)}" data-visible></button>${o.visible === false ? "Oculta" : "Visible"}</span>
+      <span class="acc"><button class="icono" aria-label="Subir en el orden" data-mover="-1">↑</button><button class="icono" aria-label="Editar" data-editar><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button></span></div>`).join("") || '<div class="vacio">No hay obras con ese filtro.</div>'}</div>`;
+  c.querySelectorAll("[data-fo]").forEach(b => b.onclick = () => { oFiltro = b.dataset.fo; ir("obras"); });
+  c.querySelector("#nuevaO").onclick = () => editarObra(null);
+  c.querySelectorAll("[data-o]").forEach(f => {
+    const o = O.find(x => x.id === f.dataset.o);
+    f.querySelector("[data-editar]").onclick = () => editarObra(o.id);
+    f.querySelector("[data-agotada]").onclick = async () => { await db.guardar("obras", {...o, agotada:!o.agotada}); avisar(o.agotada ? o.nombre_es + " vuelve a estar disponible" : o.nombre_es + " quedó agotada"); ir("obras"); };
+    f.querySelector("[data-visible]").onclick = async () => { await db.guardar("obras", {...o, visible:o.visible === false}); avisar(o.visible === false ? "Ahora se ve en la web" : "Oculta en la web"); ir("obras"); };
+    f.querySelector("[data-mover]").onclick = async () => { const i = O.indexOf(o); if (i <= 0) return; const a = O[i - 1]; await db.guardar("obras", {...o, orden:a.orden}); await db.guardar("obras", {...a, orden:o.orden === a.orden ? (+o.orden || 0) + 1 : o.orden}); ir("obras"); };
+  });
+};
+const imgDe = o => o.imagen_url || "../img/" + o.id + ".jpg";   // las obras de siempre usan la imagen que ya está en la web
+async function editarObra(id){
+  const O = await db.lista("obras"), o = O.find(x => x.id === id) || {visible:true, agotada:false, precio:0}; let lang = "es", img = id ? imgDe(o) : "";
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? "Editar · " + esc(o.nombre_es) : "Nueva ilustración"}</h2><button class="x" aria-label="Cerrar">✕</button></div>
+    <div class="cuerpo">
+      <div class="foto"><div class="img" id="eImg" style="background-image:url('${esc(img)}')"></div>
+        <div class="lado"><label class="boton linea" style="cursor:pointer">Cambiar imagen<input type="file" accept="image/*" id="eArch" class="oculto"></label><span>JPG o PNG. Se optimiza sola al subirla.</span></div></div>
+      <div class="idioma"><button type="button" data-l="es" aria-pressed="true">Español</button><button type="button" data-l="en" aria-pressed="false">English</button></div>
+      ${["es", "en"].map(l => `<div data-lang="${l}" ${l === "en" ? "hidden" : ""}>
+        <label class="campo"><span>Nombre</span><input class="entrada" name="nombre_${l}" value="${esc(o["nombre_" + l])}"></label>
+        <label class="campo"><span>Descripción (máx. 3 líneas en la ficha)</span><textarea class="entrada" name="descripcion_${l}" maxlength="200">${esc(o["descripcion_" + l])}</textarea></label></div>`).join("")}
+      <label class="campo"><span>Precio desde (COP)</span><input class="entrada" name="precio" inputmode="numeric" value="${o.precio ?? ""}"></label>
+      <div class="dos"><div class="campo"><span>Agotada</span><button type="button" class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="Agotada" id="eAgo"></button></div>
+        <div class="campo"><span>Visible en la web</span><button type="button" class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="Visible en la web" id="eVis"></button></div></div>
+    </div>
+    <div class="botones">${id ? '<button class="boton peligro" data-borrar>Quitar de la galería</button>' : ""}<button class="boton" data-guardar>Guardar</button></div>`,
+  async ed => {
+    const nes = val(ed, "nombre_es"); if (!nes){ avisar("Escribe el nombre en español."); return; } if (!img){ avisar("Sube la imagen."); return; }
+    const nid = id || nes.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Date.now().toString(36).slice(-4);
+    await db.guardar("obras", {...o, id:nid, orden:o.orden ?? (O.reduce((m, x) => Math.max(m, +x.orden || 0), 0) + 1), nombre_es:nes, nombre_en:val(ed, "nombre_en"), descripcion_es:val(ed, "descripcion_es"), descripcion_en:val(ed, "descripcion_en"),
+      precio:num(ed, "precio") || 0, agotada:ed.querySelector("#eAgo").getAttribute("aria-checked") === "true", imagen_url:img === imgDe({id:o.id}) && !o.imagen_url ? null : img, visible:ed.querySelector("#eVis").getAttribute("aria-checked") === "true"});
+    avisar("Ilustración guardada"); cerrarEditor(); ir("obras");
+  },
+  ed => {
+    ed.querySelector("#eArch").onchange = async e => { const f = e.target.files[0]; if (!f) return; avisar("Subiendo imagen…");
+      try { img = await db.subirImagen(f, id || "obra"); ed.querySelector("#eImg").style.backgroundImage = `url('${img}')`; avisar("Imagen lista: falta guardar"); } catch(er){ avisar("No se pudo subir la imagen: " + er.message); } };
+    ed.querySelectorAll("[data-l]").forEach(b => b.onclick = () => { lang = b.dataset.l; ed.querySelectorAll("[data-l]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); ed.querySelectorAll("[data-lang]").forEach(d => { d.hidden = d.dataset.lang !== lang; }); });
+    ["#eVis", "#eAgo"].forEach(k => { const v = ed.querySelector(k); v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true")); });
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm(`¿Quitar "${o.nombre_es}" de la galería para siempre? Si solo quieres esconderla, usa "Visible en la web".`)) return; await db.borrar("obras", id); avisar("Ilustración quitada"); cerrarEditor(); ir("obras"); };
+  });
+}
+
+/* COMISIONES (tipos) */
+VISTAS.comisiones = async c => {
+  const T = (await db.lista("comision_tipos")).sort((a, b) => a.n - b.n);
+  c.innerHTML = cab("Comisiones", "Los tres tipos de encargo que aparecen en la hoja de comisiones de la web.") + `<div class="ctipos">${T.map(t => `<div class="ctipo"><span class="tipo">N° 0${t.n}${t.destacado ? " · El más pedido" : ""}</span><h3>${esc(t.nombre_es)}</h3><p class="peq">${esc(t.descripcion_es)}</p><p class="precio">Desde ${pesos(t.precio)}</p><button class="boton linea" data-t="${t.n}">Editar</button></div>`).join("")}</div>`;
+  c.querySelectorAll("[data-t]").forEach(b => b.onclick = () => editarTipo(+b.dataset.t));
+};
+async function editarTipo(n){
+  const T = await db.lista("comision_tipos"), t = T.find(x => x.n === n); let lang = "es";
+  abrirEditor(`<div class="top"><h2 id="edT">${esc(t.nombre_es)}</h2><button class="x" aria-label="Cerrar">✕</button></div>
+    <div class="cuerpo">
+      <div class="idioma"><button type="button" data-l="es" aria-pressed="true">Español</button><button type="button" data-l="en" aria-pressed="false">English</button></div>
+      ${["es", "en"].map(l => `<div data-lang="${l}" ${l === "en" ? "hidden" : ""}>
+        <label class="campo"><span>Nombre</span><input class="entrada" name="nombre_${l}" value="${esc(t["nombre_" + l])}"></label>
+        <label class="campo"><span>Descripción</span><textarea class="entrada" name="descripcion_${l}" maxlength="180">${esc(t["descripcion_" + l])}</textarea></label>
+        <label class="campo"><span>Incluye (1)</span><input class="entrada" name="punto1_${l}" value="${esc(t["punto1_" + l])}"></label>
+        <label class="campo"><span>Incluye (2)</span><input class="entrada" name="punto2_${l}" value="${esc(t["punto2_" + l])}"></label></div>`).join("")}
+      <label class="campo"><span>Precio desde (COP)</span><input class="entrada" name="precio" inputmode="numeric" value="${t.precio ?? ""}"></label>
+      <label class="campo"><span>Marcar como "El más pedido"</span><button type="button" class="sw" role="switch" aria-checked="${!!t.destacado}" id="eDest"></button></label>
+    </div>
+    <div class="botones"><button class="boton" data-guardar>Guardar</button></div>`,
+  async ed => {
+    const dest = ed.querySelector("#eDest").getAttribute("aria-checked") === "true", fila = {...t, precio:num(ed, "precio") || 0, destacado:dest};
+    ["es", "en"].forEach(l => ["nombre", "descripcion", "punto1", "punto2"].forEach(k => { fila[k + "_" + l] = val(ed, k + "_" + l); }));
+    if (dest) for (const o of T) if (o.n !== n && o.destacado) await db.guardar("comision_tipos", {...o, destacado:false});
+    await db.guardar("comision_tipos", fila); avisar("Comisión guardada"); cerrarEditor(); ir("comisiones");
+  },
+  ed => {
+    ed.querySelectorAll("[data-l]").forEach(b => b.onclick = () => { lang = b.dataset.l; ed.querySelectorAll("[data-l]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); ed.querySelectorAll("[data-lang]").forEach(d => { d.hidden = d.dataset.lang !== lang; }); });
+    const v = ed.querySelector("#eDest"); v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true"));
+  });
+}
+
+/* AJUSTES */
+VISTAS.ajustes = async c => {
+  c.innerHTML = cab("Ajustes", "Conexión con la web y respaldo.") + `
+    <div class="bloque"><h2>Conexión</h2><div style="padding:16px 18px">
+      <p>${DEMO ? "<b>Modo demostración.</b> No hay base de datos conectada: todo se guarda solo en este navegador. Para conectarla, hay que crear el proyecto en Supabase (la guía está en la carpeta del proyecto) y poner su dirección y su clave pública en <i>nube.js</i>." : "<b>Conectado a la base de datos.</b> Los cambios se ven en la web al guardar."}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="boton linea" href="../${DEMO ? "?vista=panel" : ""}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">Ver la web${DEMO ? " con estos cambios" : ""}</a><button class="boton linea" id="aRes">Descargar respaldo</button>${DEMO ? '<button class="boton peligro" id="aRst">Volver a los datos de ejemplo</button>' : ""}</div></div></div>`;
+  c.querySelector("#aRes").onclick = async () => { const d = {}; for (const t of Object.keys(TABLAS)) d[t] = await db.lista(t); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], {type:"application/json"})); a.download = `respaldo-agrio-${new Date().toISOString().slice(0, 10)}.json`; a.click(); };
+  const r = c.querySelector("#aRst"); if (r) r.onclick = () => { if (!confirm("Se borran los cambios de la demostración y vuelven los datos de ejemplo.")) return; localStorage.removeItem(LS); ir("ajustes"); avisar("Listo"); };
+};
+
+/* ---------- arranque ---------- */
+(async () => {
+  if (!DEMO){ const {createClient} = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm"); sb = createClient(NUBE.url, NUBE.clave);
+    const {data} = await sb.auth.getSession(); if (data.session){ try { await comprobarAdmin(data.session.user.email); return; } catch(e){} } }
+  else { $("#avisoDemo").hidden = false; const s = sessionStorage.getItem("agrio-panel-demo-sesion"); if (s){ entrar(s); return; } }
+  $("#vLogin").hidden = false; pintarLogin();
+})();
+</script>
+</body></html>

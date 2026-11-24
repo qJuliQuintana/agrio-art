@@ -8,6 +8,7 @@
 <title>Agrio Art · Galería de ilustraciones y arte</title>
 <meta name="description" content="Galería de ilustraciones y arte de Agrio, tattoo artist e ilustrador en Bogotá, Colombia.">
 <link rel="icon" href="data:,">
+<script src="nube.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@500;600;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -802,6 +803,7 @@ let carrito = [];
 try { carrito = JSON.parse(localStorage.getItem("agrio-v3-carrito") || "[]").filter(id => OBRAS.some(o => o.id === id && o.stock > 0)); } catch(e){ carrito = []; }
 const guardar = () => { try{ localStorage.setItem("agrio-v3-carrito", JSON.stringify(carrito)); }catch(e){} };
 const obra = id => OBRAS.find(o => o.id === id);
+const descDe = o => (o.panel && o.d[LANG]) || t("k_desc_ej");
 function pintarCarrito(){
   const n = carrito.length, nEl = $("#caN");
   nEl.textContent = n; nEl.hidden = n === 0;
@@ -940,9 +942,8 @@ function armarBento(){
       const disp = o.stock > 0;
       return `<article class="obra" data-id="${o.id}" style="flex:0 0 calc((100% - ${huecos}px) * ${(proporcion(o) / suma).toFixed(5)})">
       <button class="lam" type="button" data-ver="${o.id}" aria-label="${t("ver_grande")}: ${o.t[LANG]}"><img src="${o.img}" alt="${o.t[LANG]}" style="aspect-ratio:${o.ancho} / ${o.alto}" loading="lazy" decoding="async">
-      <span class="estado ${disp ? "" : "agotada"}"><i aria-hidden="true"></i>${disp ? t("disponible") + " · " + o.stock + "/" + TANDA : t("agotada")}</span></button>
+      <span class="estado ${disp ? "" : "agotada"}"><i aria-hidden="true"></i>${disp ? t("disponible") : t("agotada")}</span></button>
       <span class="cap"><span class="fila"><b>${o.t[LANG]}</b><span class="precio-c">${precio(o.precio)}</span></span>
-      <span class="tanda">${pila(o.stock)}${disp ? t("quedan", {n:o.stock}) : t("agotada_larga")}</span>
       <button class="accion ${disp ? "" : "separar"}" type="button" data-id="${o.id}"></button></span></article>`;
     }).join("")}</div>`;
   }).join("");
@@ -1020,7 +1021,7 @@ function pintarVisor(){
   const o = OBRAS[vIdx], disp = o.stock > 0;
   $("#vN").textContent = (vIdx + 1) + " / " + OBRAS.length;
   $("#vTitulo").textContent = o.t[LANG];
-  $("#vDesc").textContent = t("k_desc_ej");   // la misma descripción de la ficha; el tamaño se elige en el flujo de compra
+  $("#vDesc").textContent = descDe(o);   // la misma descripción de la ficha; el tamaño se elige en el flujo de compra
   $("#vPrecio").textContent = precio(o.precio);
   const b = $("#vAccion"), en = carrito.includes(o.id);
   b.className = "accion" + (disp ? (en ? " en-carrito" : "") : " separar");
@@ -1357,7 +1358,7 @@ const granoTinta = (() => {
 })();
 
 /* ---------- Imágenes: ilustraciones (color y blanco y negro) y el boceto en gris claro ---------- */
-const cargarImg = src => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = src; });
+const cargarImg = src => new Promise(r => { const im = new Image(); if (/^https?:\/\//.test(src) && !src.startsWith(location.origin)) im.crossOrigin = "anonymous"; im.onload = () => r(im); im.onerror = () => r(null); im.src = src; });
 /* el logo de Rem Design se toma del SVG de la página y se pinta en gris para imprimirlo en la caja */
 let REM_LOGO = null;
 async function cargarLogoRem(){
@@ -1382,8 +1383,8 @@ async function cargarCaracter(){
 }
 async function cargarImagenes(){
   await Promise.all(OBRAS.map(async o => {
-    const im = await cargarImg((typeof ILU_SRC !== "undefined" && ILU_SRC[o.id]) || o.img); if (!im) return;
-    IMG[o.id] = im;
+    const im = await cargarImg((!o.nube && typeof ILU_SRC !== "undefined" && ILU_SRC[o.id]) || o.img); if (!im) return;
+    IMG[o.id] = im; if (o.panel){ o.ancho = im.width; o.alto = im.height; }
     const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; const x = c.getContext("2d"); x.drawImage(im, 0, 0);
     try { const d = x.getImageData(0, 0, c.width, c.height), a = d.data; for (let i = 0; i < a.length; i += 4){ const l = .3 * a[i] + .59 * a[i + 1] + .11 * a[i + 2]; a[i] = a[i + 1] = a[i + 2] = Math.min(255, (l - 128) * 1.05 + 128); } x.putImageData(d, 0, 0); } catch(e){}
     IMG_BN[o.id] = c;
@@ -1573,7 +1574,7 @@ function caraIlus(x, dib, cel){
       const tit = o.t[LANG].toUpperCase(); let tz = tz0; while (tz > 18 && p.ancho(tit, `600 ${tz}px ${FU.cond}`) > wi) tz -= .5;
       p.txt(tit, xi, yc, `600 ${tz}px ${FU.cond}`, COL.papel); yc += tz0 + 10;
       // descripción de la obra: máximo 3 líneas, con puntos suspensivos si no cabe
-      { const fdF = `400 ${fD}px ${FU.sans}`, desc = t("k_desc_ej"); let ls = p.envolver(desc, wi, fdF);
+      { const fdF = `400 ${fD}px ${FU.sans}`, desc = descDe(o); let ls = p.envolver(desc, wi, fdF);
         if (ls.length > 3){ ls = ls.slice(0, 3); let u = ls[2]; while (u.length && p.ancho(u + "…", fdF) > wi) u = u.slice(0, -1).trimEnd(); ls[2] = u + "…"; }
         yc -= 2; ls.forEach((l, k) => p.txt(l, xi, yc + k * lhD, fdF, COL.gris)); yc += 3 * lhD + 16 + 2; }
       // precio y botón en la misma línea: es lo más importante de la ficha
@@ -1900,7 +1901,7 @@ function armarPapelDOM(){
   const pasos = [1, 2, 3].map(n => { const [a, b] = t("k_c" + n).split("|"); return `<li><span><b>${a.trim()}</b>${(b || "").trim()}</span></li>`; }).join("");
   const fichas = [1, 2, 3].map(n => `<button type="button" class="pf-ficha" data-n="${n}" aria-pressed="${FORM.encuadre === String(n)}" style="--rot:${[-.5, .35, -.25][n - 1]}deg">`
     + `<svg class="pf-borde" aria-hidden="true"><path/><path/></svg><svg class="pf-sel" aria-hidden="true"><path pathLength="1"/><path pathLength="1"/><path pathLength="1"/></svg>`
-    + `<span class="pf-banda"><span class="pf-num">N° 0${n}</span>${n === 2 ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
+    + `<span class="pf-banda"><span class="pf-num">N° 0${n}</span>${n === DESTACADA ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
     + `<span class="pf-cu">${t("c" + n + "_q")}<span class="pf-l">${t("c" + n + "_a")}</span><span class="pf-l">${t("c" + n + "_b")}</span></span>`
     + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span></span></button>`).join("");
   papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas">${fichas}</div><div class="pf-form"></div></div>`;
@@ -2147,15 +2148,17 @@ async function enviarSolicitud(){
     if (correoMal && falta === "correo") avisar(t("e_correo_mal")); else el.placeholder = t({nombre:"e_nombre", correo:"e_correo", specs:"e_idea"}[falta]);
     if (comD < .98) irA(G.S.form); el.focus({preventScroll:true}); return; }
   if (!FORM.encuadre){ avisar(t("e_encargo")); irA(G.S.marcos); return; }
-  if (!CORREO_SOLICITUDES){ avisar(t("f_sin_correo")); return; }
+  const NU = window.AGRIO_NUBE || {}, nube = !!(NU.url && NU.clave);
+  if (!CORREO_SOLICITUDES && !nube){ avisar(t("f_sin_correo")); return; }
   enviando = true; avisar(t("f_enviando"));
   const datos = {_subject:t("mail_asunto", {n:FORM.nombre.trim()}), _template:"table", _captcha:"false", _replyto:FORM.correo.trim(),
     Nombre:FORM.nombre.trim(), Correo:FORM.correo.trim(), Especificaciones:FORM.specs.trim(), Formato:t("fmc_" + FORM.formato)};
   if (FORM.encuadre) datos["Encargo elegido"] = t("c" + FORM.encuadre + "_n");
   try {
-    const r = await fetch(`https://formsubmit.co/ajax/${CORREO_SOLICITUDES}`, {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}, body:JSON.stringify(datos)});
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok || String(j.success) !== "true") throw new Error("envío");
+    if (nube){ const rr = await fetch(NU.url + "/rest/v1/rpc/crear_solicitud", {method:"POST", headers:{apikey:NU.clave, Authorization:"Bearer " + NU.clave, "Content-Type":"application/json"},
+      body:JSON.stringify({p_nombre:FORM.nombre.trim(), p_correo:FORM.correo.trim(), p_encargo:+FORM.encuadre, p_formato:FORM.formato, p_especificaciones:FORM.specs.trim(), p_idioma:LANG})}); if (!rr.ok) throw new Error("panel"); }
+    if (CORREO_SOLICITUDES){ const r = await fetch(`https://formsubmit.co/ajax/${CORREO_SOLICITUDES}`, {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}, body:JSON.stringify(datos)});
+      const j = await r.json().catch(() => ({})); if (!r.ok || String(j.success) !== "true") throw new Error("envío"); }
     avisar(t("f_ok")); FORM.nombre = FORM.correo = FORM.specs = ""; ["nombre", "correo", "specs"].forEach(k => { campo(k).value = ""; }); elegirEncargo("", true);
   } catch(e){ avisar(t("f_error")); }
   enviando = false;
@@ -2609,7 +2612,33 @@ let rsT;
 let anchoRs = innerWidth;
 /* en pantallas táctiles solo cuenta el cambio de ancho (girar el aparato): la barra del navegador y el teclado no reacomodan la caja */
 addEventListener("resize", () => { const act = document.activeElement; if (innerWidth === anchoRs && (TACTIL || (act && act.classList && act.classList.contains("campo")) || escribiendo())) return; anchoRs = innerWidth; clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel || esCubo() !== G.cubo || esCarrusel() !== G.carrusel || modoCom() !== G.modo) construir(); resolver(); }, 150); });
+let DESTACADA = 2;   // la comisión con "El más pedido"
+async function cargarDeNube(){
+  const N = window.AGRIO_NUBE || {}, vista = new URLSearchParams(location.search).get("vista") === "panel"; let obras = null, tipos = null;
+  try {
+    if (N.url && N.clave){
+      const h = {apikey:N.clave, Authorization:"Bearer " + N.clave}, ab = new AbortController(), f = q => fetch(N.url + "/rest/v1/" + q, {headers:h, signal:ab.signal}).then(r => r.ok ? r.json() : Promise.reject(new Error("nube " + r.status)));
+      setTimeout(() => ab.abort(), 5000);   // si la base no responde, la web sigue con sus datos
+      [obras, tipos] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n")]);
+    } else if (vista){ const d = JSON.parse(localStorage.getItem("agrio-panel-demo") || "null"); if (d){ obras = (d.obras || []).filter(o => o.visible !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0)); tipos = d.comision_tipos; } }
+  } catch(e){ console.error(e); return; }
+  const limpio = v => String(v ?? "").replace(/[<>]/g, "");
+  if (obras && obras.length){
+    OBRAS.length = 0;
+    obras.forEach(o => { const img = /^(https:|data:image\/)/.test(o.imagen_url || "") ? o.imagen_url.replace(/["'<>]/g, "") : "img/" + encodeURIComponent(o.id) + ".jpg", es = limpio(o.nombre_es), des = limpio(o.descripcion_es);
+      const ob = {id:limpio(o.id), img, nube:img === o.imagen_url, panel:true, precio:+o.precio || 0, stock:(o.agotada != null ? o.agotada : !(+o.copias > 0)) ? 0 : 1, color:"#3a3a3d", t:{es, en:limpio(o.nombre_en) || es}, d:{es:des, en:limpio(o.descripcion_en) || des}};
+      [ob.ancho, ob.alto] = DIM[o.id] || [3, 4]; OBRAS.push(ob); });
+    carrito = carrito.filter(id => OBRAS.some(o => o.id === id && o.stock > 0)); guardar(); armarBento(); pintarCarrito();
+  }
+  if (tipos && tipos.length){
+    tipos.forEach(c => ["es", "en"].forEach(l => { const D = T[l], k = "c" + c.n, v = (a, b) => limpio(c[a + "_" + l] || c[a + "_es"]) || D[k + b];
+      D[k + "_n"] = v("nombre", "_n"); D[k + "_q"] = v("descripcion", "_q"); D[k + "_a"] = v("punto1", "_a"); D[k + "_b"] = v("punto2", "_b");
+      if (c.precio != null) D[k + "_p"] = (l === "es" ? "Desde $" : "From $") + Math.round(+c.precio).toLocaleString("es-CO").replace(/,/g, "."); }));
+    DESTACADA = (tipos.find(c => c.destacado) || {}).n || 0;
+  }
+}
 async function iniciar(){
+  await cargarDeNube();
   await Promise.all([
     document.fonts.load(`900 100px "Fira Sans Extra Condensed"`), document.fonts.load(`600 100px "Fira Sans Extra Condensed"`),
     document.fonts.load(`400 40px "Instrument Sans"`), document.fonts.load(`500 40px "Instrument Sans"`), document.fonts.load(`600 40px "Instrument Sans"`), document.fonts.load(`700 40px "Instrument Sans"`)
