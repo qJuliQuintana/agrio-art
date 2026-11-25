@@ -490,6 +490,8 @@ html.tactil .pf-hoja{box-shadow:inset 0 0 18px rgba(110,88,58,.14)}
 .pf-talon{border-top:0;padding:2px 20px 18px}
 .pf-cu{padding:14px 20px 10px}
 /* r57: con más de tres comisiones la fila se desliza de lado; las fichas conservan su tamaño y la siguiente se asoma en el borde de la hoja */
+.pf-fichas.menos{display:flex;flex-wrap:wrap;justify-content:center}
+.pf-fichas.menos .pf-ficha{width:calc((100% - (var(--fc,3) - 1) * var(--fg,30px)) / var(--fc,3))}
 .pf-fichas.mas{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--fc,3) - 1) * var(--fg,30px)) / var(--fc,3));margin:-40px calc(var(--px,54px) * -1) -32px;padding:40px var(--px,54px) 32px;
   overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y pinch-zoom;scroll-snap-type:x proximity;scroll-padding-inline:var(--px,54px)}
 .pf-fichas.mas .pf-ficha{scroll-snap-align:start}
@@ -499,6 +501,9 @@ html.tactil .pf-hoja{box-shadow:inset 0 0 18px rgba(110,88,58,.14)}
 .pf-fichas.mas::-webkit-scrollbar-thumb{border-radius:9px;background:#C6647E}
 @supports (-moz-appearance:none){ .pf-fichas.mas{scrollbar-width:thin;scrollbar-color:#C6647E rgba(28,28,29,.12)} }
 html.tactil .pf-fichas.mas::-webkit-scrollbar{display:none}
+.ca-pausa{display:none;margin:0;font-weight:600}
+html.sin-cobros .ca-pausa{display:block}
+html.sin-cobros #caPie .acts,html.sin-cobros #caPie .trust{display:none}
 html.com-cerradas #pcForm{display:none!important}
 html.com-cerradas .papel-com .panel-com{text-align:center}
 /* el formulario va dentro de la hoja */
@@ -672,6 +677,7 @@ html.no3d .panel-com{position:static;visibility:visible;transform:none;width:aut
       <button class="btn" id="caPagar" type="button" data-t="ca_pagar">Pagar</button>
       <a class="btn linea" id="caWa" target="_blank" rel="noopener" data-t="ca_wa">Comprar por WhatsApp</a>
     </div>
+    <p class="ca-pausa" data-t="ca_pausa">Por ahora las compras están en pausa.</p>
     <p class="trust" data-t="ca_nota">Pagas con PSE, tarjeta o Nequi, sin crear cuenta.</p>
   </div>
 </dialog>
@@ -744,7 +750,7 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  term5:"Las solicitudes se leen por orden de llegada.", term6:"Los encargos personalizados no están sujetos a desistimiento una vez empezados.",
  sob_pre:"Sobre mí", sob_txt:"Hola, soy Nicolás González, tattoo artist e ilustrador en Bogotá. Dibujo cosas a veces incómodas, a veces raras, siempre agrias.",
  btn_ig:"Ver Instagram", btn_wa:"Escribir por WhatsApp", pie_diseno:"Diseñado por",
- ca_t:"Carrito", ca_cerrar:"Cerrar el carrito", ca_abrir:"Abrir el carrito", ca_total:"Total", ca_pagar:"Pagar", ca_wa:"Comprar por WhatsApp",
+ ca_t:"Carrito", ca_cerrar:"Cerrar el carrito", ca_abrir:"Abrir el carrito", ca_total:"Total", ca_pagar:"Pagar", ca_pausa:"Por ahora las compras están en pausa.", ca_wa:"Comprar por WhatsApp",
  ca_nota:"Pagas con PSE, tarjeta o Nequi, sin crear cuenta.", ca_vacio:"Tu carrito está vacío. Pasa las hojas del libro y elige una ilustración.", ca_quitar:"Quitar",
  av_agregada:"Agregada al carrito", av_quitada:"Quitada del carrito", av_pagar:"El pago en línea con Wompi está pendiente. Por ahora puedes comprar por WhatsApp.",
  wa_hola:"Hola Agrio, vi tu web y quiero hablar contigo.", wa_consultar:"Hola Agrio, me interesa la ilustración «{t}», que aparece agotada.",
@@ -775,7 +781,7 @@ en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_
  term5:"Requests are read in the order they arrive.", term6:"Custom commissions can't be cancelled once started.",
  sob_pre:"About me", sob_txt:"Hi, I'm Nicolás González, a tattoo artist and illustrator in Bogotá. I draw things that are sometimes uncomfortable, sometimes weird, always sour.",
  btn_ig:"See Instagram", btn_wa:"Message on WhatsApp", pie_diseno:"Designed by",
- ca_t:"Cart", ca_cerrar:"Close the cart", ca_abrir:"Open the cart", ca_total:"Total", ca_pagar:"Pay", ca_wa:"Buy on WhatsApp",
+ ca_t:"Cart", ca_cerrar:"Close the cart", ca_abrir:"Open the cart", ca_total:"Total", ca_pagar:"Pay", ca_pausa:"Purchases are paused for now.", ca_wa:"Buy on WhatsApp",
  ca_nota:"Pay with PSE, card or Nequi, no account needed.", ca_vacio:"Your cart is empty. Turn the pages of the book and pick an illustration.", ca_quitar:"Remove",
  av_agregada:"Added to cart", av_quitada:"Removed from cart", av_pagar:"Online payment with Wompi is coming soon. For now you can buy on WhatsApp.",
  wa_hola:"Hi Agrio, I saw your website and I'd like to talk to you.", wa_consultar:"Hi Agrio, I'm interested in the illustration “{t}”, which shows as sold out.",
@@ -1901,7 +1907,7 @@ function armarPapelDOM(){
     + `<span class="pf-banda"><span class="pf-num">N° ${String(i + 1).padStart(2, "0")}</span>${n === DESTACADA ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
     + `<span class="pf-cu">${t("c" + n + "_q")}${["_a", "_b"].map(k => t("c" + n + k)).filter(Boolean).map(l => `<span class="pf-l">${l}</span>`).join("")}</span>`
     + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span></span></button>`).join("");
-  papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas${TIPOS.length > 3 ? " mas" : ""}">${fichas}</div><div class="pf-form"></div></div>`;
+  papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas${TIPOS.length > 3 ? " mas" : TIPOS.length < 3 ? " menos" : ""}">${fichas}</div><div class="pf-form"></div></div>`;
   papelDOM.querySelector(".pf-form").appendChild(pc);
   if (html.classList.contains("tactil")) papelDOM.querySelector(".pf-hoja").style.setProperty("--arrugas", `url(${imagenArrugas()})`);
 }
@@ -2618,13 +2624,14 @@ async function cargarDeNube(){
     if (N.url && N.clave){
       const h = {apikey:N.clave, Authorization:"Bearer " + N.clave}, ab = new AbortController(), f = q => fetch(N.url + "/rest/v1/" + q, {headers:h, signal:ab.signal}).then(r => r.ok ? r.json() : Promise.reject(new Error("nube " + r.status)));
       setTimeout(() => ab.abort(), 5000);   // si la base no responde, la web sigue con sus datos
-      [obras, tipos, aj] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n"), f("ajustes?select=comisiones_abiertas").catch(() => null)]);
+      [obras, tipos, aj] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n"), f("ajustes?select=*").catch(() => null)]);
     } else if (vista){ const d = JSON.parse(localStorage.getItem("agrio-panel-demo") || "null"); if (d){ obras = (d.obras || []).filter(o => o.visible !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0)); tipos = d.comision_tipos; aj = d.ajustes; } }
   } catch(e){ console.error(e); return; }
   if (aj && aj[0] && aj[0].comisiones_abiertas === false){   // comisiones cerradas desde el panel: en lugar del formulario, el aviso
     html.classList.add("com-cerradas"); ["es", "en"].forEach(l => { T[l].form_t = T[l].cerr_t; T[l].form_sub2 = T[l].cerr_s; });
     document.querySelectorAll("#panelCom [data-t]").forEach(e => { e.textContent = t(e.dataset.t); });
   }
+  if (aj && aj[0] && aj[0].cobros_pausados) html.classList.add("sin-cobros");   // cobros en pausa desde el panel
   const limpio = v => String(v ?? "").replace(/[<>]/g, "");
   if (obras && obras.length){
     OBRAS.length = 0;
@@ -2637,7 +2644,7 @@ async function cargarDeNube(){
     tipos.forEach(c => ["es", "en"].forEach(l => { const D = T[l], k = "c" + c.n, v = (a, b) => limpio(c[a + "_" + l] || c[a + "_es"]) || D[k + b] || "";
       D[k + "_n"] = v("nombre", "_n"); D[k + "_q"] = v("descripcion", "_q"); D[k + "_a"] = v("punto1", "_a"); D[k + "_b"] = v("punto2", "_b");
       if (c.precio != null) D[k + "_p"] = (l === "es" ? "Desde $" : "From $") + Math.round(+c.precio).toLocaleString("es-CO").replace(/,/g, "."); }));
-    const extra = tipos.map(c => Math.round(+c.n)).filter(n => n > 3).sort((a, b) => a - b); TIPOS = [1, 2, 3, ...new Set(extra)];
+    TIPOS = [...new Set(tipos.map(c => Math.round(+c.n)).filter(n => n > 0))].sort((a, b) => a - b);
     DESTACADA = (tipos.find(c => c.destacado) || {}).n || 0;
   }
 }

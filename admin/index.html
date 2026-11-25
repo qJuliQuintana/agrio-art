@@ -11,16 +11,18 @@
 /* ---------- colores de la marca: día (claro → salmón) y noche (gris oscuro → salmón) ---------- */
 :root{--ink:#1C1C1D;--sub:#4A4946;--linea:rgba(28,28,29,.13);--base:#F2F0EB;--salmon:#E68AA1;--rosa:#C6647E;--rosa2:#E68AA1;
   --vidrio:rgba(251,250,247,.56);--vidrioB:rgba(255,255,255,.7);--sombra:0 18px 40px -28px rgba(90,40,55,.55);--celda:rgba(28,28,29,.07);--celda2:rgba(28,28,29,.12);--pieza:rgba(255,255,255,.6);--pieza2:rgba(255,255,255,.9);--entrada:rgba(255,255,255,.72);--bordeE:rgba(28,28,29,.2);
-  --fuerte:#1C1C1D;--enFuerte:#FBFAF7;--ventana:rgba(246,243,238,.88);--solido:#FBFAF7;--nav:#1C1C1D;--navB:rgba(255,255,255,.06);
+  --fuerte:#1C1C1D;--enFuerte:#FBFAF7;--solido:#FBFAF7;--solidoE:#F3F0EA;--nav:#1C1C1D;--navB:rgba(255,255,255,.06);
   --rojoF:#FBD9DB;--rojo:#B3152A;--verdeF:#CFEEDA;--verde:#12663A;--sw:rgba(28,28,29,.3);
   --esF:#FFEBC2;--es:#774C04;--prF:#D8E6FB;--pr:#1B4A92;--fiF:#CFEEDA;--fi:#12663A;
-  --r:22px;--rb:13px;--g:14px;--cond:"Fira Sans Extra Condensed",sans-serif;--txt:"Instrument Sans",sans-serif;color-scheme:light}
+  --r:22px;--rb:13px;--g:14px;--cond:"Fira Sans Extra Condensed",sans-serif;--txt:"Instrument Sans",sans-serif;color-scheme:light;--flecha:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1C1D' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");--flechaA:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1C1D' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 14.5l6-6 6 6'/%3E%3C/svg%3E")}
 :root[data-tema="noche"]{--ink:#F5F2EB;--sub:#CFCAC2;--linea:rgba(255,255,255,.14);--base:#1C1C1D;--salmon:#C6647E;
   --vidrio:rgba(30,30,32,.58);--vidrioB:rgba(255,255,255,.12);--sombra:0 20px 44px -26px rgba(0,0,0,.8);--celda:rgba(255,255,255,.09);--celda2:rgba(255,255,255,.16);--pieza:rgba(255,255,255,.09);--pieza2:rgba(255,255,255,.15);--entrada:rgba(0,0,0,.28);--bordeE:rgba(255,255,255,.24);
-  --fuerte:#F5F2EB;--enFuerte:#1C1C1D;--ventana:rgba(34,34,36,.9);--solido:#3A3A3D;--nav:#111112;--navB:rgba(255,255,255,.1);--rosa:#F0A3B6;--sw:rgba(255,255,255,.3);color-scheme:dark}
+  --fuerte:#F5F2EB;--enFuerte:#1C1C1D;--solido:#3A3A3D;--solidoE:#262628;--nav:#111112;--navB:rgba(255,255,255,.1);--rosa:#F0A3B6;--sw:rgba(255,255,255,.3);color-scheme:dark;--flecha:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5F2EB' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E");--flechaA:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5F2EB' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 14.5l6-6 6 6'/%3E%3C/svg%3E")}
 *{box-sizing:border-box}
 html,body{margin:0}
 html{background:var(--base)}
+html.fijo{overflow:hidden}
+button,a,select,input,.fila{touch-action:manipulation}
 body{font:400 14px/1.45 var(--txt);color:var(--ink)}
 body::before{content:"";position:fixed;inset:-1px;z-index:-1;background:radial-gradient(110% 95% at 100% 100% in oklab,var(--salmon) 0%,transparent 74%),radial-gradient(70% 60% at 0% 104% in oklab,color-mix(in oklab,var(--salmon) 55%,transparent) 0%,transparent 78%),var(--base)}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -44,7 +46,7 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .boton:disabled,.boton[aria-disabled="true"]{opacity:.45;cursor:default;pointer-events:none}
 .ic{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:var(--rb);background:var(--celda)}
 .seg{display:flex;gap:2px;padding:3px;border-radius:var(--rb);background:var(--celda)}
-.campo .seg button{flex:1;padding:0 6px}
+.campo .seg button{flex:1 1 auto;gap:5px;padding:0 4px}
 .seg button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 13px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13px;color:var(--sub);white-space:nowrap}
 .seg button:hover{color:var(--ink)}
 .seg button:is([aria-pressed="true"],[aria-selected="true"]){background:var(--fuerte);color:var(--enFuerte)}
@@ -60,8 +62,13 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .campo{display:block;margin-bottom:13px}
 .linSw{display:flex!important;align-items:center;gap:10px;min-height:44px;margin:0!important;font:600 14px/1 var(--txt)!important;color:var(--ink)!important}
 .campo>span{display:block;margin-bottom:6px;font:600 12px/1.3 var(--txt);color:var(--sub)}
-.entrada{width:100%;padding:11px 13px;border:1px solid var(--bordeE);border-radius:12px;background:var(--entrada);font-size:16px;outline:none}
+.entrada{width:100%;min-height:48px;padding:11px 16px;border:1px solid var(--bordeE);border-radius:12px;background:var(--entrada);font-size:16px;outline:none}
 .entrada:focus{border-color:var(--rosa);box-shadow:0 0 0 1px var(--rosa)}
+select.entrada{-webkit-appearance:none;appearance:none;padding-right:48px;background-image:var(--flecha);background-repeat:no-repeat;background-position:right 16px center;background-size:18px 18px;text-overflow:ellipsis;cursor:pointer}
+@supports selector(select:open){select.entrada:open{background-image:var(--flechaA)}}
+input[type=date].entrada{-webkit-appearance:none;appearance:none;display:block}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
+input[type=date]::-webkit-calendar-picker-indicator{width:18px;height:18px;margin:0 0 0 14px;padding:0;cursor:pointer}
 textarea.entrada{min-height:84px;resize:vertical}
 .nota{margin:12px 0 0;font-size:12px;color:var(--sub);text-align:center}
 .demo{margin:0 0 var(--g);padding:10px 14px;border-radius:var(--rb);background:var(--esF);font-size:12.5px;color:var(--es)}
@@ -75,13 +82,12 @@ textarea.entrada{min-height:84px;resize:vertical}
 .plegar{width:40px;height:40px;flex:none;display:grid;place-items:center;padding:0;border:0;border-radius:var(--rb);background:none;color:#BDB9B1;transition:color .15s}
 .plegar:hover{color:#fff}
 .plegar svg{width:22px;height:22px;transition:transform .28s cubic-bezier(.3,.8,.3,1)}
-.temaC{display:flex;gap:4px;margin:0 0 6px;padding:4px;border-radius:var(--rb);background:#2A2A2D}
-.temaC button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:40px;padding:0;border:0;border-radius:10px;background:none;color:#A9A7A2;font:600 12px/1 var(--txt);transition:flex .25s,background .2s}
+.temaC{display:flex;gap:4px;margin:0 0 2px}
+.temaC button{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 13px;border:0;border-radius:var(--rb);background:none;color:#8F8D88;font:500 13px/1 var(--txt);transition:color .2s}
 .temaC button:hover{color:#fff}
-.temaC button[aria-pressed="true"]{flex:1.7;background:var(--rosa2);color:#1C1C1D}
-.temaC button[aria-pressed="false"] b{display:none}
+.temaC button[aria-pressed="true"]{color:var(--rosa2);font-weight:700}
+.temaC button[aria-pressed="true"] svg{stroke-width:2.4}
 .temaC b{font-weight:inherit}
-.menuM .temaC{margin:4px 0 6px}
 #nav{display:grid;gap:4px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;flex:0 1 auto;min-height:0}
 .nav{position:relative;display:flex;align-items:center;gap:12px;width:100%;height:46px;padding:0 13px;border:0;border-radius:var(--rb);background:none;font-weight:600;color:#BDB9B1;text-align:left;white-space:nowrap}
 .nav:hover{background:#2A2A2D;color:#fff}
@@ -98,10 +104,10 @@ textarea.entrada{min-height:84px;resize:vertical}
 .min .lateral .marca,.min .lateral .pieS p{display:none}
 .min .plegar svg{transform:rotate(180deg)}
 .min .lateral .temaC{flex-direction:column}
-.min .lateral .temaC button{flex:none;flex-direction:column;gap:4px;min-height:38px;font-size:10px}
-.min .lateral .temaC button[aria-pressed="true"]{min-height:50px}
+.min .lateral .temaC{gap:0}
+.min .lateral .temaC button{flex-direction:column;justify-content:center;gap:4px;width:100%;min-height:48px;padding:0;font-size:10.5px}
 .min .lateral .nav{flex-direction:column;justify-content:center;gap:5px;width:100%;height:56px;padding:0 2px;font-size:10.5px;line-height:1;text-align:center}
-.min .lateral .nav em{position:absolute;top:4px;right:12px;min-width:18px;padding:2px 4px;font-size:10px;line-height:1.2;margin:0;box-shadow:0 0 0 2px var(--nav)}
+.min .lateral .nav em{position:absolute;top:4px;right:12px;min-width:18px;padding:2px 4px;font-size:10.5px;line-height:1.2;margin:0;box-shadow:0 0 0 2px var(--nav)}
 .min .lateral .nav[aria-current="page"] em{background:#1C1C1D;color:#fff;box-shadow:none}
 .movil{display:none}
 /* ---------- cabecera ---------- */
@@ -145,16 +151,14 @@ textarea.entrada{min-height:84px;resize:vertical}
 .cara.r{background:var(--rosa2);color:#1C1C1D}
 /* carrete de las más vendidas */
 .b-car{display:flex;flex-direction:column}
-.carrete{flex:1;display:flex;gap:10px;min-height:290px;margin:0 -18px;padding:0 18px;scroll-padding:0 18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
-.carrete::-webkit-scrollbar{display:none}
-.cuadro{position:relative;flex:0 0 80%;scroll-snap-align:start;overflow:hidden;padding:0;border:0;border-radius:18px;background:#2A2A2B center 22%/cover no-repeat;color:#fff;text-align:left}
-.cuadro:only-child{flex-basis:100%}
+.carrete{flex:1;min-height:290px;margin:0 -18px;overflow:hidden;touch-action:pan-y;cursor:grab;-webkit-user-select:none;user-select:none}
+.cinta{display:flex;height:100%;width:max-content;will-change:transform}
+.cuadro{position:relative;flex:none;width:72cqw;max-width:300px;margin-right:10px;overflow:hidden;padding:0;border:0;border-radius:18px;background:#2A2A2B center 22%/cover no-repeat;color:#fff;text-align:left;cursor:inherit}
 .cuadro::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,22,.5) 0%,rgba(20,20,22,0) 30%,rgba(20,20,22,0) 48%,rgba(20,20,22,.86) 88%)}
 .cuadro>*{position:absolute;z-index:1;left:16px;right:16px}
 .cuadro i{top:14px;font:900 46px/.85 var(--cond);font-style:normal;color:var(--rosa2)}
 .cuadro span{bottom:15px;font-size:13px}
 .cuadro span b{display:block;font:600 20px/1.15 var(--txt);letter-spacing:-.02em}
-.pasos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 /* pedidos que requieren atención */
 .b-ate{display:flex;flex-direction:column}
 .tira{flex:1;display:flex;gap:10px;overflow-x:auto;margin:0 -18px -18px;padding:8px 18px 22px;scrollbar-width:thin;scrollbar-color:var(--sw) transparent}
@@ -187,7 +191,7 @@ textarea.entrada{min-height:84px;resize:vertical}
 .fila.click{cursor:pointer}
 .fila.click:hover,.fila.click.elegida,.fila.tarea:hover{background:var(--celda)}
 .titulos{font-size:12px;color:var(--sub)}
-.fp{grid-template-columns:16px 40px minmax(140px,1.4fr) 110px 132px 196px}
+.fp{grid-template-columns:16px 40px minmax(140px,1.4fr) 130px 140px 108px}
 .fc{grid-template-columns:44px minmax(130px,1.3fr) minmax(0,1.3fr) 64px 116px}
 .nombre b{display:block;font:600 15px/1.2 var(--txt);letter-spacing:-.01em;overflow-wrap:anywhere}
 .nombre span{display:block;margin-top:2px;font-size:12.5px;color:var(--sub)}
@@ -266,27 +270,36 @@ button.tarjetaP .arr>span{flex:none}
 .lin dt{font-size:11.5px;color:var(--sub)}
 .lin dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 /* ilustraciones */
-.bento.obras{grid-template-columns:repeat(auto-fill,minmax(205px,1fr))}
-.obraC{padding:10px 10px 12px;container-type:normal}
-.obraC .img{position:relative;display:block;width:100%;aspect-ratio:4/4.6;border-radius:15px;background:var(--celda) center 25%/cover no-repeat;overflow:hidden}
+/* la cuadrícula repite la de la web: 3 por fila (2 en celular) y la última fila centrada */
+.cuadricula{--cq:3;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--g);max-width:1060px;margin:0 auto var(--g)}
+.obraC{display:flex;flex-direction:column;width:calc((100% - (var(--cq) - 1) * var(--g)) / var(--cq));padding:10px 10px 12px;container-type:normal;transition:opacity .2s}
+.obraC .img{position:relative;display:block;width:100%;aspect-ratio:1/1.12;padding:0;border:0;border-radius:15px;background:#28282A center/contain no-repeat;background-origin:content-box;padding:8px;overflow:hidden}
 .obraC.apagada .img{filter:grayscale(1) opacity(.55)}
-.obraC .sobreI{position:absolute;top:20px;left:20px;display:flex;gap:6px;pointer-events:none}
+.sitio{position:absolute;top:18px;left:18px;display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:11px;background:var(--rosa2);color:#1C1C1D;font:700 14px/1 var(--txt);pointer-events:none}
+.agarra{touch-action:none!important;position:absolute;top:13px;right:13px;width:44px;height:44px;display:grid;place-items:center;padding:0;border:0;border-radius:var(--rb);background:rgba(20,20,22,.82);color:#fff;cursor:grab;touch-action:none;-webkit-touch-callout:none}
+.agarra svg.i{width:20px;height:20px}
+.obraC.origen{opacity:.3}
+.ordenando .obraC{transition:none}
+.grupoT{margin:18px 4px 12px;font:600 17px/1.15 var(--txt);letter-spacing:-.02em}
+.obraC .sobreI{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:6px;pointer-events:none}
+.obraC .marco{position:relative}
 .banda{padding:6px 10px;border-radius:9px;background:var(--rojoF);color:var(--rojo);font-weight:700;font-size:12px}
-.banda.g{background:#1C1C1D;color:#fff}
-.obraC .tx{padding:12px 6px 0}
+.banda.g{background:#F5F2EB;color:#1C1C1D}
+.obraC .tx{flex:1;display:flex;flex-direction:column;padding:12px 6px 0}
+.obraC .l1{flex:1;align-content:flex-start}
+.obraC .l1{flex-wrap:wrap;margin-bottom:10px}
 .obraC .l1{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.obraC .l1 b{font:600 17px/1.15 var(--txt);letter-spacing:-.02em}
+.obraC .l1 b{min-width:0;overflow-wrap:anywhere;font:600 17px/1.15 var(--txt);letter-spacing:-.02em}
 .obraC .l1 span{font-weight:700;white-space:nowrap}
-.obraC p{margin:5px 0 12px;font-size:12.5px;color:var(--sub);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
 .estadoObra{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;border-top:1px solid var(--linea);font-weight:600;font-size:13px}
-.obraC .dosB{margin-top:8px}
+.obraC .tx>.boton{width:100%;margin-top:8px}
 .obraC .boton{padding:0 4px;gap:5px}
 /* comisiones */
 .bento.tipos{grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr))}
 .tipoC{display:flex;flex-direction:column;min-height:400px;padding:20px;container-type:normal}
 .tipoC .n{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:40px}
 .tipoC .n>span{font-size:12.5px;font-weight:600}
-.tipoC h3{margin:20px 0 10px;font:900 44px/.86 var(--cond);text-transform:uppercase;overflow-wrap:anywhere}
+.tipoC h3{hyphens:auto;margin:20px 0 10px;font:900 44px/.86 var(--cond);text-transform:uppercase;overflow-wrap:anywhere}
 .tipoC p{margin:0 0 12px;font-size:13.5px}
 .tipoC ul{margin:0 0 18px;padding:0;list-style:none;font-size:13px}
 .tipoC li{padding:7px 0;border-top:1px solid var(--linea)}
@@ -295,19 +308,26 @@ button.tarjetaP .arr>span{flex:none}
 /* ajustes */
 .bento.ajustes{grid-template-columns:repeat(2,minmax(0,1fr))}
 .bento.ajustes .carta{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:210px;padding:20px;container-type:normal}
-.bento.ajustes .carta.a1{grid-row:span 2}
 .bento.ajustes .carta p{margin:0}
-.bento.ajustes .boton{margin-top:auto}
+.bento.ajustes>.carta>.boton,.bento.ajustes .carta>.dosB{margin-top:auto}
+.bento.ajustes .dosB,.bento.ajustes .datosL,.bento.ajustes form{width:100%}
+.bento.ajustes form .boton{width:100%;min-height:48px;margin-top:14px}
+.bento.ajustes .dosB .boton{min-height:48px}
+.cabA{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+.estW{padding:5px 9px;border-radius:8px;background:var(--celda2);font-size:11.5px;line-height:1.2;font-weight:700}
+.estW.si{background:var(--fiF);color:var(--fi)}.estW.prueba{background:var(--esF);color:var(--es)}
+.lin1{padding:9px 0;border-top:1px solid var(--linea)}.lin1:first-child{border-top:0;padding-top:0}
+.lin1 dt{font-size:11.5px;color:var(--sub)}.lin1 dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .bento.ajustes h2{margin:0;font:600 17px/1.15 var(--txt);letter-spacing:-.02em}
 /* ---------- edición ---------- */
 .capa{position:fixed;inset:0;background:rgba(20,20,22,.4);z-index:20}
-.editor{position:fixed;top:14px;right:14px;bottom:14px;z-index:21;width:min(500px,calc(100% - 28px));background:var(--ventana);border:1px solid var(--vidrioB);-webkit-backdrop-filter:blur(30px) saturate(1.2);backdrop-filter:blur(30px) saturate(1.2);border-radius:26px;overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.editor{position:fixed;top:14px;right:14px;bottom:14px;z-index:21;width:min(500px,calc(100% - 28px));background:var(--solidoE);border:1px solid var(--vidrioB);border-radius:26px;overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);display:flex;flex-direction:column}
 .editor .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 22px 12px}
 .editor h2{margin:0;font:900 32px/.92 var(--cond);text-transform:uppercase;overflow-wrap:anywhere}
-.editor .cuerpo{flex:1;overflow:auto;padding:4px 22px 20px}
+.editor .cuerpo{flex:1;overflow:hidden auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 22px 20px}
 .editor .cuerpo .bloque{background:var(--celda);border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:16px}
-.editor .botones{display:flex;gap:10px;padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--linea)}
-.editor .botones .boton:last-child{flex:1}
+.editor .botones{display:flex;gap:12px;padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--linea)}
+.editor .botones .boton{flex:1 1 0;min-height:48px}
 .dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .foto{display:grid;grid-template-columns:140px 1fr;gap:14px;margin-bottom:14px}
 .foto .img{position:relative;height:176px;border-radius:14px;background:var(--celda) center/contain no-repeat}
@@ -334,16 +354,18 @@ button.tarjetaP .arr>span{flex:none}
 .popup .ic svg{width:24px;height:24px}
 .popup h2{margin:0 0 8px;font:600 20px/1.2 var(--txt);letter-spacing:-.02em}
 .popup p{margin:0 0 20px;color:var(--sub)}
-.popup div:last-child{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-/* en modales y popups, los botones van solo con texto */
-:is(.editor,.popup) .boton svg.i{display:none}
+.popup div:last-child{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.popup .boton{min-height:48px}
+/* en modales y popups los botones van con texto; llevan icono Crear y Guardar, y cerrar es solo la x */
+:is(.editor,.popup) .boton:not([data-guardar],.x) svg.i{display:none}
+.editor .boton.x{width:44px;min-height:44px;padding:0;flex:none}
 .abrirC{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border-radius:var(--rb);background:var(--pieza);font-weight:600}
 .accC{align-items:center}
 .filtros.tabs{margin-bottom:12px}
 /* ---------- tablet: menú retraído; al desplegarlo se abre por encima ---------- */
 @media (min-width:901px){.muelle{display:none}}
 @media (max-width:1320px){
-  .fp{grid-template-columns:16px minmax(130px,1fr) 104px 196px}
+  .fp{grid-template-columns:16px minmax(130px,1fr) 130px 108px}
   .fp>.ocultaTab{display:none}
 }
 @media (max-width:1180px){
@@ -359,12 +381,14 @@ button.tarjetaP .arr>span{flex:none}
 @media (max-width:900px){
   .contenido{padding-left:12px;padding-right:16px}
   .bento.home{grid-template-areas:"met met" "ate ate" "ilu ilu" "com com" "car cli"}
-  .fp{grid-template-columns:16px minmax(110px,1fr) 92px 190px;gap:10px}
+  .fp{grid-template-columns:16px minmax(110px,1fr) 124px 104px;gap:10px}
   .tarjetaP{padding:12px 11px}
   .tablero.solo{grid-template-columns:1fr!important}
   .tablero.solo .col:not(.abierta){display:none}
   .muelle{display:grid}
 }
+/* la web pasa a 2 por fila por debajo de 760 px */
+@media (max-width:759px){.cuadricula{--cq:2}}
 /* ---------- celular ---------- */
 @media (max-width:700px){
   :root{--g:12px}
@@ -399,20 +423,40 @@ button.tarjetaP .arr>span{flex:none}
   .filtros.p .fin{width:auto}
   .filtros.p .fin button{padding:0 11px}
   .buscar input{font-size:16px}
-  .fp{grid-template-columns:16px minmax(0,1fr) auto;gap:8px 10px}
-  .fp .selE{grid-column:2/-1}
+  .fp{grid-template-columns:16px minmax(0,1fr) 122px;gap:8px 10px}
+  .fp>span:has(.precio){text-align:right}
+  .titulos+.fila{border-top:0}
+  .fp .selE{grid-column:2/-1;margin-top:-2px}
   .fc{grid-template-columns:44px 1fr auto;gap:4px 12px}
   .fc>.peq.cont{grid-column:2/-1;grid-row:2}
   .fc>.oc{display:none}
   .bento.ajustes{grid-template-columns:1fr}
-  .bento.obras{grid-template-columns:1fr}
-  .obraC .img{aspect-ratio:16/11}
+  .bento.ajustes .carta{min-height:0}
+  .obraC{padding:8px 8px 10px}.obraC .tx{padding:10px 4px 0}.obraC .l1{gap:2px 8px}.obraC .l1 b{width:100%;font-size:16px}
   .tipoC{min-height:0}.tipoC .p{margin-top:8px}
   .foto{grid-template-columns:110px 1fr}
   .editor{top:8px;right:8px;bottom:8px;width:calc(100% - 16px)}
 }
+/* celular acostado: el menú va arriba, como en vertical */
+@media (min-width:701px) and (max-width:1000px) and (max-height:480px){
+  .app{display:block}
+  .hueco{display:none}
+  .movil{position:sticky;top:10px;z-index:12;display:block;margin:10px 12px 0}
+  .movilB{display:flex;align-items:center;gap:10px;padding:8px 8px 8px 18px;border-radius:22px;background:var(--nav);border:1px solid var(--navB);color:#fff;box-shadow:0 14px 28px -16px rgba(0,0,0,.7)}
+  .movil .marca{font-size:23px}
+  .movilB .donde{margin-left:auto;font-weight:600;font-size:13px;color:#BDB9B1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .menuB{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 15px;border:0;border-radius:var(--rb);background:var(--rosa2);color:#1C1C1D;font-weight:600;font-size:14px}
+  .menuM{margin-top:8px;padding:10px;border-radius:22px;background:var(--nav);border:1px solid var(--navB);color:#EDEAE3;box-shadow:0 24px 50px -16px rgba(0,0,0,.75);max-height:calc(100dvh - 92px);overflow:auto}
+  .menuM nav{display:grid;gap:4px}
+  .menuM .nav{height:48px;font-size:15px}
+  .menuM .pieS{margin-top:8px;padding-top:10px;border-top:1px solid #38383B}
+  .contenido{padding:18px 16px 40px}
+  .menuM nav{grid-template-columns:1fr 1fr 1fr}
+}
 /* pantallas bajas: el menú cabe entero */
-@media (max-height:700px){.min .lateral .nav{height:48px}.min .lateral .temaC button[aria-pressed="true"]{min-height:42px}.min .lateral .temaC button{min-height:34px}.nav{height:42px}}
+@media (max-height:480px){.menuM nav{grid-template-columns:1fr 1fr 1fr!important}.menuM .pieS{display:flex;align-items:center;gap:4px 10px;flex-wrap:wrap}.menuM .pieS p{padding-bottom:0}.menuM .pieS .nav{width:auto}}
+@media (max-width:350px){.campo .seg button svg.i{display:none}.movilB .donde{display:none}.movilB .menuB{margin-left:auto}.dos{grid-template-columns:1fr;gap:0}.contenido .accC{width:100%}}
+@media (max-height:700px){.min .lateral .nav{height:48px}.min .lateral .temaC button{min-height:40px}.nav{height:42px}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media (prefers-reduced-transparency:reduce){:root{--vidrio:#FBFAF7}:root[data-tema="noche"]{--vidrio:#2A2A2B}}
 </style></head>
@@ -467,6 +511,7 @@ const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) 
 function avisar(t, o = {}){
   const tipo = o.tipo || "ok", caja = $("#avisos"), el = document.createElement("div"); el.className = "avisoT " + tipo; if (tipo === "mal") el.setAttribute("role", "alert");
   el.innerHTML = `<i>${ico(tipo === "ok" ? "check" : tipo === "mal" ? "alerta" : "info")}</i><div><b>${esc(t)}</b>${o.detalle ? `<p>${[].concat(o.detalle).filter(Boolean).map(esc).join("<br>")}</p>` : ""}</div><button type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button>`;
+  if (tipo === "ok") caja.querySelectorAll(".mal").forEach(n => n.remove());   // salió bien: los errores anteriores ya no aplican
   while (caja.children.length > 2) caja.firstChild.remove();
   caja.append(el); let reloj; const fuera = () => { el.classList.add("sale"); setTimeout(() => el.remove(), 220); }, contar = () => { clearTimeout(reloj); reloj = setTimeout(fuera, tipo === "mal" ? 9000 : 5000); };
   el.querySelector("button").onclick = fuera; el.onpointerenter = () => clearTimeout(reloj); el.onpointerleave = contar; contar(); return fuera;
@@ -515,7 +560,7 @@ async function completarIngles(){   // al entrar: traduce lo que quedó pendient
 const txt = (o, k) => (EN && o[k + "_en"]) || o[k + "_es"] || "";
 
 /* ---------- estados de los pedidos ---------- */
-const ESTADOS = [["espera", tr("En espera por confirmar", "Awaiting confirmation")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]];
+const ESTADOS = [["espera", tr("En espera", "On hold")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]];
 const est = e => ESTADOS.find(x => x[0] === e) || ESTADOS[0];
 const etq = e => `<span class="etq ${est(e)[0]}">${est(e)[1]}</span>`;
 const FORMATOS = {dig:"Digital", imp:tr("Impreso", "Printed"), enm:tr("Enmarcado", "Framed")};
@@ -653,13 +698,13 @@ const I = {
   ajustes:'<path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/>',
   sale:'<path d="M7 17L17 7M9 7h8v8"/>', mas:'<path d="M12 5v14M5 12h14"/>', lapiz:'<path d="M4.5 19.5h4L19 9l-4-4L4.5 15.5z"/>', correo:'<rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/>',
   wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8.2 18.8z"/><path d="M9 9.2c.2 2.8 2.6 5.4 5.6 5.7l1-1.7-2-1-1 .9c-.9-.5-1.5-1.2-1.8-2l.8-.9-.8-2z"/>', cal:'<rect x="4" y="5" width="16" height="15.5" rx="2.5"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/>', izq:'<path d="M14.5 6l-6 6 6 6"/>', der:'<path d="M9.5 6l6 6-6 6"/>',
-  persona:'<circle cx="12" cy="8" r="3.7"/><path d="M5 20.5c.8-4 3.6-6 7-6s6.2 2 7 6"/>', lugar:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>', pago:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>', barras:'<path d="M5 20v-7M12 20V5M19 20v-11"/>', arriba:'<path d="M12 19V5M6 11l6-6 6 6"/>', nube:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9 6 6 0 0 1 11.6 1.4A3.9 3.9 0 0 1 17.6 18.5z"/>', bajar:'<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>', vuelve:'<path d="M5 5v5h5"/><path d="M5.5 10a7.5 7.5 0 1 1-1 5"/>', ojo:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', lupa:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', alerta:'<path d="M12 4L2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.2v.01"/>', info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>', reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', vacio:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>', agotada:'<path d="M12 3.5l8.5 8.5-8.5 8.5L3.5 12z"/><path d="M8.5 12h7"/>', candado:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>', check:'<path d="M4.5 12.5l5 5 10-11"/>', basura:'<path d="M4 6.5h16M9 6.5V4h6v2.5M6 6.5l1 13.5h10l1-13.5M10 10.5v5.5M14 10.5v5.5"/>', subir:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>', grip:'<path d="M9 5.5v.01M9 12v.01M9 18.5v.01M15 5.5v.01M15 12v.01M15 18.5v.01" stroke-width="3"/>', tablero:'<rect x="3.5" y="4" width="4.6" height="16" rx="1.6"/><rect x="9.8" y="4" width="4.6" height="11" rx="1.6"/><rect x="16" y="4" width="4.6" height="7" rx="1.6"/>', lista:'<path d="M8.5 6h12M8.5 12h12M8.5 18h12M4 6v.01M4 12v.01M4 18v.01"/>'
+  persona:'<circle cx="12" cy="8" r="3.7"/><path d="M5 20.5c.8-4 3.6-6 7-6s6.2 2 7 6"/>', lugar:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>', pago:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>', barras:'<path d="M5 20v-7M12 20V5M19 20v-11"/>', arriba:'<path d="M12 19V5M6 11l6-6 6 6"/>', nube:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9 6 6 0 0 1 11.6 1.4A3.9 3.9 0 0 1 17.6 18.5z"/>', bajar:'<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>', vuelve:'<path d="M5 5v5h5"/><path d="M5.5 10a7.5 7.5 0 1 1-1 5"/>', ojo:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', lupa:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', pausa:'<rect x="6.5" y="5" width="3.6" height="14" rx="1.4"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.4"/>', alerta:'<path d="M12 4L2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.2v.01"/>', info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>', reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', vacio:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>', agotada:'<path d="M12 3.5l8.5 8.5-8.5 8.5L3.5 12z"/><path d="M8.5 12h7"/>', candado:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>', check:'<path d="M4.5 12.5l5 5 10-11"/>', basura:'<path d="M4 6.5h16M9 6.5V4h6v2.5M6 6.5l1 13.5h10l1-13.5M10 10.5v5.5M14 10.5v5.5"/>', subir:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>', grip:'<path d="M9 5.5v.01M9 12v.01M9 18.5v.01M15 5.5v.01M15 12v.01M15 18.5v.01" stroke-width="3"/>', tablero:'<rect x="3.5" y="4" width="4.6" height="16" rx="1.6"/><rect x="9.8" y="4" width="4.6" height="11" rx="1.6"/><rect x="16" y="4" width="4.6" height="7" rx="1.6"/>', lista:'<path d="M8.5 6h12M8.5 12h12M8.5 18h12M4 6v.01M4 12v.01M4 18v.01"/>'
 };
 const ico = k => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
 const SECC = [["home", tr("Inicio", "Home")], ["obras", tr("Galería", "Gallery")], ["comisiones", tr("Comisiones", "Commissions")], ["clientes", tr("Clientes", "Customers")], ["ajustes", tr("Ajustes", "Settings")]];
 let seccion = "home", nuevos = 0;
 function pintarNav(){
-  const lista = SECC.map(([k, n]) => `<button class="nav" type="button" data-s="${k}" aria-label="${n}${k === "comisiones" && nuevos ? tr(`, ${nuevos} en espera por confirmar`, `, ${nuevos} awaiting confirmation`) : ""}" ${k === seccion ? 'aria-current="page"' : ""}>${ico(k)}<b>${n}</b>${k === "comisiones" && nuevos ? `<em>${nuevos}</em>` : ""}</button>`).join("");
+  const lista = SECC.map(([k, n]) => `<button class="nav" type="button" data-s="${k}" aria-label="${n}${k === "comisiones" && nuevos ? tr(`, ${nuevos} en espera`, `, ${nuevos} on hold`) : ""}" ${k === seccion ? 'aria-current="page"' : ""}>${ico(k)}<b>${n}</b>${k === "comisiones" && nuevos ? `<em>${nuevos}</em>` : ""}</button>`).join("");
   $("#nav").innerHTML = lista; $("#navM").innerHTML = lista; $("#donde").textContent = SECC.find(x => x[0] === seccion)[1]; abrirMenu(false);
   document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { if (esTab()) plegar(true); ir(b.dataset.s); });
 }
@@ -692,12 +737,13 @@ addEventListener("hashchange", () => { const s = location.hash.slice(1); if (s &
 
 /* ---------- editor lateral ---------- */
 function abrirEditor(html, alGuardar, extra){
-  const ed = $("#editor"); ed.innerHTML = html; ed.hidden = false; $("#capa").hidden = false;
+  const ed = $("#editor"); if (ed.hidden) vuelveA = document.activeElement; ed.innerHTML = html; ed.hidden = false; $("#capa").hidden = false; $("#vApp").inert = true; document.documentElement.classList.add("fijo");
   ed.querySelector(".x").onclick = cerrarEditor; $("#capa").onclick = cerrarEditor;
   const g = ed.querySelector("[data-guardar]"); if (g) g.onclick = async () => { g.disabled = true; try { await alGuardar(ed); } catch(e){ error(tr("No se pudo guardar", "Could not save"), e); } g.disabled = false; };
   if (extra) extra(ed); setTimeout(() => { const f = ed.querySelector("input,textarea,select"); if (f && matchMedia("(pointer:fine)").matches) f.focus(); }, 50);
 }
-function cerrarEditor(){ $("#editor").hidden = true; $("#capa").hidden = true; }
+let vuelveA = null;
+function cerrarEditor(){ if ($("#editor").hidden) return; $("#editor").hidden = true; $("#capa").hidden = true; $("#vApp").inert = false; document.documentElement.classList.remove("fijo"); if (vuelveA && vuelveA.isConnected) vuelveA.focus({preventScroll:true}); vuelveA = null; }
 addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".fila[role=button]")){ e.preventDefault(); e.target.click(); return; } if (e.key === "Escape" && !$("#popup").open){ cerrarEditor(); abrirMenu(false); if (esTab()) plegar(true); } });
 const val = (ed, n) => { const el = ed.querySelector(`[name="${n}"]`); return el ? el.value.trim() : ""; };
 /* falta un dato: se avisa y se lleva el cursor al campo */
@@ -706,6 +752,8 @@ const num = (ed, n) => { const v = val(ed, n).replace(/[^\d]/g, ""); return v ==
 
 /* ---------- vistas ---------- */
 const VISTAS = {};
+/* al buscar o elegir solo cambian los resultados: el campo no se toca y el teclado del celular no se cierra */
+async function soloResultados(c, vista){ const t = document.createElement("div"); await vista(t); const a = c.querySelector("#res"), b = t.querySelector("#res"); if (a && b){ a.replaceWith(b); } }
 const iniciales = n => { const w = String(n || "?").trim().split(/\s+/); return (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase(); };
 const urlImg = u => `background-image:url("${String(u).replace(/["'()\\\s]/g, "")}")`.replace(/"/g, "&quot;");
 const cab = (t, sub, boton) => `<div class="cabeza"><div><h1>${t}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${boton || ""}</div>${DEMO ? `<p class="demo">${tr("Modo demostración: los cambios se guardan solo en este navegador. Para que se vean en la web hay que conectar la base de datos (Ajustes).", "Demo mode: changes are saved only in this browser. To show them on the site, connect the database (Settings).")}</p>` : ""}`;
@@ -720,10 +768,30 @@ function atencion(p){
   if (curso && d != null && d < 0) return {peso:1000 - d, alta:true, txt:tr(`Entrega vencida ${hace(-d)}`, `Overdue, ${hace(-d)}`)};
   if (curso && d != null && d <= 3) return {peso:900 - d, alta:d <= 1, txt:d === 0 ? tr("Entrega hoy", "Due today") : d === 1 ? tr("Entrega mañana", "Due tomorrow") : tr(`Entrega en ${d} días`, `Due in ${d} days`)};
   if (!curso) return p.pagado ? null : {peso:700, alta:true, txt:tr("Finalizado sin pagar", "Completed, unpaid")};
-  if (p.estado === "espera") return {peso:500 + edad, alta:edad >= 3, txt:edad ? tr(`Sin confirmar ${hace(edad)}`, `Unconfirmed, ${hace(edad)}`) : tr("Llegó hoy", "Arrived today")};
+  if (p.estado === "espera") return {peso:500 + edad, alta:edad >= 3, txt:edad ? tr(`En espera ${hace(edad)}`, `On hold, ${hace(edad)}`) : tr("Llegó hoy", "Arrived today")};
   if (!p.pagado) return {peso:600, alta:false, txt:p.pago === "proceso" ? tr("Pago en proceso", "Payment in process") : tr("En proceso sin pagar", "In progress, unpaid")};
   if (d == null) return {peso:400, alta:false, txt:tr("Sin fecha de entrega", "No delivery date")};
   return d <= 7 ? {peso:300 - d, alta:false, txt:tr(`Entrega en ${d} días`, `Due in ${d} days`)} : null;
+}
+/* carrete de más vendidas: avanza solo y sin fin; se detiene al tocarlo, al pasar el mouse o con el teclado, y se puede arrastrar */
+function carreteInfinito(ca, abrir){
+  if (!ca) return; const ci = ca.firstElementChild, base = [...ci.children], quieto = matchMedia("(prefers-reduced-motion:reduce)").matches; let W = 0, x = 0, v = 0, t0 = 0, pausa = false, arr = null, finArr = 0;
+  const medir = () => { [...ci.children].slice(base.length).forEach(n => n.remove()); W = base.reduce((s, b) => s + b.offsetWidth + 10, 0); if (!W) return; const veces = Math.ceil(ca.clientWidth / W) + 1;
+    for (let k = 0; k < veces; k++) base.forEach(b => { const n = b.cloneNode(true); n.tabIndex = -1; n.setAttribute("aria-hidden", "true"); ci.append(n); }); };
+  medir(); let ancho = ca.clientWidth; new ResizeObserver(() => { if (ca.clientWidth !== ancho){ ancho = ca.clientWidth; medir(); } }).observe(ca);
+  const cuadro = t => { if (!ca.isConnected) return; const dt = Math.min(48, t - (t0 || t)); t0 = t;
+    if (!arr){ x += v * dt; v *= Math.pow(.994, dt); if (!pausa && !quieto) x += dt * .026; }
+    if (W){ x = ((x % W) + W) % W; ci.style.transform = `translate3d(${-x}px,0,0)`; } requestAnimationFrame(cuadro); };
+  requestAnimationFrame(cuadro);
+  ca.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") pausa = true; }); ca.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") pausa = false; });
+  ca.addEventListener("focusin", e => { if (e.target.matches(":focus-visible")){ pausa = true; x = e.target.offsetLeft; } ca.scrollLeft = 0; }); ca.addEventListener("focusout", () => { pausa = false; });
+  ca.addEventListener("pointerdown", e => { if (e.button) return; arr = {id:e.pointerId, x0:e.clientX, x, ux:e.clientX, ut:performance.now(), mov:false}; v = 0; });
+  const mov = e => { if (!ca.isConnected) return fuera(); if (!arr || e.pointerId !== arr.id) return; const d = e.clientX - arr.x0; if (Math.abs(d) > 6) arr.mov = true; if (!arr.mov) return; x = arr.x - d; const n = performance.now(); v = -(e.clientX - arr.ux) / Math.max(1, n - arr.ut); arr.ux = e.clientX; arr.ut = n; };
+  const sube = e => { if (!arr || e.pointerId !== arr.id) return; if (arr.mov) finArr = performance.now(); if (performance.now() - arr.ut > 90) v = 0; arr = null; };
+  const fuera = () => { removeEventListener("pointermove", mov); removeEventListener("pointerup", sube); removeEventListener("pointercancel", sube); };
+  addEventListener("pointermove", mov); addEventListener("pointerup", sube); addEventListener("pointercancel", sube);
+  ca.addEventListener("dragstart", e => e.preventDefault());
+  ca.addEventListener("click", e => { const b = e.target.closest("[data-obra]"); if (b && performance.now() - finArr > 300) abrir(b.dataset.obra); });
 }
 VISTAS.home = async c => {
   const [P, C, O, T] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos")]), cli = Object.fromEntries(C.map(x => [x.id, x])), ob = Object.fromEntries(O.map(x => [x.id, x]));
@@ -742,11 +810,11 @@ VISTAS.home = async c => {
     return `<button class="rg" type="button" data-pedido="${p.id}">${com ? `<span class="ic">${ico("comisiones")}</span>` : `<span class="mini" style="${o ? urlImg(imgDe(o)) : ""}"></span>`}<b>${esc(com ? tipoCom[p.comision_n] || tr("Sin tipo", "No type") : o ? txt(o, "nombre") : tr("Sin ilustración", "No illustration"))}</b><span class="m">${pesos(p.monto)}</span><small>${esc(n)}${com && p.estado !== "finalizado" && p.fecha_entrega ? " · " + entregaTxt(p) : ""}</small><span class="ets">${etq(p.estado)}${pagoTxt(p)}</span></button>`; };
   c.innerHTML = cab(tr("Inicio", "Home"), "", `<button class="boton verde" type="button" data-nuevo>${ico("mas")}${tr("Nuevo pedido", "New order")}</button>`) + `
     <div class="bento home">
-      <div class="b-met">${metrica("barras", pesos(pagMes), tr("Pagado este mes", "Paid this month"), pagSem ? `<span class="sello">+${pesos(pagSem)} ${tr("en 7 días", "in 7 days")}</span>` : "")}${metrica("pedidos", porConf.length, porConf.length === 1 ? tr("Pedido por confirmar", "Order to confirm") : tr("Pedidos por confirmar", "Orders to confirm"), enProc ? `<span class="sello n">${enProc} ${tr("en proceso", "in progress")}</span>` : "")}${metrica("persona", C.length, C.length === 1 ? tr("Cliente", "Customer") : tr("Clientes", "Customers"), cliMes ? `<span class="sello n">+${cliMes} ${tr("este mes", "this month")}</span>` : "")}${metrica("obras", `${agot} ${tr("de", "of")} ${O.length}`, tr("Ilustraciones agotadas", "Sold-out illustrations"))}</div>
+      <div class="b-met">${metrica("barras", pesos(pagMes), tr("Pagado este mes", "Paid this month"), pagSem ? `<span class="sello">+${pesos(pagSem)} ${tr("en 7 días", "in 7 days")}</span>` : "")}${metrica("pedidos", porConf.length, porConf.length === 1 ? tr("Pedido en espera", "Order on hold") : tr("Pedidos en espera", "Orders on hold"), enProc ? `<span class="sello n">${enProc} ${tr("en proceso", "in progress")}</span>` : "")}${metrica("persona", C.length, C.length === 1 ? tr("Cliente", "Customer") : tr("Clientes", "Customers"), cliMes ? `<span class="sello n">+${cliMes} ${tr("este mes", "this month")}</span>` : "")}${metrica("obras", `${agot} ${tr("de", "of")} ${O.length}`, tr("Ilustraciones agotadas", "Sold-out illustrations"))}</div>
       <section class="carta b-ilu"><div class="cartaT"><h2>${tr("Compras de ilustraciones", "Illustration purchases")}</h2>${verTodo("compra")}</div>${rec("compra").map(fila).join("") || `<p class="peq">${tr("Aún no hay compras.", "No purchases yet.")}</p>`}</section>
       <section class="carta b-com"><div class="cartaT"><h2>${tr("Compras de comisiones", "Commission purchases")}</h2>${verTodo("comision")}</div>${rec("comision").map(fila).join("") || `<p class="peq">${tr("Aún no hay comisiones.", "No commissions yet.")}</p>`}</section>
       <section class="carta b-car" aria-label="${tr('Ilustraciones más vendidas', 'Best-selling illustrations')}"><div class="cartaT"><h2>${tr("Ilustraciones más vendidas", "Best-selling illustrations")}</h2></div>
-        ${top.length ? `<div class="carrete" id="carrete" tabindex="0" role="group" aria-label="${tr('Carrete', 'Reel')}">${top.map(([id, n], i) => `<button class="cuadro" type="button" data-obra="${esc(id)}" style="${urlImg(imgDe(ob[id]))}" aria-label="${i + 1}. ${esc(txt(ob[id], "nombre"))}, ${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}"><i aria-hidden="true">${i + 1}</i><span><b>${esc(txt(ob[id], "nombre"))}</b>${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}</span></button>`).join("")}</div>${top.length > 1 ? `<div class="pasos"><button class="boton chico" type="button" data-paso="-1">${ico("izq")}${tr("Anterior", "Previous")}</button><button class="boton chico" type="button" data-paso="1">${tr("Siguiente", "Next")}${ico("der")}</button></div>` : ""}` : `<p class="peq">${tr("Aún no hay ilustraciones vendidas.", "No illustrations sold yet.")}</p>`}</section>
+        ${top.length ? `<div class="carrete" id="carrete" role="group" aria-label="${tr('Carrete', 'Reel')}"><div class="cinta">${top.map(([id, n], i) => `<button class="cuadro" type="button" data-obra="${esc(id)}" style="${urlImg(imgDe(ob[id]))}" aria-label="${i + 1}. ${esc(txt(ob[id], "nombre"))}, ${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}"><i aria-hidden="true">${i + 1}</i><span><b>${esc(txt(ob[id], "nombre"))}</b>${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}</span></button>`).join("")}</div></div>` : `<p class="peq">${tr("Aún no hay ilustraciones vendidas.", "No illustrations sold yet.")}</p>`}</section>
       <section class="carta b-ate"><div class="cartaT"><h2>${tr("Pedidos que requieren atención", "Orders that need attention")}</h2></div>
         ${urg.length ? `<div class="tira">${urg.map(({p, a}, i) => `<button class="hoja ${i ? "" : "una"}" type="button" data-pedido="${p.id}"><span class="razon ${a.alta ? "alta" : ""}">${a.txt}</span><b>${esc(cli[p.cliente_id]?.nombre || tr("Sin cliente", "No customer"))}</b><span class="detalle">${esc(detallePedido(p, O))}</span><span class="monto">${pesos(p.monto)}</span>${pagoTxt(p)}<small>${tr("Pedido", "Order")} #${p.numero || "—"} · ${est(p.estado)[1]}</small></button>`).join("")}</div>` : `<p class="peq">${tr("Todo al día: ningún pedido requiere atención.", "All caught up: no order needs attention.")}</p>`}</section>
       <section class="carta b-cli"><div class="cartaT"><h2>${tr("Clientes", "Customers")}</h2><button class="boton chico" type="button" data-ir="clientes">${ico("sale")}${tr("Ver todos", "View all")}</button></div>${mejores.map(({x, g, n}, i) => `<button class="rg cl" type="button" data-cli="${x.id}"><span class="cara ${i ? "" : "r"}">${esc(iniciales(x.nombre))}</span><b>${esc(x.nombre)}</b><span class="m">${pesos(g)}</span><small>${n} ${n === 1 ? tr("pedido", "order") : tr("pedidos", "orders")}${x.ciudad ? " · " + esc(x.ciudad) : ""}</small></button>`).join("") || `<p class="peq">${tr("Aún no hay clientes.", "No customers yet.")}</p>`}</section>
@@ -754,13 +822,8 @@ VISTAS.home = async c => {
   c.querySelector("[data-nuevo]").onclick = () => editarPedido(null);
   c.querySelectorAll("[data-pedido]").forEach(b => b.onclick = () => editarPedido(b.dataset.pedido));
   c.querySelectorAll("[data-cli]").forEach(b => b.onclick = () => editarCliente(b.dataset.cli));
-  c.querySelectorAll("[data-obra]").forEach(b => b.onclick = () => editarObra(b.dataset.obra));
+  carreteInfinito(c.querySelector("#carrete"), id => editarObra(id));
   c.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { if (b.dataset.ir === "clientes") return ir("clientes"); fTipo = b.dataset.ir; fEstado = ""; fBusca = ""; cTab = "pedidos"; ir("comisiones"); });
-  const ca = c.querySelector("#carrete"), ps = c.querySelectorAll("[data-paso]");
-  if (ca && ps.length){
-    const paso = () => ca.children[1].offsetLeft - ca.children[0].offsetLeft, topes = () => { ps[0].disabled = ca.scrollLeft < 4; ps[1].disabled = ca.scrollLeft > ca.scrollWidth - ca.clientWidth - 4; };
-    ps.forEach(b => b.onclick = () => ca.scrollBy({left:+b.dataset.paso * paso(), behavior:"smooth"})); ca.addEventListener("scroll", topes, {passive:true}); topes();
-  }
 };
 const tipoCom = {};
 function detallePedido(p, O){
@@ -788,15 +851,15 @@ async function verPedidos(c){
   const grupo = ([k, n]) => abierta(k) ? `<section class="bloque grupoL" data-col="${k}" aria-label="${n}"><h3>${n}<span>${de(k).length}</span></h3>${de(k).map(renglon).join("") || `<div class="fila peq">${tr("Nada por aquí.", "Nothing here.")}</div>`}</section>` : "";
   const seg = (attr, arr, v) => arr.map(([k, n, i]) => `<button type="button" data-${attr}="${k}" data-foco="${attr}${k}" aria-pressed="${v === k}">${i ? ico(i) : ""}${n}</button>`).join("");
   c.innerHTML = `<div class="filtros p"><div class="grupoF" role="group" aria-labelledby="gT"><span id="gT">${tr("Tipo", "Type")}</span><div class="seg">${seg("ft", [["todos", tr("Todos", "All")], ["compra", tr("Ilustraciones", "Illustrations")], ["comision", tr("Comisiones", "Commissions")]], fTipo)}</div></div>
-      <div class="grupoF" role="group" aria-labelledby="gE"><span id="gE">${tr("Estado", "Status")}</span><div class="seg">${seg("fe", [["", tr("Todos", "All")], ["espera", tr("En espera", "Awaiting")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]], fEstado)}</div></div>
-      <label class="buscar">${ico("lupa")}<input id="bP" type="search" aria-label="${tr('Buscar pedidos', 'Search orders')}" placeholder="${tr('Buscar pedido…', 'Search order…')}" value="${esc(fBusca)}"></label>
+      <div class="grupoF" role="group" aria-labelledby="gE"><span id="gE">${tr("Estado", "Status")}</span><div class="seg">${seg("fe", [["", tr("Todos", "All")], ["espera", tr("En espera", "On hold")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]], fEstado)}</div></div>
+      <label class="buscar">${ico("lupa")}<input id="bP" type="search" aria-label="${tr('Buscar pedidos', 'Search orders')}" placeholder="${tr('Buscar…', 'Search…')}" value="${esc(fBusca)}"></label>
       <div class="seg fin" role="group" aria-label="${tr('Ver como', 'View as')}">${seg("fv", [["tablero", tr("Tablero", "Board"), "tablero"], ["lista", tr("Lista", "List"), "lista"]], fVista)}</div></div>
-    ${fVista === "tablero" ? `<div class="tablero ${fEstado ? "solo" : ""}" data-solo="${fEstado}">${ESTADOS.map(col).join("")}</div>` : ESTADOS.map(grupo).join("")}`;
+    <div id="res">${fVista === "tablero" ? `<div class="tablero ${fEstado ? "solo" : ""}" data-solo="${fEstado}">${ESTADOS.map(col).join("")}</div>` : ESTADOS.map(grupo).join("")}</div>`;
   const otra = async foco => { await verPedidos(c); const f = foco && c.querySelector(`[data-foco="${foco}"]`); if (f) f.focus({preventScroll:true}); };
   c.querySelectorAll("[data-ft]").forEach(b => b.onclick = () => { fTipo = b.dataset.ft; otra(b.dataset.foco); });
   c.querySelectorAll("[data-fe]").forEach(b => b.onclick = () => { fEstado = b.dataset.fe; otra(b.dataset.foco); });
   c.querySelectorAll("[data-fv]").forEach(b => b.onclick = () => { fVista = b.dataset.fv; try { localStorage.setItem("agrio-panel-pedidos", fVista); } catch(e){} otra(b.dataset.foco); });
-  const bp = c.querySelector("#bP"); bp.oninput = () => { fBusca = bp.value; clearTimeout(bp.t); bp.t = setTimeout(async () => { await verPedidos(c); const n = c.querySelector("#bP"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+  const bp = c.querySelector("#bP"); bp.oninput = () => { fBusca = bp.value; clearTimeout(bp.t); bp.t = setTimeout(() => soloResultados(c, verPedidos), 250); };
   c.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => { if (!arrastre.recien()) editarPedido(f.dataset.pedido); });
   const mover = async (id, estado) => {
     const p = P.find(x => x.id === id); if (!p || p.estado === estado) return;
@@ -845,7 +908,7 @@ async function editarPedido(id, clientePre){
   const ev = E.filter(e => e.pedido_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
   const opc = (arr, v) => arr.map(([k, n]) => `<option value="${esc(k)}" ${String(k) === String(v ?? "") ? "selected" : ""}>${esc(n)}</option>`).join("");
   const wa = cl && cl.whatsapp ? cl.whatsapp.replace(/\D/g, "") : "";
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Pedido #", "Order #") + (p.numero || "") : tr("Nuevo pedido", "New order")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Pedido #", "Order #") + (p.numero || "") : tr("Nuevo pedido", "New order")}</h2><button class="boton x" type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button></div>
     <div class="cuerpo">
       ${cl ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${cl.correo ? `<a class="boton chico" href="mailto:${esc(cl.correo)}?subject=${encodeURIComponent(tr("Tu pedido Agrio Art #", "Your Agrio Art order #") + (p.numero || ""))}">${ico("correo")}${tr("Correo", "Email")}</a>` : ""}<a class="boton chico" href="#clientes" data-vercli="${cl.id}">${ico("persona")}${tr("Ver cliente", "View customer")}</a></div>` : ""}
       <label class="campo"><span>${tr("Fecha de entrega", "Delivery date")}</span><input class="entrada" type="date" name="fecha_entrega" value="${esc(p.fecha_entrega || "")}"><small class="peq">${tr("La que acordaron por correo. Puedes dejarla vacía.", "The one agreed by email. You can leave it empty.")}</small></label>
@@ -858,14 +921,14 @@ async function editarPedido(id, clientePre){
       <label class="campo" data-solo="comision"><span>${tr("Especificaciones", "Specifications")}</span><textarea class="entrada" name="especificaciones">${esc(p.especificaciones)}</textarea></label>
       <div class="dos"><label class="campo"><span>${tr("Valor total (COP)", "Total price (COP)")}</span><input class="entrada" name="monto" inputmode="numeric" value="${p.monto ?? ""}"></label>
         </div>
-      <div class="campo"><span>${tr("Pago total", "Full payment")}</span><div class="seg" role="group" aria-label="${tr('Pago total', 'Full payment')}">${PAGOS.map(([k, n, i]) => `<button type="button" data-pago="${k}" aria-pressed="${pagoDe(p)[0] === k}">${ico(i)}${n}</button>`).join("")}</div></div>
+      <div class="campo"><span>${tr("Pago total", "Full payment")}</span><div class="seg" role="group" aria-label="${tr('Pago total', 'Full payment')}">${PAGOS.map(([k, n, i]) => `<button type="button" data-pago="${k}" aria-pressed="${pagoDe(p)[0] === k}">${ico(i)}${k === "proceso" ? tr("En proceso", "In process") : n}</button>`).join("")}</div></div>
       <div class="dos"><label class="campo"><span>${tr("Envío / dirección", "Shipping / address")}</span><input class="entrada" name="envio" value="${esc(p.envio)}"></label>
         <label class="campo"><span>${tr("Guía de envío", "Tracking number")}</span><input class="entrada" name="guia" value="${esc(p.guia)}"></label></div>
       <label class="campo"><span>${tr("Notas internas", "Internal notes")}</span><textarea class="entrada" name="notas">${esc(p.notas)}</textarea></label>
       ${id ? `<label class="campo"><span>${tr("Agregar al historial", "Add to history")}</span><input class="entrada" name="nota_evento" placeholder="${tr('Ej.: envié el boceto por WhatsApp', 'E.g.: sent the sketch on WhatsApp')}"></label>
       <span class="campo"><span>${tr("Historial", "History")}</span></span><ul class="historia">${ev.map(e => `<li><b>${e.estado ? esc(est(e.estado)[1]) : tr("Nota", "Note")}</b>${e.nota ? " · " + esc(e.nota) : ""}<time>${fechaHora(e.creado)}</time></li>`).join("") || `<li class="peq">${tr("Sin movimientos todavía.", "No activity yet.")}</li>`}</ul>` : ""}
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico(id ? "check" : "mas")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     let cliente_id = val(ed, "cliente_id");
     if (cliente_id === "__nuevo"){ avisar(tr("No se guardó el pedido", "The order was not saved"), {tipo:"mal", detalle:tr("Primero crea el cliente.", "Create the customer first.")}); return; }
@@ -898,18 +961,18 @@ VISTAS.clientes = async c => {
   const z = C.find(x => x.id === cSel), zP = z ? tot(z.id).sort((a, b) => (b.creado || "").localeCompare(a.creado || "")) : [], zw = z ? (z.whatsapp || "").replace(/\D/g, "") : "";
   const lin = (i, n, v) => `<div class="lin"><span class="ic">${ico(i)}</span><div><dt>${n}</dt><dd>${esc(v) || "—"}</dd></div></div>`;
   c.innerHTML = cab(tr("Clientes", "Customers"), `${C.length} ${tr("en la base de datos.", "in the database.")}`, `<div class="accC"><button class="boton" type="button" id="csv">${ico("bajar")}${tr("Exportar CSV", "Export CSV")}</button><button class="boton verde" type="button" id="nuevoC">${ico("mas")}${tr("Nuevo cliente", "New customer")}</button></div>`) + `
-    <div class="filtros"><label class="buscar">${ico("lupa")}<input id="bC" type="search" aria-label="${tr('Buscar clientes', 'Search customers')}" placeholder="${tr('Buscar por nombre, correo o ciudad…', 'Search by name, email or city…')}" value="${esc(cBusca)}"></label></div>
-    <div class="bento dosC"><div class="bloque"><div class="fila fc titulos"><span></span><span>${tr("Cliente", "Customer")}</span><span>${tr("Contacto", "Contact")}</span><span>${tr("Pedidos", "Orders")}</span><span>${tr("Total gastado", "Total spent")}</span></div>
+    <div class="filtros"><label class="buscar">${ico("lupa")}<input id="bC" type="search" aria-label="${tr('Buscar clientes', 'Search customers')}" placeholder="${tr('Buscar…', 'Search…')}" value="${esc(cBusca)}"></label></div>
+    <div class="bento dosC" id="res"><div class="bloque"><div class="fila fc titulos"><span></span><span>${tr("Cliente", "Customer")}</span><span>${tr("Contacto", "Contact")}</span><span>${tr("Pedidos", "Orders")}</span><span>${tr("Total gastado", "Total spent")}</span></div>
     ${L.map(x => { const t = tot(x.id); return `<div class="fila fc click ${x.id === cSel ? "elegida" : ""}" role="button" tabindex="0" data-cli="${x.id}"><span class="cara ${x.id === cSel ? "r" : ""}">${esc(iniciales(x.nombre))}</span><div class="nombre"><b>${esc(x.nombre)}</b><span>${esc(x.ciudad || "")}</span></div><span class="peq cont">${esc(x.correo || "")}${x.whatsapp ? "<br>" + esc(x.whatsapp) : ""}</span><span class="oc">${t.length}</span><span class="precio">${pesos(suma(t))}</span></div>`; }).join("") || `<div class="vacio">${tr("No hay clientes con esa búsqueda.", "No customers match that search.")}</div>`}</div>
     ${z ? `<div class="ladoC bento"><section class="carta cliT"><span class="cara r">${esc(iniciales(z.nombre))}</span><b>${esc(z.nombre)}</b><small>${tr("Cliente desde", "Customer since")} ${fecha(z.creado)}</small><div class="gasto"><span>${tr("Total gastado", "Total spent")}</span><b>${pesos(suma(zP))}</b></div><div class="dosB"><button class="boton chico" type="button" data-edcli>${ico("lapiz")}${tr("Editar", "Edit")}</button><button class="boton chico" type="button" data-pedcli>${ico("mas")}${tr("Nuevo pedido", "New order")}</button><a class="boton chico" ${z.correo ? `href="mailto:${esc(z.correo)}"` : 'aria-disabled="true"'}>${ico("correo")}${tr("Correo", "Email")}</a><a class="boton chico" ${zw ? `href="https://wa.me/${zw}" target="_blank" rel="noopener"` : 'aria-disabled="true"'}>${ico("wa")}WhatsApp</a></div></section>
       <section class="carta"><div class="cartaT"><h2>${tr("Información", "Information")}</h2></div><dl class="datosL">${lin("correo", tr("Correo", "Email"), z.correo)}${lin("wa", tr("WhatsApp", "WhatsApp"), z.whatsapp)}${lin("lugar", tr("Ciudad", "City"), z.ciudad)}</dl></section>
       <section class="carta"><div class="cartaT"><h2>${tr("Pedidos", "Orders")}</h2><span class="sello n">${zP.length}</span></div>${zP.map(p => `<button class="tarjetaP" type="button" data-pedido="${p.id}"><span class="arr"><span>#${p.numero}</span>${etq(p.estado)}</span><b>${esc(detallePedido(p, CACHE_O))}</b><span class="peq">${pesos(p.monto)} </span>${pagoTxt(p)}</button>`).join("") || `<p class="peq">${tr("Sin pedidos.", "No orders.")}</p>`}</section></div>` : ""}</div>`;
-  c.querySelectorAll("[data-cli]").forEach(f => f.onclick = () => { if (innerWidth <= 1180){ editarCliente(f.dataset.cli); return; } cSel = f.dataset.cli; VISTAS.clientes(c); });
+  c.querySelectorAll("[data-cli]").forEach(f => f.onclick = () => { if (innerWidth <= 1180){ editarCliente(f.dataset.cli); return; } cSel = f.dataset.cli; soloResultados($("#contenido"), VISTAS.clientes); });
   c.querySelectorAll("[data-edcli]").forEach(b => b.onclick = () => editarCliente(cSel));
   c.querySelectorAll("[data-pedido]").forEach(b => b.onclick = () => editarPedido(b.dataset.pedido));
   const pc = c.querySelector("[data-pedcli]"); if (pc) pc.onclick = () => editarPedido(null, cSel);
   c.querySelector("#nuevoC").onclick = () => editarCliente(null);
-  const b = c.querySelector("#bC"); b.oninput = () => { cBusca = b.value; clearTimeout(b.t); b.t = setTimeout(async () => { await VISTAS.clientes(c); const n = c.querySelector("#bC"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+  const b = c.querySelector("#bC"); b.oninput = () => { cBusca = b.value; clearTimeout(b.t); b.t = setTimeout(() => soloResultados(c, VISTAS.clientes), 250); };
   c.querySelector("#csv").onclick = () => {
     const filas = [[tr("Nombre", "Name"), tr("Correo", "Email"), tr("WhatsApp", "WhatsApp"), tr("Ciudad", "City"), tr("Pedidos", "Orders"), tr("Total gastado", "Total spent"), tr("Cliente desde", "Customer since"), tr("Notas", "Notes")]].concat(C.map(x => { const t = tot(x.id); return [x.nombre, x.correo, x.whatsapp, x.ciudad, t.length, suma(t), (x.creado || "").slice(0, 10), x.notas]; }));
     const csv = "\ufeff" + filas.map(f => f.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\n"), a = document.createElement("a");
@@ -919,17 +982,17 @@ VISTAS.clientes = async c => {
 async function editarCliente(id, desdePedido){
   const [C, P] = await Promise.all([db.lista("clientes"), db.lista("pedidos")]), x = C.find(y => y.id === id) || {}, ped = P.filter(p => p.cliente_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
   const wa = (x.whatsapp || "").replace(/\D/g, "");
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? esc(x.nombre) : tr("Nuevo cliente", "New customer")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? esc(x.nombre) : tr("Nuevo cliente", "New customer")}</h2><button class="boton x" type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button></div>
     <div class="cuerpo">
       ${id ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${x.correo ? `<a class="boton chico" href="mailto:${esc(x.correo)}">${ico("correo")}${tr("Correo", "Email")}</a>` : ""}</div><div class="gasto"><span>${tr("Total gastado", "Total spent")}</span><b>${pesos(ped.reduce((s, p) => s + (p.pagado ? +p.monto || 0 : 0), 0))}</b></div>` : ""}
       <label class="campo"><span>${tr("Nombre", "Name")}</span><input class="entrada" name="nombre" value="${esc(x.nombre)}"></label>
-      <div class="dos"><label class="campo"><span>${tr("Correo", "Email")}</span><input class="entrada" name="correo" type="email" value="${esc(x.correo)}"></label><label class="campo"><span>WhatsApp</span><input class="entrada" name="whatsapp" inputmode="tel" placeholder="57 300 000 0000" value="${esc(x.whatsapp)}"></label></div>
+      <div class="dos"><label class="campo"><span>${tr("Correo", "Email")}</span><input class="entrada" name="correo" type="email" value="${esc(x.correo)}"></label><label class="campo"><span>WhatsApp</span><input class="entrada" name="whatsapp" inputmode="tel" placeholder="573001234567" value="${esc(x.whatsapp)}"></label></div>
       <label class="campo"><span>${tr("Ciudad", "City")}</span><input class="entrada" name="ciudad" value="${esc(x.ciudad)}"></label>
       <label class="campo"><span>${tr("Notas", "Notes")}</span><textarea class="entrada" name="notas">${esc(x.notas)}</textarea></label>
       ${id ? `<span class="campo"><span>${tr("Pedidos", "Orders")} (${ped.length})</span></span><div class="bloque">${ped.map(p => `<div class="fila click" style="grid-template-columns:1fr auto" data-pedido="${p.id}"><div class="nombre"><b style="font-size:16px">#${p.numero} · ${esc(detallePedido(p, CACHE_O))}</b><span>${fecha(p.creado)} · ${pesos(p.monto)}</span>${pagoTxt(p)}</div>${etq(p.estado)}</div>`).join("") || `<div class="vacio">${tr("Sin pedidos.", "No orders.")}</div>`}</div>
       <button class="boton" type="button" data-nuevo-pedido style="margin-top:4px">${ico("mas")}${tr("Nuevo pedido para este cliente", "New order for this customer")}</button>` : ""}
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico(id ? "check" : "mas")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     const fila = {id:id || null, nombre:val(ed, "nombre"), correo:val(ed, "correo").toLowerCase() || null, whatsapp:val(ed, "whatsapp"), ciudad:val(ed, "ciudad"), notas:val(ed, "notas")};
     if (!fila.nombre) return falta(ed, "nombre", id ? tr("No se guardó el cliente", "The customer was not saved") : tr("No se creó el cliente", "The customer was not created"), tr("Escribe el nombre.", "Enter the name."));
@@ -949,29 +1012,66 @@ async function editarCliente(id, desdePedido){
 let oFiltro = "todas";
 VISTAS.obras = async c => {
   const O = (await db.lista("obras")).sort((a, b) => (a.orden || 0) - (b.orden || 0)); CACHE_O = O;
-  const L = O.filter(o => oFiltro === "todas" || (oFiltro === "disp" ? !o.agotada && o.visible !== false : oFiltro === "agot" ? o.agotada : o.visible === false));
-  c.innerHTML = cab(tr("Galería", "Gallery"), tr("Lo que cambies aquí se ve en la galería de la web al guardar.", "What you change here shows in the site's gallery when you save."), `<button class="boton verde" type="button" id="nuevaO">${ico("mas")}${tr("Nueva obra", "New artwork")}</button>`) + `
+  const enWeb = O.filter(o => o.visible !== false), ocultas = O.filter(o => o.visible === false), sitio = o => enWeb.indexOf(o) + 1, todas = oFiltro === "todas";
+  const ficha = o => { const n = sitio(o), nom = esc(txt(o, "nombre")); return `<article class="carta obraC ${n ? "" : "apagada"}" data-o="${esc(o.id)}"><div class="marco"><button class="img" type="button" style="${urlImg(imgDe(o))}" data-editar aria-label="${tr("Editar", "Edit")} ${nom}"></button><div class="sobreI">${o.agotada ? `<span class="banda">${tr("Agotada", "Sold out")}</span>` : ""}${n ? "" : `<span class="banda g">${tr("Oculta", "Hidden")}</span>`}</div></div>
+      ${n ? `<span class="sitio" title="${tr("Lugar en la web", "Place on the site")}">${n}</span>` : ""}${todas && n ? `<button class="agarra" type="button" data-agarra aria-label="${tr("Mover", "Move")} ${nom}. ${tr("Lugar", "Place")} ${n} ${tr("de", "of")} ${enWeb.length}">${ico("grip")}</button>` : ""}
+      <div class="tx"><div class="l1"><b>${nom}</b><span>${pesos(o.precio)}</span></div>
+      <div class="estadoObra">${tr("Agotada", "Sold out")}<button class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="${tr("Marcar como agotada", "Mark as sold out")}: ${nom}" data-agotada></button></div>
+      <div class="estadoObra">${tr("En la web", "On the site")}<button class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="${tr("Mostrar en la web", "Show on the site")}: ${nom}" data-visible></button></div><button class="boton chico" type="button" data-editar>${ico("lapiz")}${tr("Editar", "Edit")}</button></div></article>`; };
+  const L = oFiltro === "disp" ? enWeb.filter(o => !o.agotada) : oFiltro === "agot" ? O.filter(o => o.agotada) : oFiltro === "ocultas" ? ocultas : enWeb;
+  c.innerHTML = cab(tr("Galería", "Gallery"), todas ? tr("El mismo orden de la web. Agarra los puntitos para mover una obra.", "The same order as the site. Grab the dots to move an artwork.") : "", `<button class="boton verde" type="button" id="nuevaO">${ico("mas")}${tr("Nueva obra", "New artwork")}</button>`) + `
     <div class="filtros"><div class="seg" role="group" aria-label="${tr('Mostrar', 'Show')}">${[["todas", tr("Todas", "All")], ["disp", tr("Disponibles", "Available")], ["agot", tr("Agotadas", "Sold out")], ["ocultas", tr("Ocultas", "Hidden")]].map(([k, n]) => `<button type="button" data-fo="${k}" aria-pressed="${oFiltro === k}">${n}</button>`).join("")}</div></div>
-    <div class="bento obras">${L.map(o => `<article class="carta obraC ${o.visible === false ? "apagada" : ""}" data-o="${esc(o.id)}"><button class="img" type="button" style="border:0;padding:0;${urlImg(imgDe(o))}" data-editar aria-label="${tr("Editar", "Edit")} ${esc(o.nombre_es)}"></button>
-      <div class="sobreI">${o.agotada ? `<span class="banda">${tr("Agotada", "Sold out")}</span>` : ""}${o.visible === false ? `<span class="banda g">${tr("Oculta", "Hidden")}</span>` : ""}</div>
-      <div class="tx"><div class="l1"><b>${esc(txt(o, "nombre"))}</b><span>${pesos(o.precio)}</span></div><p>${esc(txt(o, "descripcion"))}</p>
-      <div class="estadoObra">${tr("Agotada", "Sold out")}<button class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="${tr("Marcar como agotada", "Mark as sold out")}: ${esc(o.nombre_es)}" data-agotada></button></div>
-      <div class="estadoObra">${tr("Visible en la web", "Visible on the site")}<button class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="${tr("Mostrar en la web", "Show on the site")}: ${esc(o.nombre_es)}" data-visible></button></div><div class="dosB"><button class="boton chico" type="button" data-editar>${ico("lapiz")}${tr("Editar", "Edit")}</button><button class="boton chico" type="button" data-mover="-1" ${o === O[0] ? "disabled" : ""} aria-label="${tr("Adelantar en la galería", "Move earlier in the gallery")}: ${esc(o.nombre_es)}">${ico("izq")}${tr("Adelantar", "Move up")}</button></div></div></article>`).join("") || `<div class="carta">${tr("No hay obras con ese filtro.", "No artworks match that filter.")}</div>`}</div>`;
-  c.querySelectorAll("[data-fo]").forEach(b => b.onclick = () => { oFiltro = b.dataset.fo; ir("obras"); });
+    <div class="cuadricula" id="cuad">${L.map(ficha).join("") || `<div class="carta" style="width:100%">${todas ? tr("Aún no hay obras.", "No artworks yet.") : tr("No hay obras con ese filtro.", "No artworks match that filter.")}</div>`}</div>${todas && ocultas.length ? `<h2 class="grupoT">${tr("No salen en la web", "Not on the site")}</h2><div class="cuadricula">${ocultas.map(ficha).join("")}</div>` : ""}`;
+  c.querySelectorAll("[data-fo]").forEach(b => b.onclick = () => { oFiltro = b.dataset.fo; refrescar(); });
   c.querySelector("#nuevaO").onclick = () => editarObra(null);
   c.querySelectorAll("[data-o]").forEach(f => {
     const o = O.find(x => x.id === f.dataset.o);
-    f.querySelectorAll("[data-editar]").forEach(b => b.onclick = () => editarObra(o.id));
+    f.querySelectorAll("[data-editar]").forEach(b => b.onclick = () => { if (!orden.recien()) editarObra(o.id); });
     f.querySelector("[data-agotada]").onclick = async () => { if (!o.agotada && !await confirmarAgotada(o)) return; try { await db.guardar("obras", {...o, agotada:!o.agotada}); } catch(e){ return error(tr("No se pudo guardar", "Could not save"), e); } avisar(o.agotada ? tr("De nuevo disponible", "Available again") : tr("Marcada como agotada", "Marked as sold out"), {detalle:txt(o, "nombre")}); refrescar(); };
     f.querySelector("[data-visible]").onclick = async () => { try { await db.guardar("obras", {...o, visible:o.visible === false}); } catch(e){ return error(tr("No se pudo guardar", "Could not save"), e); } avisar(o.visible === false ? tr("Ahora se ve en la web", "Now visible on the site") : tr("Oculta en la web", "Hidden on the site"), {detalle:txt(o, "nombre")}); refrescar(); };
-    f.querySelector("[data-mover]").onclick = async () => { const i = O.indexOf(o); if (i <= 0) return; const a = O[i - 1]; await db.guardar("obras", {...o, orden:a.orden}); await db.guardar("obras", {...a, orden:o.orden === a.orden ? (+o.orden || 0) + 1 : o.orden}); avisar(tr("Orden de la galería actualizado", "Gallery order updated"), {detalle:txt(o, "nombre")}); refrescar(); };
+  });
+  if (todas) orden.activar(c.querySelector("#cuad"), async (ids, id, foco) => {   // ids: el orden nuevo de las que salen en la web
+    const de = enWeb.findIndex(o => o.id === id) + 1, a = ids.indexOf(id) + 1; if (de === a) return;
+    try { const L2 = ids.map(i => O.find(o => o.id === i)).concat(ocultas); for (let k = 0; k < L2.length; k++) if (L2[k].orden !== k + 1) await db.guardar("obras", {...L2[k], orden:k + 1}); avisar(tr("Lugar en la web: cambio guardado", "Place on the site: change saved"), {detalle:`${txt(O.find(o => o.id === id), "nombre")}: ${de} → ${a}`}); } catch(e){ error(tr("No se pudo mover la obra", "Could not move the artwork"), e); }
+    await refrescar(); if (foco){ const b = c.querySelector(`[data-o="${CSS.escape(id)}"] [data-agarra]`); if (b) b.focus({preventScroll:true}); }
   });
 };
+/* mover obras en la cuadrícula: con los puntitos (dedo o mouse), manteniendo presionada la imagen, o con las flechas del teclado */
+const orden = (() => {
+  let fin = 0;
+  function activar(cu, alSoltar){
+    const fichas = () => [...cu.querySelectorAll("[data-o]")], ids = () => fichas().map(f => f.dataset.o), numerar = () => fichas().forEach((f, i) => { f.querySelector(".sitio").textContent = i + 1; });
+    const acomodar = fn => { const L = fichas(), r0 = new Map(L.map(f => [f, f.getBoundingClientRect()])); fn(); numerar();   // las demás se deslizan a su nuevo lugar
+      L.forEach(f => { const a = r0.get(f), b = f.getBoundingClientRect(), dx = a.left - b.left, dy = a.top - b.top; if (dx || dy) f.animate([{transform:`translate(${dx}px,${dy}px)`}, {transform:"none"}], {duration:matchMedia("(prefers-reduced-motion:reduce)").matches ? 1 : 220, easing:"cubic-bezier(.2,.8,.3,1)"}); }); };
+    fichas().forEach(f => {
+      const asa = f.querySelector("[data-agarra]"), img = f.querySelector(".img"); let vivo = false;
+      asa.addEventListener("keydown", e => { const cols = getComputedStyle(cu).getPropertyValue("--cq") | 0, d = {ArrowLeft:-1, ArrowRight:1, ArrowUp:-cols, ArrowDown:cols}[e.key]; if (!d) return; e.preventDefault(); const l = ids(), i = l.indexOf(f.dataset.o), j = Math.max(0, Math.min(l.length - 1, i + d)); if (i === j) return; l.splice(j, 0, l.splice(i, 1)[0]); alSoltar(l, f.dataset.o, true); });
+      f.addEventListener("touchmove", e => { if (vivo) e.preventDefault(); }, {passive:false}); f.addEventListener("contextmenu", e => { if (vivo || f.dataset.dedo) e.preventDefault(); }); f.addEventListener("dragstart", e => e.preventDefault());
+      f.addEventListener("pointerdown", e => {
+        const conAsa = e.target.closest("[data-agarra]"), conImg = e.target.closest(".img"); if (e.button || !e.isPrimary || !(conAsa || conImg)) return;
+        const dedo = e.pointerType !== "mouse", x0 = e.clientX, y0 = e.clientY, caja = f.getBoundingClientRect(); let x = x0, y = y0, fan = null, reloj = 0, raf = 0; if (dedo) f.dataset.dedo = 1;
+        const poner = () => { fan.style.transform = `translate(${x - (x0 - caja.left)}px,${y - (y0 - caja.top)}px) scale(1.03)`; };
+        const buscar = () => { const d = document.elementsFromPoint(x, y).map(n => n.closest("#cuad [data-o]")).find(n => n && n !== f); if (!d || d === f) return; const l = fichas(), i = l.indexOf(f), j = l.indexOf(d); acomodar(() => { if (i < j) d.after(f); else d.before(f); }); fan.querySelector(".sitio").textContent = f.querySelector(".sitio").textContent; };
+        const bucle = () => { const v = y < 90 ? -10 : y > innerHeight - 90 ? 10 : 0; if (v){ scrollBy(0, v); buscar(); } raf = requestAnimationFrame(bucle); };
+        const empezar = () => { vivo = true; fan = f.cloneNode(true); fan.className += " fantasma"; fan.removeAttribute("data-o"); fan.style.width = caja.width + "px"; fan.style.height = caja.height + "px"; document.body.append(fan); f.classList.add("origen"); document.documentElement.classList.add("arrastrando"); if (dedo && navigator.vibrate) navigator.vibrate(12); getSelection().removeAllRanges(); poner(); bucle(); };
+        const mov = ev => { if (ev.pointerId !== e.pointerId) return; x = ev.clientX; y = ev.clientY; const lejos = Math.hypot(x - x0, y - y0);
+          if (!vivo){ if (dedo && !conAsa){ if (lejos > 9) limpiar(); return; } if (lejos < 5) return; empezar(); } ev.preventDefault(); poner(); buscar(); };
+        const limpiar = () => { clearTimeout(reloj); cancelAnimationFrame(raf); removeEventListener("pointermove", mov); removeEventListener("pointerup", sube); removeEventListener("pointercancel", cancela); removeEventListener("keydown", tecla, true); if (fan) fan.remove(); if (vivo) fin = performance.now(); f.classList.remove("origen"); document.documentElement.classList.remove("arrastrando"); vivo = false; setTimeout(() => delete f.dataset.dedo, 400); };
+        const sube = ev => { if (ev.pointerId !== e.pointerId) return; const era = vivo; limpiar(); if (era) alSoltar(ids(), f.dataset.o); };
+        const cancela = ev => { if (ev && ev.pointerId !== e.pointerId) return; const era = vivo; limpiar(); if (era) refrescar(); };
+        const tecla = ev => { if (ev.key === "Escape" && vivo){ ev.stopPropagation(); cancela(); } };
+        addEventListener("pointermove", mov); addEventListener("pointerup", sube); addEventListener("pointercancel", cancela); addEventListener("keydown", tecla, true);
+        if (dedo && !conAsa) reloj = setTimeout(empezar, 320);
+      });
+    });
+  }
+  return {activar, recien:() => performance.now() - fin < 350};
+})();
 const confirmarAgotada = o => confirmar({titulo:tr(`¿Marcar "${o.nombre_es}" como agotada?`, `Mark "${txt(o, "nombre")}" as sold out?`), texto:tr("En la web ya no se podrá comprar. Puedes volver a ponerla disponible cuando quieras.", "It can no longer be bought on the site. You can make it available again anytime."), boton:tr("Marcar agotada", "Mark sold out"), icono:"agotada"});
 const imgDe = o => o.imagen_url || "../img/" + o.id + ".jpg";   // las obras de siempre usan la imagen que ya está en la web
 async function editarObra(id){
   const O = await db.lista("obras"), o = O.find(x => x.id === id) || {visible:true, agotada:false}; let img = id ? imgDe(o) : "";
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Editar · ", "Edit · ") + esc(o.nombre_es) : tr("Nueva obra", "New artwork")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Editar · ", "Edit · ") + esc(o.nombre_es) : tr("Nueva obra", "New artwork")}</h2><button class="boton x" type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button></div>
     <div class="cuerpo">
       <div class="foto"><div class="img" id="eImg" style="${img ? urlImg(img) : ""}"></div>
         <div class="lado"><label class="boton chico">${ico("subir")}${id ? tr("Cambiar imagen", "Change image") : tr("Subir imagen", "Upload image")}<input type="file" accept="image/*" id="eArch" class="oculto"></label><span>${tr("JPG o PNG. Se optimiza sola al subirla.", "JPG or PNG. It is optimized on upload.")}</span></div></div>
@@ -981,7 +1081,7 @@ async function editarObra(id){
       <div class="dos"><div class="campo"><span>${tr("Agotada", "Sold out")}</span><button type="button" class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="${tr('Agotada', 'Sold out')}" id="eAgo"></button></div>
         <div class="campo"><span>${tr("Visible en la web", "Visible on the site")}</span><button type="button" class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="${tr('Visible en la web', 'Visible on the site')}" id="eVis"></button></div></div>
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Quitar", "Remove")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico(id ? "check" : "mas")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     const nes = val(ed, "nombre_es"), no = id ? tr("No se guardó la obra", "The artwork was not saved") : tr("No se añadió la obra", "The artwork was not added");
     if (!nes) return falta(ed, "nombre_es", no, tr("Escribe el nombre.", "Enter the name.")); if (!img) return falta(ed, "", no, tr("Sube la imagen.", "Upload the image."));
@@ -998,15 +1098,14 @@ async function editarObra(id){
     ed.querySelector("#eArch").onchange = async e => { const f = e.target.files[0]; if (!f) return; const fin = avisar(tr("Subiendo imagen…", "Uploading image…"), {tipo:"info"});
       try { img = await db.subirImagen(f, id || "obra"); ed.querySelector("#eImg").style.backgroundImage = `url('${img}')`; fin(); avisar(tr("Imagen lista", "Image ready"), {tipo:"info", detalle:tr("Falta guardar.", "Remember to save.")}); } catch(er){ fin(); error(tr("No se pudo subir la imagen", "Could not upload the image"), er); } };
     ["#eVis", "#eAgo"].forEach(k => { const v = ed.querySelector(k); v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true")); });
-    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Quitar "${o.nombre_es}" de la galería?`, `Remove "${txt(o, "nombre")}" from the gallery?`), texto:tr("No se puede deshacer. Si solo quieres esconderla, apaga \"Visible en la web\".", "This cannot be undone. To just hide it, turn off \"Visible on the site\"."), boton:tr("Quitar", "Remove")})) return; try { await db.borrar("obras", id); } catch(e){ return error(tr("No se pudo quitar la obra", "Could not remove the artwork"), e); } avisar(tr("Obra quitada de la galería", "Artwork removed from the gallery"), {detalle:txt(o, "nombre")}); cerrarEditor(); refrescar(); };
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Borrar "${o.nombre_es}"?`, `Delete "${txt(o, "nombre")}"?`), texto:tr("Sale de la galería de la web y no se puede deshacer. Si solo quieres esconderla, apaga \"Visible en la web\".", "It leaves the site's gallery and this cannot be undone. To just hide it, turn off \"Visible on the site\"."), boton:tr("Borrar", "Delete")})) return; try { await db.borrar("obras", id); } catch(e){ return error(tr("No se pudo borrar la obra", "Could not delete the artwork"), e); } avisar(tr("Obra borrada", "Artwork deleted"), {detalle:txt(o, "nombre")}); cerrarEditor(); refrescar(); };
   });
 }
 
 /* COMISIONES (tipos) */
-const BASE = 3;   // las tres comisiones de siempre no se borran; las demás se agregan a la hoja de la web, que se desliza de lado
 let cTab = "pedidos";
 VISTAS.comisiones = async c => {
-  const aj = (await db.lista("ajustes"))[0] || {id:1, comisiones_abiertas:true}, ab = aj.comisiones_abiertas !== false, ped = cTab === "pedidos";
+  const aj = await leerAjustes(), ab = aj.comisiones_abiertas !== false, ped = cTab === "pedidos";
   c.innerHTML = cab(tr("Comisiones", "Commissions"), ped ? tr("Arrastra cada pedido para cambiar su estado.", "Drag each order to change its status.") : tr("Los tipos de encargo y sus precios.", "Commission types and their prices."), `<div class="accC"><div class="abrirC"><span>${ab ? tr("Abiertas", "Open") : tr("Cerradas", "Closed")}</span><button class="sw" type="button" role="switch" aria-checked="${ab}" aria-label="${tr("Comisiones abiertas", "Commissions open")}" id="abrirC"></button></div><button class="boton verde" type="button" id="nuevoC2">${ico("mas")}${ped ? tr("Nuevo pedido", "New order") : tr("Nueva comisión", "New commission")}</button></div>`) + `
     <div class="filtros tabs"><div class="seg" role="group" aria-label="${tr("Sección", "Section")}"><button type="button" data-tab="pedidos" aria-pressed="${ped}">${ico("pedidos")}${tr("Pedidos", "Orders")}</button><button type="button" data-tab="tipos" aria-pressed="${!ped}">${ico("comisiones")}${tr("Tipos y precios", "Types and prices")}</button></div></div><div id="sub"></div>`;
   c.querySelectorAll("[data-tab]").forEach(b => b.onclick = async () => { cTab = b.dataset.tab; await VISTAS.comisiones(c); c.querySelector(`[data-tab="${cTab}"]`).focus({preventScroll:true}); });
@@ -1024,8 +1123,8 @@ async function verTipos(c){
   c.querySelectorAll("[data-t]").forEach(b => b.onclick = () => editarTipo(+b.dataset.t));
 }
 async function editarTipo(n){
-  const T = await db.lista("comision_tipos"), t = T.find(x => x.n === n) || {n:T.reduce((m, x) => Math.max(m, x.n), BASE) + 1, destacado:false};
-  abrirEditor(`<div class="top"><h2 id="edT">${n ? esc(t.nombre_es) : tr("Nueva comisión", "New commission")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
+  const T = await db.lista("comision_tipos"), t = T.find(x => x.n === n) || {n:T.reduce((m, x) => Math.max(m, x.n), 0) + 1, destacado:false};
+  abrirEditor(`<div class="top"><h2 id="edT">${n ? esc(t.nombre_es) : tr("Nueva comisión", "New commission")}</h2><button class="boton x" type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button></div>
     <div class="cuerpo">
       <label class="campo"><span>${tr("Nombre", "Name")}</span><input class="entrada" name="nombre_es" value="${esc(t.nombre_es)}"></label>
       <label class="campo"><span>${tr("Descripción", "Description")}</span><textarea class="entrada" name="descripcion_es" maxlength="180">${esc(t.descripcion_es)}</textarea></label>
@@ -1034,7 +1133,7 @@ async function editarTipo(n){
       <label class="campo"><span>${tr("Precio desde (COP)", "Price from (COP)")}</span><input class="entrada" name="precio" inputmode="numeric" value="${t.precio ?? ""}"></label>
       <div class="campo"><span>${tr("Marcar como \"El más pedido\"", "Mark as \"Most requested\"")}</span><button type="button" class="sw" role="switch" aria-checked="${!!t.destacado}" aria-label="${tr('Marcar como El más pedido', 'Mark as Most requested')}" id="eDest"></button></div>
     </div>
-    <div class="botones">${n > BASE ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${n ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
+    <div class="botones">${n && T.length > 1 ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico(n ? "check" : "mas")}${n ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     const dest = ed.querySelector("#eDest").getAttribute("aria-checked") === "true", fila = {...t, precio:num(ed, "precio") || 0, destacado:dest};
     CAMPOS_TR.comision_tipos.forEach(k => { fila[k + "_es"] = val(ed, k + "_es"); });
@@ -1053,13 +1152,38 @@ async function editarTipo(n){
 }
 
 /* AJUSTES */
+const leerAjustes = async () => ({id:1, comisiones_abiertas:true, cobros_pausados:false, wompi_llave:"", ...((await db.lista("ajustes"))[0] || {})});
+/* Wompi: la llave pública se comprueba con Wompi; las privadas nunca se guardan aquí */
+const METODOS = {CARD:tr("Tarjetas", "Cards"), PSE:"PSE", NEQUI:"Nequi", BANCOLOMBIA_TRANSFER:tr("Botón Bancolombia", "Bancolombia button"), BANCOLOMBIA_QR:"QR Bancolombia", BANCOLOMBIA_COLLECT:tr("Corresponsal Bancolombia", "Bancolombia agent"), DAVIPLATA:"DaviPlata", PCOL:tr("Puntos Colombia", "Puntos Colombia"), BNPL_BANCOLOMBIA:tr("Cuotas Bancolombia", "Bancolombia installments"), SU_PLUS:"SU+ Pay"};
+async function wompi(llave){
+  const r = await conTope(fetch(`https://${/^pub_test_/.test(llave) ? "sandbox" : "production"}.wompi.co/v1/merchants/${encodeURIComponent(llave)}`), 12000);
+  if (!r.ok) return null; const d = (await r.json()).data || {}; return {nombre:d.name || d.legal_name || "", metodos:(d.accepted_payment_methods || (d.payment_methods || []).map(m => m.name) || []).map(m => METODOS[m] || m)};
+}
 VISTAS.ajustes = async c => {
-  c.innerHTML = cab(tr("Ajustes", "Settings"), tr("Conexión con la web y respaldo.", "Site connection and backup.")) + `
+  const aj = await leerAjustes(), ll = aj.wompi_llave || "", prueba = /^pub_test_/.test(ll), act = !aj.cobros_pausados;
+  const guardar = async cambio => { try { await db.guardar("ajustes", {...aj, ...cambio}); return true; } catch(e){ error(tr("No se pudo guardar", "Could not save"), e); return false; } };
+  c.innerHTML = cab(tr("Ajustes", "Settings"), "") + `
     <div class="bento ajustes">
-      <section class="carta a1"><span class="ic">${ico("nube")}</span><h2>${tr("Conexión", "Connection")}</h2><p>${DEMO ? tr("<b>Modo demostración.</b> No hay base de datos conectada: todo se guarda solo en este navegador. Para conectarla, hay que crear el proyecto en Supabase (la guía está en la carpeta del proyecto) y poner su dirección y su clave pública en <i>nube.js</i>.", "<b>Demo mode.</b> No database is connected: everything is saved only in this browser. To connect it, create the Supabase project (the guide is in the project folder) and put its URL and public key in <i>nube.js</i>.") : tr("<b>Conectado a la base de datos.</b> Los cambios se ven en la web al guardar.", "<b>Connected to the database.</b> Changes show on the site when you save.")}</p></section>
+      <section class="carta w"><div class="cabA"><span class="ic">${ico("pago")}</span><span class="estW ${ll ? prueba ? "prueba" : "si" : ""}">${ll ? prueba ? tr("Modo de prueba", "Test mode") : tr("Conectado", "Connected") : tr("Sin conectar", "Not connected")}</span></div><h2>${tr("Pagos con Wompi", "Payments with Wompi")}</h2>
+        ${ll ? `<dl class="datosL" id="wD"><div class="lin1"><dt>${tr("Comercio", "Business")}</dt><dd id="wN">…</dd></div><div class="lin1"><dt>${tr("Medios de pago", "Payment methods")}</dt><dd id="wM">…</dd></div><div class="lin1"><dt>${tr("Llave pública", "Public key")}</dt><dd>${esc(ll.slice(0, 9))}••••${esc(ll.slice(-4))}</dd></div></dl><p class="peq">${tr("Falta conectar la firma del servidor para cobrar desde la web.", "The server signature still has to be connected to charge on the site.")}</p><div class="dosB"><a class="boton" href="https://comercios.wompi.co" target="_blank" rel="noopener">${tr("Abrir Wompi", "Open Wompi")}</a><button class="boton rojo" type="button" id="wQ">${tr("Desconectar", "Disconnect")}</button></div>`
+        : `<form id="wF" novalidate><label class="campo"><span>${tr("Llave pública", "Public key")}</span><input class="entrada" name="llave" placeholder="pub_prod_…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></label><p class="peq">${tr("Está en Wompi, en Desarrolladores. Pega solo la pública: las llaves privadas no van aquí.", "Find it in Wompi, under Developers. Paste only the public one: private keys don't go here.")}</p><button class="boton verde">${tr("Conectar", "Connect")}</button></form>`}</section>
+      <section class="carta"><div class="cabA"><span class="ic">${ico("pausa")}</span><button class="sw" type="button" role="switch" aria-checked="${act}" aria-label="${tr("Cobros activos", "Charges active")}" id="cP"></button></div><h2>${act ? tr("Cobros activos", "Charges active") : tr("Cobros en pausa", "Charges paused")}</h2><p class="peq">${act ? tr("La web deja comprar las ilustraciones.", "The site lets people buy illustrations.") : tr("La web no deja comprar hasta que los actives.", "The site won't let people buy until you turn them on.")}</p></section>
+      <section class="carta"><span class="ic">${ico("nube")}</span><h2>${tr("Base de datos", "Database")}</h2><p>${DEMO ? tr("<b>Modo demostración.</b> No hay base de datos conectada: todo se guarda solo en este navegador. Para conectarla, hay que crear el proyecto en Supabase (la guía está en la carpeta del proyecto) y poner su dirección y su clave pública en <i>nube.js</i>.", "<b>Demo mode.</b> No database is connected: everything is saved only in this browser. To connect it, create the Supabase project (the guide is in the project folder) and put its URL and public key in <i>nube.js</i>.") : tr("<b>Conectado a la base de datos.</b> Los cambios se ven en la web al guardar.", "<b>Connected to the database.</b> Changes show on the site when you save.")}</p></section>
       <section class="carta"><span class="ic">${ico("ojo")}</span><h2>${tr("Ver la web", "View the site")}</h2><p class="peq">${DEMO ? tr("Se abre con los cambios de esta demostración.", "Opens with this demo's changes.") : tr("Se abre en otra pestaña.", "Opens in a new tab.")}</p><a class="boton" href="../${DEMO ? "?vista=panel" : ""}" target="_blank" rel="noopener">${ico("sale")}${tr("Abrir la web", "Open the site")}</a></section>
       <section class="carta"><span class="ic">${ico("bajar")}</span><h2>${tr("Respaldo", "Backup")}</h2><p class="peq">${tr("Un archivo con todos los pedidos, clientes, obras y comisiones.", "One file with every order, customer, artwork and commission.")}</p><button class="boton" type="button" id="aRes">${ico("bajar")}${tr("Descargar respaldo", "Download backup")}</button></section>
-      ${DEMO ? `<section class="carta" style="grid-column:1/-1;min-height:0"><h2>${tr("Datos de ejemplo", "Sample data")}</h2><p class="peq">${tr("Borra los cambios de la demostración y vuelve al inicio.", "Clears the demo's changes and starts over.")}</p><button class="boton rojo" type="button" id="aRst">${ico("vuelve")}${tr("Volver a los datos de ejemplo", "Restore sample data")}</button></section>` : ""}</div>`;
+      ${DEMO ? `<section class="carta"><span class="ic">${ico("vuelve")}</span><h2>${tr("Datos de ejemplo", "Sample data")}</h2><p class="peq">${tr("Borra los cambios de la demostración y vuelve al inicio.", "Clears the demo's changes and starts over.")}</p><button class="boton rojo" type="button" id="aRst">${ico("vuelve")}${tr("Volver a los datos de ejemplo", "Restore sample data")}</button></section>` : ""}</div>`;
+  c.querySelector("#cP").onclick = async () => {
+    if (act && !await confirmar({titulo:tr("¿Pausar los cobros?", "Pause charges?"), texto:tr("Nadie podrá comprar en la web hasta que los actives. Los pedidos en curso no cambian.", "Nobody can buy on the site until you turn them on. Current orders don't change."), boton:tr("Pausar", "Pause"), icono:"pausa"})) return;
+    if (await guardar({cobros_pausados:act})){ avisar(act ? tr("Cobros en pausa", "Charges paused") : tr("Cobros activos", "Charges active"), {detalle:act ? tr("La web no deja comprar.", "The site won't let people buy.") : tr("La web vuelve a dejar comprar.", "The site lets people buy again.")}); refrescar(); }
+  };
+  const wF = c.querySelector("#wF"); if (wF) wF.onsubmit = async ev => {
+    ev.preventDefault(); const v = wF.llave.value.trim(), bt = wF.querySelector("button"), no = tr("Wompi no se conectó", "Wompi was not connected");
+    if (/^prv_|integrity|events/.test(v)){ wF.llave.value = ""; return falta(wF, "llave", no, tr("Esa es una llave privada. Usa la que empieza por pub_.", "That is a private key. Use the one starting with pub_.")); }
+    if (!/^pub_(test|prod)_[A-Za-z0-9]{6,}$/.test(v)) return falta(wF, "llave", no, tr("La llave pública empieza por pub_prod_ o pub_test_.", "The public key starts with pub_prod_ or pub_test_."));
+    bt.disabled = true; try { const r = await wompi(v); if (!r) falta(wF, "llave", no, tr("Wompi no reconoce esa llave.", "Wompi doesn't recognize that key.")); else if (await guardar({wompi_llave:v})){ avisar(tr("Wompi conectado", "Wompi connected"), {detalle:r.nombre}); refrescar(); } } catch(e){ error(no, new Error(tr("No hubo respuesta de Wompi. Intenta de nuevo.", "Wompi did not answer. Try again."))); } bt.disabled = false;
+  };
+  const wQ = c.querySelector("#wQ"); if (wQ) wQ.onclick = async () => { if (!await confirmar({titulo:tr("¿Desconectar Wompi?", "Disconnect Wompi?"), texto:tr("La web deja de cobrar con Wompi. Puedes conectarlo otra vez.", "The site stops charging with Wompi. You can connect it again."), boton:tr("Desconectar", "Disconnect"), icono:"pago"})) return; if (await guardar({wompi_llave:""})){ avisar(tr("Wompi desconectado", "Wompi disconnected")); refrescar(); } };
+  if (ll) wompi(ll).then(r => { const n = c.querySelector("#wN"), m = c.querySelector("#wM"); if (!n) return; n.textContent = r ? r.nombre || "—" : tr("Wompi no reconoce la llave", "Wompi doesn't recognize the key"); m.textContent = r && r.metodos.length ? r.metodos.join(", ") : "—"; }).catch(() => { const n = c.querySelector("#wN"), m = c.querySelector("#wM"); if (n){ n.textContent = tr("Sin respuesta", "No answer"); m.textContent = "—"; } });
   c.querySelector("#aRes").onclick = async () => { const d = {}; for (const t of Object.keys(TABLAS)) d[t] = await db.lista(t); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], {type:"application/json"})); a.download = `respaldo-agrio-${new Date().toISOString().slice(0, 10)}.json`; a.click(); };
   const r = c.querySelector("#aRst"); if (r) r.onclick = async () => { if (!await confirmar({titulo:tr("¿Volver a los datos de ejemplo?", "Restore sample data?"), texto:tr("Se borran los cambios de la demostración.", "The demo's changes are cleared."), boton:tr("Volver", "Restore"), icono:"vuelve"})) return; localStorage.removeItem(LS); ir("ajustes"); avisar(tr("Datos de ejemplo restaurados", "Sample data restored")); };
 };
