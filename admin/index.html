@@ -535,8 +535,9 @@ function avisarCambios(nombre, l, extra){
    1) con la base conectada, la hace el servidor (función "traducir"); 2) si no, el traductor del propio navegador (Chrome de computador: gratis, sin enviar el texto a nadie).
    Si no se puede en ese momento, la web muestra el español y queda pendiente: se completa sola al abrir el panel donde sí se pueda. */
 const IDIOMAS = {sourceLanguage:"es", targetLanguage:"en"}, conTope = (p, ms) => Promise.race([p, new Promise((_, x) => setTimeout(() => x(new Error("tiempo")), ms))]);
+let sinFuncion = false;   // si la función del servidor no existe, no se vuelve a intentar en esta visita
 async function traducir(textos){
-  if (!DEMO) try { const {data, error} = await conTope(sb.functions.invoke("traducir", {body:{textos}}), 12000); if (!error && data && data.textos && data.textos.length === textos.length) return data.textos; } catch(e){}
+  if (!DEMO && !sinFuncion) try { const {data, error} = await conTope(sb.functions.invoke("traducir", {body:{textos}}), 12000); if (!error && data && data.textos && data.textos.length === textos.length) return data.textos; sinFuncion = true; } catch(e){ sinFuncion = true; }
   if ("Translator" in self) try { const t = await conTope(self.Translator.create(IDIOMAS), 25000), r = []; for (const x of textos) r.push((await t.translate(x)).trim()); return r; } catch(e){ console.warn(e); }
   return null;
 }
@@ -653,7 +654,7 @@ async function achicar(archivo, maxLado, calidad){
 }
 
 /* ---------- entrar ---------- */
-let modoLogin = "codigo", codigoEnviado = false, usuario = "";
+let modoLogin = DEMO ? "codigo" : "clave", codigoEnviado = false, usuario = "";
 function pintarLogin(){
   $("#lClaveC").hidden = modoLogin !== "clave"; $("#lCodigoC").hidden = !(modoLogin === "codigo" && codigoEnviado);
   $("#lBoton").textContent = modoLogin === "clave" ? tr("Entrar", "Sign in") : codigoEnviado ? tr("Entrar", "Sign in") : tr("Enviarme el código", "Send me the code");
@@ -1190,7 +1191,7 @@ VISTAS.ajustes = async c => {
 
 /* ---------- arranque ---------- */
 (async () => {
-  if (!DEMO){ const {createClient} = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm"); sb = createClient(NUBE.url, NUBE.clave);
+  if (!DEMO){ const {createClient} = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm"); sb = createClient(NUBE.url, NUBE.clave);
     const {data} = await sb.auth.getSession(); if (data.session){ try { await comprobarAdmin(data.session.user.email); return; } catch(e){} } }
   else { $("#avisoDemo").hidden = false; const s = sessionStorage.getItem("agrio-panel-demo-sesion"); if (s){ entrar(s); return; } }
   $("#vLogin").hidden = false; pintarLogin();

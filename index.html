@@ -2159,7 +2159,7 @@ async function enviarSolicitud(){
     Nombre:FORM.nombre.trim(), Correo:FORM.correo.trim(), Especificaciones:FORM.specs.trim(), Formato:t("fmc_" + FORM.formato)};
   if (FORM.encuadre) datos["Encargo elegido"] = t("c" + FORM.encuadre + "_n");
   try {
-    if (nube){ const rr = await fetch(NU.url + "/rest/v1/rpc/crear_solicitud", {method:"POST", headers:{apikey:NU.clave, Authorization:"Bearer " + NU.clave, "Content-Type":"application/json"},
+    if (nube){ const rr = await fetch(NU.url + "/rest/v1/rpc/crear_solicitud", {method:"POST", headers:{...cabNube(NU.clave), "Content-Type":"application/json"},
       body:JSON.stringify({p_nombre:FORM.nombre.trim(), p_correo:FORM.correo.trim(), p_encargo:+FORM.encuadre, p_formato:FORM.formato, p_especificaciones:FORM.specs.trim(), p_idioma:LANG})}); if (!rr.ok) throw new Error("panel"); }
     if (CORREO_SOLICITUDES){ const r = await fetch(`https://formsubmit.co/ajax/${CORREO_SOLICITUDES}`, {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}, body:JSON.stringify(datos)});
       const j = await r.json().catch(() => ({})); if (!r.ok || String(j.success) !== "true") throw new Error("envío"); }
@@ -2618,11 +2618,13 @@ let anchoRs = innerWidth;
 /* en pantallas táctiles solo cuenta el cambio de ancho (girar el aparato): la barra del navegador y el teclado no reacomodan la caja */
 addEventListener("resize", () => { const act = document.activeElement; if (innerWidth === anchoRs && (TACTIL || (act && act.classList && act.classList.contains("campo")) || escribiendo())) return; anchoRs = innerWidth; clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel || esCubo() !== G.cubo || esCarrusel() !== G.carrusel || modoCom() !== G.modo) construir(); resolver(); }, 150); });
 let DESTACADA = 2;   // la comisión con "El más pedido"
+/* la llave pública nueva (sb_publishable_…) va solo en apikey; la anterior (eyJ…) también como Bearer */
+function cabNube(k){ return /^eyJ/.test(k) ? {apikey:k, Authorization:"Bearer " + k} : {apikey:k}; }
 async function cargarDeNube(){
   const N = window.AGRIO_NUBE || {}, vista = new URLSearchParams(location.search).get("vista") === "panel"; let obras = null, tipos = null, aj = null;
   try {
     if (N.url && N.clave){
-      const h = {apikey:N.clave, Authorization:"Bearer " + N.clave}, ab = new AbortController(), f = q => fetch(N.url + "/rest/v1/" + q, {headers:h, signal:ab.signal}).then(r => r.ok ? r.json() : Promise.reject(new Error("nube " + r.status)));
+      const h = cabNube(N.clave), ab = new AbortController(), f = q => fetch(N.url + "/rest/v1/" + q, {headers:h, signal:ab.signal}).then(r => r.ok ? r.json() : Promise.reject(new Error("nube " + r.status)));
       setTimeout(() => ab.abort(), 5000);   // si la base no responde, la web sigue con sus datos
       [obras, tipos, aj] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n"), f("ajustes?select=*").catch(() => null)]);
     } else if (vista){ const d = JSON.parse(localStorage.getItem("agrio-panel-demo") || "null"); if (d){ obras = (d.obras || []).filter(o => o.visible !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0)); tipos = d.comision_tipos; aj = d.ajustes; } }
