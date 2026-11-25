@@ -29,7 +29,7 @@ document.documentElement.classList.add("cargando");
 })();
 </script>
 <style>
-/* V5 (ref11, rehecha en 3D real): una caja negra granulada, con aristas redondeadas y sin tapa, sobre fondo blanco granulado.
+/* AgrioArt-web (caja en 3D real): una caja negra granulada, con aristas redondeadas y sin tapa, sobre fondo blanco granulado.
    Todo el contenido está impreso en la caja: la cara 1 es el Inicio; en la cara 2 están Sobre mí, el texto de la galería
    y las ilustraciones. Al bajar, la caja gira, la cámara se acerca hasta que la cara 2 llena la pantalla y luego la
    recorre hacia abajo. Al subir, todo vuelve. Títulos en salmón y texto gris granulado. */
@@ -157,7 +157,7 @@ html.no3d #escena,html.no3d .zonas{display:none}
 
 html.no3d .ilustraciones{display:grid;background:#1C1C1D;color:var(--papel)}
 
-/* ---------- Diálogos de la V3: comisiones, carrito y detalle ---------- */
+/* ---------- Diálogos: comisiones, carrito y detalle ---------- */
 /* ---------- Vuelo al carrito: la ilustración se deshace en cuadritos ---------- */
 .vuelo{position:fixed;inset:0;width:100vw;height:100vh;z-index:90;pointer-events:none}
 
@@ -786,8 +786,8 @@ function avisar(msg){
 
 /* ============ Carrito ============ */
 let carrito = [];
-try { carrito = JSON.parse(localStorage.getItem("agrio-v3-carrito") || "[]").filter(id => OBRAS.some(o => o.id === id && !o.agotada)); } catch(e){ carrito = []; }
-const guardar = () => { try{ localStorage.setItem("agrio-v3-carrito", JSON.stringify(carrito)); }catch(e){} };
+try { carrito = JSON.parse(localStorage.getItem("agrio-carrito") || "[]").filter(id => OBRAS.some(o => o.id === id && !o.agotada)); } catch(e){ carrito = []; }
+const guardar = () => { try{ localStorage.setItem("agrio-carrito", JSON.stringify(carrito)); }catch(e){} };
 const obra = id => OBRAS.find(o => o.id === id);
 const descDe = o => (o.panel && o.d[LANG]) || t("k_desc_ej");
 function pintarCarrito(){
@@ -898,7 +898,7 @@ function marcar(){
   if (activa !== seccionAntes){ moverBurbuja($("#burbujaNav"), $(`.pildora [data-s="${activa}"]`), seccionAntes !== null); seccionAntes = activa; }
 }
 
-/* ============ Compra, vuelo al carrito y detalle (de la V3) ============ */
+/* ============ Compra, vuelo al carrito y detalle ============ */
 /* ============ Bento de ilustraciones con disponibilidad ============
    Filas justificadas: se elige cómo repartir las obras en filas para que cada fila quede cerca de una altura
    cómoda; en cada fila las ilustraciones comparten altura y llenan exactamente el ancho, completas y sin huecos. */
