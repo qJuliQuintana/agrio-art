@@ -481,7 +481,7 @@ html.tactil .pf-hoja{box-shadow:inset 0 0 18px rgba(110,88,58,.14)}
 .pf-borde path{fill:none;stroke:#1C1C1D;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .pf-borde path+path{stroke-width:1.1;opacity:.45}
 .pf-sel{inset:-18px;width:calc(100% + 36px);height:calc(100% + 36px);filter:url(#marcador)}
-.pf-sel path{fill:none;stroke:#C6647E;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .7s cubic-bezier(.6,0,.3,1)}
+.pf-sel path{fill:none;stroke:#C6647E;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1.1;stroke-dashoffset:1.05;transition:stroke-dashoffset .7s cubic-bezier(.6,0,.3,1)}
 .pf-sel path:nth-child(2){stroke-width:1.6;opacity:.6;transition-delay:.1s}
 .pf-sel path:nth-child(3){stroke-width:4;transition-delay:.55s;transition-duration:.35s}
 .pf-ficha[aria-pressed="true"] .pf-sel path{stroke-dashoffset:0}
@@ -489,6 +489,18 @@ html.tactil .pf-hoja{box-shadow:inset 0 0 18px rgba(110,88,58,.14)}
 .pf-banda::before{content:"";position:absolute;inset:8px 8px 2px;z-index:-1;background:repeating-linear-gradient(-3deg,#1C1C1D 0 8px,#29292b 8px 10px);clip-path:var(--mancha,none)}
 .pf-talon{border-top:0;padding:2px 20px 18px}
 .pf-cu{padding:14px 20px 10px}
+/* r57: con más de tres comisiones la fila se desliza de lado; las fichas conservan su tamaño y la siguiente se asoma en el borde de la hoja */
+.pf-fichas.mas{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--fc,3) - 1) * var(--fg,30px)) / var(--fc,3));margin:-40px calc(var(--px,54px) * -1) -32px;padding:40px var(--px,54px) 32px;
+  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y pinch-zoom;scroll-snap-type:x proximity;scroll-padding-inline:var(--px,54px)}
+.pf-fichas.mas .pf-ficha{scroll-snap-align:start}
+.pf-cel .pf-fichas.mas{grid-auto-columns:84%;--fg:22px!important;gap:22px}
+.pf-fichas.mas::-webkit-scrollbar{height:8px}
+.pf-fichas.mas::-webkit-scrollbar-track{margin-inline:var(--px,54px);border-radius:9px;background:rgba(28,28,29,.12)}
+.pf-fichas.mas::-webkit-scrollbar-thumb{border-radius:9px;background:#C6647E}
+@supports (-moz-appearance:none){ .pf-fichas.mas{scrollbar-width:thin;scrollbar-color:#C6647E rgba(28,28,29,.12)} }
+html.tactil .pf-fichas.mas::-webkit-scrollbar{display:none}
+html.com-cerradas #pcForm{display:none!important}
+html.com-cerradas .papel-com .panel-com{text-align:center}
 /* el formulario va dentro de la hoja */
 .papel-com .panel-com{position:relative;left:auto;top:auto;transform:none!important;width:auto!important;max-height:none!important;visibility:inherit!important;margin:var(--sep,44px) 0 0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible;z-index:1}
 .papel-com .pc-in{max-width:none!important;width:100%;margin:0!important;display:grid;grid-template-columns:minmax(200px,.8fr) 1.7fr;column-gap:clamp(24px,4vw,64px);align-items:start}
@@ -721,7 +733,7 @@ es:{doc:"Agrio Art · Ilustraciones", secciones:"Secciones", nav_ini:"Inicio", v
  c1_n:"Primer plano", c1_q:"Retrato de cabeza y hombros con fondo sencillo. Ideal para un avatar, un regalo o tu propio monstruo.", c1_a:"Una persona o personaje", c1_b:"Fondo plano o con textura", c1_p:"Desde $250.000", c1_d:"1 a 2 semanas",
  c2_n:"Cuerpo entero", c2_q:"Un personaje completo, de pies a cabeza, con fondo sencillo. La forma más agria de verte dibujado.", c2_a:"Personaje completo con su pose", c2_b:"Fondo sencillo y detalles de tu historia", c2_p:"Desde $420.000", c2_d:"2 a 3 semanas",
  c3_n:"Mundo agrio", c3_q:"Uno o varios personajes dentro de un escenario completo. Una escena con todo su universo.", c3_a:"Varios personajes", c3_b:"Escenario con ambiente y detalle", c3_p:"Desde $750.000", c3_d:"4 a 6 semanas",
- form_t:"Cuéntame tu idea", form_sub:"Tu solicitud me llega por WhatsApp. Te respondo con el precio final y la fecha de entrega.",
+ cerr_t:"Comisiones cerradas", cerr_s:"Por ahora no recibo encargos nuevos.", form_t:"Cuéntame tu idea", form_sub:"Tu solicitud me llega por WhatsApp. Te respondo con el precio final y la fecha de entrega.",
  f_nombre:"Tu nombre", f_contacto:"WhatsApp o correo", f_cat:"Tipo de encargo", f_idea:"Tu idea", ph_idea:"Quién aparece, qué está haciendo, qué sentimiento quieres que tenga…",
  f_ref:"Referencias (opcional)", ph_ref:"Enlace a fotos o a tu Instagram", f_formato:"¿Cómo la quieres?", fm_dig:"Digital", fm_imp:"Impresa y firmada", fm_amb:"Las dos",
  f_fecha:"¿Para cuándo la necesitas? (opcional)", f_acepto:"Leí y acepto las condiciones de las comisiones.", f_enviar:"Enviar solicitud por WhatsApp",
@@ -752,7 +764,7 @@ en:{doc:"Agrio Art · Illustrations", secciones:"Sections", nav_ini:"Home", ver_
  c1_n:"Close-up", c1_q:"Head and shoulders portrait with a simple background. Great for an avatar, a gift or your own monster.", c1_a:"One person or character", c1_b:"Plain or textured background", c1_p:"From $250.000", c1_d:"1 to 2 weeks",
  c2_n:"Full body", c2_q:"A complete character, head to toe, with a simple background. The sourest way to get drawn.", c2_a:"Full character with a pose", c2_b:"Simple background and details of your story", c2_p:"From $420.000", c2_d:"2 to 3 weeks",
  c3_n:"Sour world", c3_q:"One or more characters inside a full scene. A picture with its whole universe.", c3_a:"Several characters", c3_b:"Detailed setting and mood", c3_p:"From $750.000", c3_d:"4 to 6 weeks",
- form_t:"Tell me your idea", form_sub:"Your request reaches me on WhatsApp. I'll reply with the final price and delivery date.",
+ cerr_t:"Commissions closed", cerr_s:"I'm not taking new commissions right now.", form_t:"Tell me your idea", form_sub:"Your request reaches me on WhatsApp. I'll reply with the final price and delivery date.",
  f_nombre:"Your name", f_contacto:"WhatsApp or email", f_cat:"Kind of commission", f_idea:"Your idea", ph_idea:"Who's in it, what they're doing, what feeling it should have…",
  f_ref:"References (optional)", ph_ref:"Link to photos or your Instagram", f_formato:"How do you want it?", fm_dig:"Digital", fm_imp:"Printed and signed", fm_amb:"Both",
  f_fecha:"When do you need it? (optional)", f_acepto:"I've read and accept the commission terms.", f_enviar:"Send request on WhatsApp",
@@ -1686,6 +1698,7 @@ const COM = {grupo:null, tapas:null, hojas:[], interior:null, marcos:[], placas:
 const modoCom = () => "abajo";   // r43: en todos los tamaños el formulario va debajo de las comisiones
 const esCarrusel = () => true;
 /* los tres marcos son iguales (unidades de la caja), con volumen como la caja y girados de tres cuartos */
+let TIPOS = [1, 2, 3];   // las comisiones de la hoja; si el panel tiene más, se agregan
 const ENCARGOS = [{n:1, w:460, h:620}, {n:2, w:460, h:620}, {n:3, w:460, h:620}];   // hojas verticales, como papel
 const MOL = 34, MAT = 20, MATB = 24, PR = 70, GIRO_M = -.38, ZPAS = PR / 2 - 16;   // moldura, paspartú, profundidad, giro y plano del paspartú
 const RIM = 489, HOJA = 486, HOJA_C = 250;
@@ -1883,12 +1896,12 @@ if (matchMedia("(pointer:coarse)").matches){ html.classList.add("tactil"); }
 function armarPapelDOM(){
   const pc = document.getElementById("panelCom"); if (pc.parentElement) pc.remove();   // el formulario se guarda (con lo escrito) y vuelve dentro de la hoja
   const pasos = [1, 2, 3].map(n => { const [a, b] = t("k_c" + n).split("|"); return `<li><span><b>${a.trim()}</b>${(b || "").trim()}</span></li>`; }).join("");
-  const fichas = [1, 2, 3].map(n => `<button type="button" class="pf-ficha" data-n="${n}" aria-pressed="${FORM.encuadre === String(n)}" style="--rot:${[-.5, .35, -.25][n - 1]}deg">`
+  const fichas = TIPOS.map((n, i) => `<button type="button" class="pf-ficha" data-n="${n}" aria-pressed="${FORM.encuadre === String(n)}" style="--rot:${[-.5, .35, -.25][i % 3]}deg">`
     + `<svg class="pf-borde" aria-hidden="true"><path/><path/></svg><svg class="pf-sel" aria-hidden="true"><path pathLength="1"/><path pathLength="1"/><path pathLength="1"/></svg>`
-    + `<span class="pf-banda"><span class="pf-num">N° 0${n}</span>${n === DESTACADA ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
-    + `<span class="pf-cu">${t("c" + n + "_q")}<span class="pf-l">${t("c" + n + "_a")}</span><span class="pf-l">${t("c" + n + "_b")}</span></span>`
+    + `<span class="pf-banda"><span class="pf-num">N° ${String(i + 1).padStart(2, "0")}</span>${n === DESTACADA ? `<span class="pf-tag">${t("mas_pedido").toUpperCase()}</span>` : ""}<span class="pf-nom">${t("c" + n + "_n")}</span></span>`
+    + `<span class="pf-cu">${t("c" + n + "_q")}${["_a", "_b"].map(k => t("c" + n + k)).filter(Boolean).map(l => `<span class="pf-l">${l}</span>`).join("")}</span>`
     + `<span class="pf-talon"><span class="pf-pr">${t("c" + n + "_p")}</span></span></button>`).join("");
-  papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas">${fichas}</div><div class="pf-form"></div></div>`;
+  papelDOM.innerHTML = `<div class="pf-hoja"><i class="pf-fib"></i><h2 class="pf-tit">${t("nav_com")}</h2><p class="pf-q">${t("k_como")}</p><ol class="pf-pasos">${pasos}</ol><div class="pf-fichas${TIPOS.length > 3 ? " mas" : ""}">${fichas}</div><div class="pf-form"></div></div>`;
   papelDOM.querySelector(".pf-form").appendChild(pc);
   if (html.classList.contains("tactil")) papelDOM.querySelector(".pf-hoja").style.setProperty("--arrugas", `url(${imagenArrugas()})`);
 }
@@ -1930,7 +1943,7 @@ function medidasPapel(W, lu, fs, cel){
   st.setProperty("--ft", ((cel ? 124 : 156) * lu).toFixed(1) + "px"); st.setProperty("--fq", (20 * fs * lu).toFixed(1) + "px"); st.setProperty("--fp", (13 * fs * lu).toFixed(1) + "px");
   st.setProperty("--fx", Math.min(16, Math.max(13, 13.5 * lu)).toFixed(1) + "px"); st.setProperty("--fn", Math.min(46, Math.max(30, 36 * lu)).toFixed(1) + "px");
   st.setProperty("--pp", cel ? "30px 16px 30px" : `${Math.round(48 * Math.min(1.2, lu))}px ${Math.round(54 * Math.min(1.2, lu))}px`);
-  st.setProperty("--cols", cel ? 1 : 3); st.setProperty("--fc", cel ? 1 : 3); st.setProperty("--fg", (cel ? 26 : Math.max(22, 30 * Math.min(1.2, lu))) + "px");
+  st.setProperty("--px", (cel ? 16 : Math.round(54 * Math.min(1.2, lu))) + "px"); st.setProperty("--cols", cel ? 1 : 3); st.setProperty("--fc", cel ? 1 : 3); st.setProperty("--fg", (cel ? 26 : Math.max(22, 30 * Math.min(1.2, lu))) + "px");
   st.setProperty("--gc", (36 * lu).toFixed(1) + "px"); st.setProperty("--sep", (cel ? 30 : 44 * Math.min(1.2, lu)).toFixed(0) + "px");
   st.setProperty("--fh", (cel ? 34 : Math.min(56, 44 * lu)).toFixed(0) + "px"); papelDOM.classList.toggle("pf-cel", cel);
   // el título cabe en la hoja: si no, se achica
@@ -2044,7 +2057,7 @@ capaPlacas.addEventListener("keydown", e => {
 });
 function elegirEncargo(v, forzar){
   FORM.encuadre = (!forzar && FORM.encuadre === v) ? "" : v;
-  if (G.carrusel && FORM.encuadre) COM.idx = +FORM.encuadre - 1;
+  if (G.carrusel && FORM.encuadre) COM.idx = Math.min(ENCARGOS.length, +FORM.encuadre) - 1;
   document.querySelectorAll('[data-grupo="encuadre"] .pc-chip').forEach(c => c.setAttribute("aria-pressed", String(c.dataset.v === FORM.encuadre)));
   COM.placas.forEach((p, i) => p.setAttribute("aria-pressed", String(String(i + 1) === FORM.encuadre)));
   papelDOM.querySelectorAll(".pf-ficha").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.n === FORM.encuadre)));
@@ -2111,7 +2124,7 @@ function armarZonas(){
   G.zonas.forEach((z, i) => {
     let b;
     if (z.tipo === "campo"){
-      if (z.campo === "encuadre"){ b = document.createElement("select"); [1, 2, 3].forEach(n => { const o = document.createElement("option"); o.value = String(n); o.textContent = t("c" + n + "_n"); b.appendChild(o); }); b.value = FORM.encuadre; b.addEventListener("change", () => { FORM.encuadre = b.value; }); }
+      if (z.campo === "encuadre"){ b = document.createElement("select"); TIPOS.forEach(n => { const o = document.createElement("option"); o.value = String(n); o.textContent = t("c" + n + "_n"); b.appendChild(o); }); b.value = FORM.encuadre; b.addEventListener("change", () => { FORM.encuadre = b.value; }); }
       else { b = document.createElement(z.campo === "specs" ? "textarea" : "input"); if (z.campo !== "specs"){ b.type = z.campo === "correo" ? "email" : "text"; b.autocomplete = z.campo === "correo" ? "email" : "name"; } else b.placeholder = t("ph_specs");
         b.value = FORM[z.campo] || ""; b.addEventListener("input", () => { FORM[z.campo] = b.value; b.classList.remove("falta"); }); }
       b.className = "zona campo";
@@ -2131,6 +2144,7 @@ async function enviarSolicitud(){
   if (falta){ const el = campo(falta); el.classList.add("falta"); el.setAttribute("aria-invalid", "true");
     if (correoMal && falta === "correo") avisar(t("e_correo_mal")); else el.placeholder = t({nombre:"e_nombre", correo:"e_correo", specs:"e_idea"}[falta]);
     if (comD < .98) irA(G.S.form); el.focus({preventScroll:true}); return; }
+  if (html.classList.contains("com-cerradas")) return;
   if (!FORM.encuadre){ avisar(t("e_encargo")); irA(G.S.marcos); return; }
   const NU = window.AGRIO_NUBE || {}, nube = !!(NU.url && NU.clave);
   if (!CORREO_SOLICITUDES && !nube){ avisar(t("f_sin_correo")); return; }
@@ -2523,6 +2537,7 @@ function moverBloques(){
   Object.assign(reglasCom.style, {left:G.cabX + "px", transform:`translateY(${yV.toFixed(1)}px) rotate(${giro.toFixed(2)}deg)`, transformOrigin:"50% 0", opacity:pinza(kT / .12).toFixed(3)});
   // r47: el papel de la página, en el mismo lugar que el papel 3D; aparece cuando este ya quedó liso
   if (G.papel){ const yP = proyectar(vC.set(0, G.yCab, zR))[1], c = COM.papelC || 0, vis = c > .7 && yP < vh + 60 && yP + G.papel.H > -60;
+    if (!vis && papelDOM.classList.contains("ver")){ const f = papelDOM.querySelector(".pf-fichas.mas"); if (f && f.scrollLeft) f.scrollLeft = 0; }   // al volver a abrirse, la fila empieza en la primera
     papelDOM.classList.toggle("ver", vis); papelDOM.inert = c < .96;
     Object.assign(papelDOM.style, {transform:`translate(${G.papel.x.toFixed(1)}px, ${yP.toFixed(1)}px)`, opacity:pinza((c - .96) / .04).toFixed(3)}); }
   // el formulario (de vidrio), debajo del papel
@@ -2598,14 +2613,18 @@ let anchoRs = innerWidth;
 addEventListener("resize", () => { const act = document.activeElement; if (innerWidth === anchoRs && (TACTIL || (act && act.classList && act.classList.contains("campo")) || escribiendo())) return; anchoRs = innerWidth; clearTimeout(rsT); rsT = setTimeout(() => { medirLienzo(); if (esCel() !== G.cel || esCubo() !== G.cubo || esCarrusel() !== G.carrusel || modoCom() !== G.modo) construir(); resolver(); }, 150); });
 let DESTACADA = 2;   // la comisión con "El más pedido"
 async function cargarDeNube(){
-  const N = window.AGRIO_NUBE || {}, vista = new URLSearchParams(location.search).get("vista") === "panel"; let obras = null, tipos = null;
+  const N = window.AGRIO_NUBE || {}, vista = new URLSearchParams(location.search).get("vista") === "panel"; let obras = null, tipos = null, aj = null;
   try {
     if (N.url && N.clave){
       const h = {apikey:N.clave, Authorization:"Bearer " + N.clave}, ab = new AbortController(), f = q => fetch(N.url + "/rest/v1/" + q, {headers:h, signal:ab.signal}).then(r => r.ok ? r.json() : Promise.reject(new Error("nube " + r.status)));
       setTimeout(() => ab.abort(), 5000);   // si la base no responde, la web sigue con sus datos
-      [obras, tipos] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n")]);
-    } else if (vista){ const d = JSON.parse(localStorage.getItem("agrio-panel-demo") || "null"); if (d){ obras = (d.obras || []).filter(o => o.visible !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0)); tipos = d.comision_tipos; } }
+      [obras, tipos, aj] = await Promise.all([f("obras?select=*&visible=eq.true&order=orden"), f("comision_tipos?select=*&order=n"), f("ajustes?select=comisiones_abiertas").catch(() => null)]);
+    } else if (vista){ const d = JSON.parse(localStorage.getItem("agrio-panel-demo") || "null"); if (d){ obras = (d.obras || []).filter(o => o.visible !== false).sort((a, b) => (a.orden || 0) - (b.orden || 0)); tipos = d.comision_tipos; aj = d.ajustes; } }
   } catch(e){ console.error(e); return; }
+  if (aj && aj[0] && aj[0].comisiones_abiertas === false){   // comisiones cerradas desde el panel: en lugar del formulario, el aviso
+    html.classList.add("com-cerradas"); ["es", "en"].forEach(l => { T[l].form_t = T[l].cerr_t; T[l].form_sub2 = T[l].cerr_s; });
+    document.querySelectorAll("#panelCom [data-t]").forEach(e => { e.textContent = t(e.dataset.t); });
+  }
   const limpio = v => String(v ?? "").replace(/[<>]/g, "");
   if (obras && obras.length){
     OBRAS.length = 0;
@@ -2615,9 +2634,10 @@ async function cargarDeNube(){
     carrito = carrito.filter(id => OBRAS.some(o => o.id === id && !o.agotada)); guardar(); armarBento(); pintarCarrito();
   }
   if (tipos && tipos.length){
-    tipos.forEach(c => ["es", "en"].forEach(l => { const D = T[l], k = "c" + c.n, v = (a, b) => limpio(c[a + "_" + l] || c[a + "_es"]) || D[k + b];
+    tipos.forEach(c => ["es", "en"].forEach(l => { const D = T[l], k = "c" + c.n, v = (a, b) => limpio(c[a + "_" + l] || c[a + "_es"]) || D[k + b] || "";
       D[k + "_n"] = v("nombre", "_n"); D[k + "_q"] = v("descripcion", "_q"); D[k + "_a"] = v("punto1", "_a"); D[k + "_b"] = v("punto2", "_b");
       if (c.precio != null) D[k + "_p"] = (l === "es" ? "Desde $" : "From $") + Math.round(+c.precio).toLocaleString("es-CO").replace(/,/g, "."); }));
+    const extra = tipos.map(c => Math.round(+c.n)).filter(n => n > 3).sort((a, b) => a - b); TIPOS = [1, 2, 3, ...new Set(extra)];
     DESTACADA = (tipos.find(c => c.destacado) || {}).n || 0;
   }
 }

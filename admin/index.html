@@ -44,6 +44,7 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .boton:disabled,.boton[aria-disabled="true"]{opacity:.45;cursor:default;pointer-events:none}
 .ic{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:var(--rb);background:var(--celda)}
 .seg{display:flex;gap:2px;padding:3px;border-radius:var(--rb);background:var(--celda)}
+.campo .seg button{flex:1;padding:0 6px}
 .seg button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:0 13px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13px;color:var(--sub);white-space:nowrap}
 .seg button:hover{color:var(--ink)}
 .seg button:is([aria-pressed="true"],[aria-selected="true"]){background:var(--fuerte);color:var(--enFuerte)}
@@ -71,9 +72,16 @@ textarea.entrada{min-height:84px;resize:vertical}
 .latT{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:44px;margin-bottom:14px;padding-left:8px;flex:none}
 .lateral .marca,.movil .marca{font-size:25px;color:#F5F2EB;white-space:nowrap}
 .lateral .marca span,.movil .marca span{color:var(--rosa2)}
-.plegar{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 11px;flex:none;border:0;border-radius:var(--rb);background:#2E2E31;color:#EDEAE3;font:600 12.5px/1 var(--txt)}
-.plegar:hover{background:#3B3B3F}
-.plegar svg{transition:transform .28s}
+.plegar{width:40px;height:40px;flex:none;display:grid;place-items:center;padding:0;border:0;border-radius:var(--rb);background:none;color:#BDB9B1;transition:color .15s}
+.plegar:hover{color:#fff}
+.plegar svg{width:22px;height:22px;transition:transform .28s cubic-bezier(.3,.8,.3,1)}
+.temaC{display:flex;gap:4px;margin:0 0 6px;padding:4px;border-radius:var(--rb);background:#2A2A2D}
+.temaC button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:40px;padding:0;border:0;border-radius:10px;background:none;color:#A9A7A2;font:600 12px/1 var(--txt);transition:flex .25s,background .2s}
+.temaC button:hover{color:#fff}
+.temaC button[aria-pressed="true"]{flex:1.7;background:var(--rosa2);color:#1C1C1D}
+.temaC button[aria-pressed="false"] b{display:none}
+.temaC b{font-weight:inherit}
+.menuM .temaC{margin:4px 0 6px}
 #nav{display:grid;gap:4px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;flex:0 1 auto;min-height:0}
 .nav{position:relative;display:flex;align-items:center;gap:12px;width:100%;height:46px;padding:0 13px;border:0;border-radius:var(--rb);background:none;font-weight:600;color:#BDB9B1;text-align:left;white-space:nowrap}
 .nav:hover{background:#2A2A2D;color:#fff}
@@ -89,7 +97,10 @@ textarea.entrada{min-height:84px;resize:vertical}
 .min .latT{padding:0;justify-content:center}
 .min .lateral .marca,.min .lateral .pieS p{display:none}
 .min .plegar svg{transform:rotate(180deg)}
-.min .plegar,.min .lateral .nav{flex-direction:column;justify-content:center;gap:5px;width:100%;height:56px;padding:0 2px;font-size:10.5px;line-height:1;text-align:center}
+.min .lateral .temaC{flex-direction:column}
+.min .lateral .temaC button{flex:none;flex-direction:column;gap:4px;min-height:38px;font-size:10px}
+.min .lateral .temaC button[aria-pressed="true"]{min-height:50px}
+.min .lateral .nav{flex-direction:column;justify-content:center;gap:5px;width:100%;height:56px;padding:0 2px;font-size:10.5px;line-height:1;text-align:center}
 .min .lateral .nav em{position:absolute;top:4px;right:12px;min-width:18px;padding:2px 4px;font-size:10px;line-height:1.2;margin:0;box-shadow:0 0 0 2px var(--nav)}
 .min .lateral .nav[aria-current="page"] em{background:#1C1C1D;color:#fff;box-shadow:none}
 .movil{display:none}
@@ -124,8 +135,7 @@ textarea.entrada{min-height:84px;resize:vertical}
 .rg b{font:600 15px/1.2 var(--txt);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rg .m{font-weight:700;text-align:right;white-space:nowrap}
 .rg small{grid-column:2/-1;font-size:12.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rg .etq{grid-column:2/-1;justify-self:start;margin-top:3px}
-@container (min-width:400px){.rg small{grid-column:2}.rg .etq{grid-column:3;justify-self:end;margin:0}.rg :is(.mini,.ic){grid-row:1/3}}
+.rg .ets{grid-column:2/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 10px;margin-top:4px}
 .rg.cl{grid-template-columns:44px minmax(0,1fr) auto}
 .rg.cl .cara{grid-area:1/1/3/2}
 .rg.cl b{grid-area:1/2}
@@ -193,8 +203,11 @@ textarea.entrada{min-height:84px;resize:vertical}
 .etq.espera{background:var(--esF);color:var(--es)}
 .etq.proceso{background:var(--prF);color:var(--pr)}
 .etq.finalizado{background:var(--fiF);color:var(--fi)}
-.pago{font-size:11.5px;font-weight:700;color:var(--sub)}.pago.si{color:var(--verde)}
-:root[data-tema="noche"] .pago.si{color:#8FD6A3}
+.pago{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;line-height:1.2;font-weight:700;white-space:nowrap;color:var(--sub)}
+.pago svg.i{width:14px;height:14px;stroke-width:2.3}
+.pago.pagado{color:var(--verde)}.pago.proceso{color:#8A5400}
+:root[data-tema="noche"] .pago.pagado{color:#8FD6A3}:root[data-tema="noche"] .pago.proceso{color:#FFD28A}
+.hoja.una .pago{color:#33191F!important}
 /* ---------- pedidos como tareas ---------- */
 .tablero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--g);align-items:stretch}
 .tablero.solo{grid-template-columns:repeat(3,auto)}
@@ -223,7 +236,7 @@ textarea.entrada{min-height:84px;resize:vertical}
 .tarjetaP .peq{display:block;margin-top:2px}
 .tarjetaP .pie{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
 .tarjetaP .pie .m{font:700 18px/1.1 var(--txt);letter-spacing:-.03em}
-.tarjetaP .pie .pago{display:block;margin-top:3px;letter-spacing:0}
+.tarjetaP .pie .pago{display:flex;margin-top:4px;letter-spacing:0}
 button.tarjetaP{display:block;width:100%;margin-bottom:8px;border:0;text-align:left}
 button.tarjetaP>b{display:block;font:600 15px/1.2 var(--txt)}
 button.tarjetaP .arr{justify-content:space-between}
@@ -296,7 +309,6 @@ button.tarjetaP .arr>span{flex:none}
 .editor .botones{display:flex;gap:10px;padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--linea)}
 .editor .botones .boton:last-child{flex:1}
 .dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.editor .idioma{display:inline-flex;margin:2px 0 12px}
 .foto{display:grid;grid-template-columns:140px 1fr;gap:14px;margin-bottom:14px}
 .foto .img{position:relative;height:176px;border-radius:14px;background:var(--celda) center/contain no-repeat}
 .foto .lado{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--sub)}
@@ -305,9 +317,29 @@ button.tarjetaP .arr>span{flex:none}
 .historia li::before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--rosa2)}
 .historia time{display:block;color:var(--sub);font-size:11.5px}
 .contacto{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
-.aviso{position:fixed;left:50%;bottom:24px;z-index:70;translate:-50% 0;width:max-content;max-width:calc(100% - 24px);padding:12px 18px;border-radius:var(--rb);background:#1C1C1D;color:#fff;font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12);transition:opacity .25s,translate .25s}
-.editor:not([hidden])~.aviso{bottom:92px}
-.aviso[hidden]{display:block!important;opacity:0;translate:-50% 20px;pointer-events:none}
+.avisos{position:fixed;right:20px;bottom:20px;z-index:70;display:grid;gap:8px;width:min(380px,calc(100% - 24px));pointer-events:none}
+.avisoT{display:grid;grid-template-columns:36px 1fr 36px;align-items:start;gap:12px;padding:12px;border-radius:18px;background:#1C1C1D;color:#fff;box-shadow:0 18px 40px -14px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.12);pointer-events:auto;animation:entraA .25s ease-out}
+.avisoT.sale{opacity:0;translate:0 8px;transition:opacity .2s,translate .2s}
+.avisoT>i{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:var(--verdeF);color:var(--verde)}
+.avisoT.mal>i{background:var(--rojoF);color:var(--rojo)}.avisoT.info>i{background:var(--rosa2);color:#1C1C1D}
+.avisoT b{display:block;padding-top:2px;font:600 14px/1.3 var(--txt)}
+.avisoT p{margin:2px 0 0;font-size:12.5px;line-height:1.4;color:#CFCAC2;overflow-wrap:anywhere}
+.avisoT button{width:36px;height:36px;display:grid;place-items:center;padding:0;border:0;border-radius:11px;background:none;color:#A9A7A2}
+.avisoT button:hover{color:#fff}
+@keyframes entraA{from{opacity:0;translate:0 12px}}
+.editor:not([hidden])~.avisos{bottom:96px}
+.popup{width:min(420px,calc(100% - 28px));padding:26px 24px 22px;border:0;border-radius:26px;background:var(--solido);color:var(--ink);text-align:center;box-shadow:0 40px 90px -20px rgba(0,0,0,.6)}
+.popup::backdrop{background:rgba(20,20,22,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.popup .ic{width:56px;height:56px;margin:0 auto 14px;border-radius:17px;background:var(--rojoF);color:var(--rojo)}
+.popup .ic svg{width:24px;height:24px}
+.popup h2{margin:0 0 8px;font:600 20px/1.2 var(--txt);letter-spacing:-.02em}
+.popup p{margin:0 0 20px;color:var(--sub)}
+.popup div:last-child{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* en modales y popups, los botones van solo con texto */
+:is(.editor,.popup) .boton svg.i{display:none}
+.abrirC{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border-radius:var(--rb);background:var(--pieza);font-weight:600}
+.accC{align-items:center}
+.filtros.tabs{margin-bottom:12px}
 /* ---------- tablet: menú retraído; al desplegarlo se abre por encima ---------- */
 @media (min-width:901px){.muelle{display:none}}
 @media (max-width:1320px){
@@ -379,6 +411,8 @@ button.tarjetaP .arr>span{flex:none}
   .foto{grid-template-columns:110px 1fr}
   .editor{top:8px;right:8px;bottom:8px;width:calc(100% - 16px)}
 }
+/* pantallas bajas: el menú cabe entero */
+@media (max-height:700px){.min .lateral .nav{height:48px}.min .lateral .temaC button[aria-pressed="true"]{min-height:42px}.min .lateral .temaC button{min-height:34px}.nav{height:42px}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media (prefers-reduced-transparency:reduce){:root{--vidrio:#FBFAF7}:root[data-tema="noche"]{--vidrio:#2A2A2B}}
 </style></head>
@@ -387,13 +421,13 @@ button.tarjetaP .arr>span{flex:none}
 <section class="login" id="vLogin" hidden>
   <form class="tarjeta" id="fLogin" novalidate>
     <div class="marca">Agrio <span>Art</span> · Panel</div>
-    <p class="s">Entra para gestionar la galería, las comisiones y los pedidos.</p>
-    <p class="demo" id="avisoDemo" hidden>Modo demostración: aún no hay base de datos conectada. Los cambios se guardan solo en este navegador. Entra con cualquier correo y el código <b>123456</b>.</p>
-    <div class="seg" role="tablist"><button type="button" role="tab" aria-selected="true" data-modo="codigo">Código al correo</button><button type="button" role="tab" aria-selected="false" data-modo="clave">Usuario y contraseña</button></div>
-    <label class="campo"><span>Correo</span><input class="entrada" id="lCorreo" type="email" autocomplete="email" required></label>
-    <label class="campo" id="lClaveC" hidden><span>Contraseña</span><input class="entrada" id="lClave" type="password" autocomplete="current-password"></label>
-    <label class="campo" id="lCodigoC" hidden><span>Código</span><input class="entrada" id="lCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]*"></label>
-    <button class="boton verde ancho" id="lBoton">Enviarme el código</button>
+    <p class="s" data-en="Sign in to manage the gallery, commissions and orders.">Entra para gestionar la galería, las comisiones y los pedidos.</p>
+    <p class="demo" id="avisoDemo" hidden><span data-en="Demo mode: no database is connected yet. Changes are saved only in this browser. Sign in with any email and the code">Modo demostración: aún no hay base de datos conectada. Los cambios se guardan solo en este navegador. Entra con cualquier correo y el código</span> <b>123456</b>.</p>
+    <div class="seg" role="tablist"><button type="button" role="tab" aria-selected="true" data-modo="codigo" data-en="Email code">Código al correo</button><button type="button" role="tab" aria-selected="false" data-modo="clave" data-en="User and password">Usuario y contraseña</button></div>
+    <label class="campo"><span data-en="Email">Correo</span><input class="entrada" id="lCorreo" type="email" autocomplete="email" required></label>
+    <label class="campo" id="lClaveC" hidden><span data-en="Password">Contraseña</span><input class="entrada" id="lClave" type="password" autocomplete="current-password"></label>
+    <label class="campo" id="lCodigoC" hidden><span data-en="Code">Código</span><input class="entrada" id="lCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]*"></label>
+    <button class="boton verde ancho" id="lBoton" data-en="Send me the code">Enviarme el código</button>
     <p class="nota" id="lNota"></p>
   </form>
 </section>
@@ -401,17 +435,18 @@ button.tarjetaP .arr>span{flex:none}
 <!-- panel -->
 <div class="app" id="vApp" hidden>
   <div class="hueco"><aside class="lateral" id="lateral">
-    <div class="latT"><div class="marca">Agrio <span>Art</span></div><button class="plegar" type="button" id="plegar" aria-controls="lateral"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6l-6 6 6 6"/><path d="M19 5v14"/></svg><b></b></button></div>
-    <nav id="nav" aria-label="Módulos"></nav>
-    <div class="pieS"><p><span data-modo-txt></span><b data-quien></b></p><button class="nav" type="button" data-tema-b></button><button class="nav" type="button" data-salir><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H6a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 6 20h8"/><path d="M10 12h10M16.5 8.5L20 12l-3.5 3.5"/></svg><b>Salir</b></button></div>
+    <div class="latT"><div class="marca">Agrio <span>Art</span></div><button class="plegar" type="button" id="plegar" aria-controls="lateral"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button></div>
+    <nav id="nav" aria-label="Módulos" data-en-label="Sections"></nav>
+    <div class="pieS"><p><span data-modo-txt></span><b data-quien></b></p><div class="temaC" role="group" aria-label="Modo" data-en-label="Mode"><button type="button" data-tema-k="dia" aria-label="Día" data-en-label="Day"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3L7 7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></svg><b data-en="Day">Día</b></button><button type="button" data-tema-k="noche" aria-label="Noche" data-en-label="Night"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg><b data-en="Night">Noche</b></button></div><button class="nav" type="button" data-salir><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H6a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 6 20h8"/><path d="M10 12h10M16.5 8.5L20 12l-3.5 3.5"/></svg><b data-en="Sign out">Salir</b></button></div>
   </aside></div>
-  <header class="movil"><div class="movilB"><div class="marca">Agrio <span>Art</span></div><span class="donde" id="donde"></span><button class="menuB" type="button" id="menuB" aria-expanded="false" aria-controls="menuM"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menú</button></div>
-    <div class="menuM" id="menuM" hidden><nav id="navM" aria-label="Módulos"></nav><div class="pieS"><p><span data-modo-txt></span><b data-quien></b></p><button class="nav" type="button" data-tema-b></button><button class="nav" type="button" data-salir><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H6a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 6 20h8"/><path d="M10 12h10M16.5 8.5L20 12l-3.5 3.5"/></svg><b>Salir</b></button></div></div></header>
+  <header class="movil"><div class="movilB"><div class="marca">Agrio <span>Art</span></div><span class="donde" id="donde"></span><button class="menuB" type="button" id="menuB" aria-expanded="false" aria-controls="menuM"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span data-en="Menu">Menú</span></button></div>
+    <div class="menuM" id="menuM" hidden><nav id="navM" aria-label="Módulos" data-en-label="Sections"></nav><div class="pieS"><p><span data-modo-txt></span><b data-quien></b></p><div class="temaC" role="group" aria-label="Modo" data-en-label="Mode"><button type="button" data-tema-k="dia" aria-label="Día" data-en-label="Day"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3L7 7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></svg><b data-en="Day">Día</b></button><button type="button" data-tema-k="noche" aria-label="Noche" data-en-label="Night"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg><b data-en="Night">Noche</b></button></div><button class="nav" type="button" data-salir><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H6a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 6 20h8"/><path d="M10 12h10M16.5 8.5L20 12l-3.5 3.5"/></svg><b data-en="Sign out">Salir</b></button></div></div></header>
   <main class="contenido" id="contenido"></main>
 </div>
 <div class="capa" id="capa" hidden></div>
 <aside class="editor" id="editor" hidden role="dialog" aria-modal="true" aria-labelledby="edT"></aside>
-<div class="aviso" id="aviso" hidden role="status"></div>
+<div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+<dialog class="popup" id="popup" aria-labelledby="ppT"></dialog>
 
 <script type="module">
 /* ============================================================
@@ -420,22 +455,73 @@ button.tarjetaP .arr>span{flex:none}
    sin ella, en modo demostración: guarda en este navegador.
    ============================================================ */
 const NUBE = window.AGRIO_NUBE || {}, DEMO = !(NUBE.url && NUBE.clave);
+const EN = !/^es\b/i.test(navigator.language || "es"), LOC = EN ? navigator.language : "es-CO", tr = (es, en) => EN ? en : es;   // el panel sigue el idioma del navegador
+if (EN){ document.documentElement.lang = "en"; document.title = "Panel · Agrio Art"; document.querySelectorAll("[data-en]").forEach(e => { e.textContent = e.dataset.en; }); document.querySelectorAll("[data-en-label]").forEach(e => e.setAttribute("aria-label", e.dataset.enLabel)); }
 const $ = s => document.querySelector(s), esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pesos = n => n == null || n === "" ? "—" : "$" + Math.round(+n).toLocaleString("es-CO").replace(/,/g, ".");
-const fecha = d => d ? new Date(d).toLocaleDateString("es-CO", {day:"numeric", month:"short", year:"numeric"}) : "—";
-const diaMes = d => d.getFullYear() === new Date().getFullYear() ? d.toLocaleDateString("es-CO", {day:"numeric", month:"short"}) : fecha(d);
-const fechaHora = d => d ? new Date(d).toLocaleString("es-CO", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}) : "";
+const fecha = d => d ? new Date(d).toLocaleDateString(LOC, {day:"numeric", month:"short", year:"numeric"}) : "—";
+const diaMes = d => d.getFullYear() === new Date().getFullYear() ? d.toLocaleDateString(LOC, {day:"numeric", month:"short"}) : fecha(d);
+const fechaHora = d => d ? new Date(d).toLocaleString(LOC, {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}) : "";
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
-function avisar(t){ const a = $("#aviso"); a.textContent = t; a.hidden = false; clearTimeout(avisar.t); avisar.t = setTimeout(() => { a.hidden = true; }, 2600); }
+/* alertas del sistema: qué pasó y el detalle; los errores se quedan más tiempo */
+function avisar(t, o = {}){
+  const tipo = o.tipo || "ok", caja = $("#avisos"), el = document.createElement("div"); el.className = "avisoT " + tipo; if (tipo === "mal") el.setAttribute("role", "alert");
+  el.innerHTML = `<i>${ico(tipo === "ok" ? "check" : tipo === "mal" ? "alerta" : "info")}</i><div><b>${esc(t)}</b>${o.detalle ? `<p>${[].concat(o.detalle).filter(Boolean).map(esc).join("<br>")}</p>` : ""}</div><button type="button" aria-label="${tr("Cerrar", "Close")}">${ico("x")}</button>`;
+  while (caja.children.length > 2) caja.firstChild.remove();
+  caja.append(el); let reloj; const fuera = () => { el.classList.add("sale"); setTimeout(() => el.remove(), 220); }, contar = () => { clearTimeout(reloj); reloj = setTimeout(fuera, tipo === "mal" ? 9000 : 5000); };
+  el.querySelector("button").onclick = fuera; el.onpointerenter = () => clearTimeout(reloj); el.onpointerleave = contar; contar(); return fuera;
+}
+const error = (t, e) => { console.error(e); avisar(t, {tipo:"mal", detalle:e && e.message ? e.message : String(e || "")}); };
+/* popup para confirmar lo que no tiene vuelta o afecta la web */
+function confirmar({titulo, texto, boton, icono = "basura"}){
+  const d = $("#popup"); d.innerHTML = `<span class="ic">${ico(icono)}</span><h2 id="ppT">${esc(titulo)}</h2><p>${esc(texto)}</p><div><button class="boton" type="button" autofocus data-no>${tr("Cancelar", "Cancel")}</button><button class="boton rojo" type="button" data-si>${ico(icono)}${esc(boton)}</button></div>`;
+  return new Promise(r => { let v = false; d.querySelector("[data-si]").onclick = () => { v = true; d.close(); }; d.querySelector("[data-no]").onclick = () => d.close(); d.onclick = e => { if (e.target === d) d.close(); }; d.onclose = () => r(v); d.showModal(); });
+}
+/* qué cambió entre dos versiones, en palabras: "Precio: $400.000 → $420.000" */
+function cambios(a, b, campos){
+  return campos.filter(([k]) => String(a[k] ?? "") !== String(b[k] ?? "")).map(([k, n, f]) => { const v = x => f ? f(x) : x || "—", largo = !f && (String(a[k] ?? "").length > 40 || String(b[k] ?? "").length > 40); return {k, n, txt:f === null || largo ? "" : `${v(a[k])} → ${v(b[k])}`}; });
+}
+function avisarCambios(nombre, l, extra){
+  if (!l.length){ avisar(tr("Sin cambios", "No changes"), {tipo:"info", detalle:nombre}); return; }
+  if (l.length === 1) avisar(`${l[0].n}: ${tr("cambio guardado", "change saved")}`, {detalle:[l[0].txt ? `${nombre}: ${l[0].txt}` : nombre, extra]});
+  else avisar(`${l.length} ${tr("cambios guardados", "changes saved")}`, {detalle:[nombre, ...l.map(x => x.txt ? `${x.n}: ${x.txt}` : x.n), extra]});
+}
+/* traducción al inglés: el panel se escribe en español y la web lo muestra en el idioma de quien la visita.
+   1) con la base conectada, la hace el servidor (función "traducir"); 2) si no, el traductor del propio navegador (Chrome de computador: gratis, sin enviar el texto a nadie).
+   Si no se puede en ese momento, la web muestra el español y queda pendiente: se completa sola al abrir el panel donde sí se pueda. */
+const IDIOMAS = {sourceLanguage:"es", targetLanguage:"en"}, conTope = (p, ms) => Promise.race([p, new Promise((_, x) => setTimeout(() => x(new Error("tiempo")), ms))]);
+async function traducir(textos){
+  if (!DEMO) try { const {data, error} = await conTope(sb.functions.invoke("traducir", {body:{textos}}), 12000); if (!error && data && data.textos && data.textos.length === textos.length) return data.textos; } catch(e){}
+  if ("Translator" in self) try { const t = await conTope(self.Translator.create(IDIOMAS), 25000), r = []; for (const x of textos) r.push((await t.translate(x)).trim()); return r; } catch(e){ console.warn(e); }
+  return null;
+}
+/* llena lo que falta en inglés; devuelve "hecho", "pendiente" o "" si no hacía falta */
+async function conIngles(antes, fila, campos){
+  const c = campos.filter(k => (fila[k + "_es"] || "") && ((antes[k + "_es"] || "") !== fila[k + "_es"] || !antes[k + "_en"]));
+  campos.forEach(k => { fila[k + "_en"] = c.includes(k) || !fila[k + "_es"] ? "" : antes[k + "_en"] || ""; });
+  if (!c.length) return "";
+  const t = await traducir(c.map(k => fila[k + "_es"])); if (!t) return "pendiente"; c.forEach((k, i) => { fila[k + "_en"] = t[i]; }); return "hecho";
+}
+const txtIngles = r => r === "hecho" ? tr("Traducido al inglés para la web.", "Translated into English for the site.") : r === "pendiente" ? tr("Traducción al inglés pendiente: la web muestra el español mientras tanto.", "English translation pending: the site shows Spanish meanwhile.") : "";
+const CAMPOS_TR = {obras:["nombre", "descripcion"], comision_tipos:["nombre", "descripcion", "punto1", "punto2"]};
+async function completarIngles(){   // al entrar: traduce lo que quedó pendiente, si aquí se puede sin descargar nada
+  try {
+    if (DEMO && (!("Translator" in self) || (await self.Translator.availability(IDIOMAS)) !== "available")) return;
+    let n = 0; for (const t of Object.keys(CAMPOS_TR)) for (const o of await db.lista(t)){ if (!CAMPOS_TR[t].some(k => o[k + "_es"] && !o[k + "_en"])) continue; const f = {...o}; if (await conIngles(o, f, CAMPOS_TR[t]) === "hecho"){ await db.guardar(t, f); n++; } }
+    if (n) avisar(tr("Traducciones al día", "Translations up to date"), {tipo:"info", detalle:`${n} ${n === 1 ? tr("ficha traducida al inglés", "card translated into English") : tr("fichas traducidas al inglés", "cards translated into English")}`});
+  } catch(e){ console.warn(e); }
+}
+/* lo que se escribe en español se lee en el idioma del navegador cuando hay traducción */
+const txt = (o, k) => (EN && o[k + "_en"]) || o[k + "_es"] || "";
 
 /* ---------- estados de los pedidos ---------- */
-const ESTADOS = [["espera", "En espera por confirmar"], ["proceso", "En proceso"], ["finalizado", "Finalizado"]];
+const ESTADOS = [["espera", tr("En espera por confirmar", "Awaiting confirmation")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]];
 const est = e => ESTADOS.find(x => x[0] === e) || ESTADOS[0];
 const etq = e => `<span class="etq ${est(e)[0]}">${est(e)[1]}</span>`;
-const FORMATOS = {dig:"Digital", imp:"Impreso", enm:"Enmarcado"};
+const FORMATOS = {dig:"Digital", imp:tr("Impreso", "Printed"), enm:tr("Enmarcado", "Framed")};
 
 /* ---------- datos: base real (Supabase) o demostración (este navegador) ---------- */
-const TABLAS = {obras:"id", comision_tipos:"n", clientes:"id", pedidos:"id", pedido_eventos:"id"};
+const TABLAS = {obras:"id", comision_tipos:"n", clientes:"id", pedidos:"id", pedido_eventos:"id", ajustes:"id"};
 let sb = null;
 const LS = "agrio-panel-demo";
 function semilla(){
@@ -455,43 +541,44 @@ function semilla(){
       {id:c2, nombre:"Cliente de ejemplo 2", correo:"cliente2@ejemplo.com", whatsapp:"", ciudad:"Medellín", notas:"", creado:new Date(ahora - 9 * dia).toISOString()},
       {id:c3, nombre:"Cliente de ejemplo 3", correo:"cliente3@ejemplo.com", whatsapp:"", ciudad:"Cali", notas:"", creado:new Date(ahora - 2 * dia).toISOString()},
       {id:c4, nombre:"Cliente de ejemplo 4", correo:"cliente4@ejemplo.com", whatsapp:"", ciudad:"Pereira", notas:"", creado:new Date(ahora - 45 * dia).toISOString()}],
-    pedidos:[{id:p1, numero:1, tipo:"comision", estado:"proceso", cliente_id:c1, comision_n:2, formato:"dig", especificaciones:"Ejemplo: personaje con capa y su gato.", monto:420000, pagado:true, pagado_en:new Date(ahora - 10 * dia).toISOString(), fecha_entrega:new Date(ahora + 6 * dia).toISOString().slice(0, 10), notas:"", creado:new Date(ahora - 18 * dia).toISOString()},
-      {id:p2, numero:2, tipo:"compra", estado:"proceso", cliente_id:c2, obra_id:"katana", formato:"imp", monto:350000, pagado:true, pagado_en:new Date(ahora - 8 * dia).toISOString(), fecha_entrega:new Date(ahora + 3 * dia).toISOString().slice(0, 10), notas:"", creado:new Date(ahora - 8 * dia).toISOString()},
-      {id:p3, numero:3, tipo:"comision", estado:"espera", cliente_id:c3, comision_n:1, formato:"dig", especificaciones:"Ejemplo: retrato para avatar.", monto:250000, pagado:false, notas:"Llegó desde la web (es)", creado:new Date(ahora - 2 * dia).toISOString()},
-      {id:p4, numero:4, tipo:"compra", estado:"finalizado", cliente_id:c1, obra_id:"tigre", formato:"enm", monto:400000, pagado:true, pagado_en:new Date(ahora - 30 * dia).toISOString(), notas:"", creado:new Date(ahora - 30 * dia).toISOString()},
-      {id:uid(), numero:5, tipo:"compra", estado:"finalizado", cliente_id:c2, obra_id:"katana", formato:"imp", monto:350000, pagado:true, pagado_en:f(-22), notas:"", creado:f(-22)},
-      {id:uid(), numero:6, tipo:"compra", estado:"finalizado", cliente_id:c4, obra_id:"espinas", formato:"enm", monto:450000, pagado:true, pagado_en:f(-14), notas:"", creado:f(-14)},
-      {id:uid(), numero:7, tipo:"comision", estado:"proceso", cliente_id:c4, comision_n:3, formato:"imp", especificaciones:"Ejemplo: dos personajes en un mercado nocturno.", monto:750000, pagado:true, pagado_en:f(-25), fecha_entrega:f(-2).slice(0, 10), notas:"", creado:f(-27)},
-      {id:uid(), numero:8, tipo:"compra", estado:"finalizado", cliente_id:c1, obra_id:"katana", formato:"dig", monto:350000, pagado:true, pagado_en:f(-6), notas:"", creado:f(-6)},
-      {id:uid(), numero:9, tipo:"comision", estado:"finalizado", cliente_id:c2, comision_n:1, formato:"dig", especificaciones:"Ejemplo: retrato con máscara.", monto:250000, pagado:false, notas:"", creado:f(-33)},
-      {id:uid(), numero:10, tipo:"compra", estado:"espera", cliente_id:c3, obra_id:"oni", formato:"imp", monto:420000, pagado:false, notas:"", creado:f(0)},
-      {id:uid(), numero:11, tipo:"compra", estado:"finalizado", cliente_id:c4, obra_id:"espinas", formato:"dig", monto:450000, pagado:true, pagado_en:f(-40), notas:"", creado:f(-40)}],
+    pedidos:[{id:p1, numero:1, tipo:"comision", estado:"proceso", cliente_id:c1, comision_n:2, formato:"dig", especificaciones:"Ejemplo: personaje con capa y su gato.", monto:420000, pago:"pagado", pagado_en:new Date(ahora - 10 * dia).toISOString(), fecha_entrega:new Date(ahora + 6 * dia).toISOString().slice(0, 10), notas:"", creado:new Date(ahora - 18 * dia).toISOString()},
+      {id:p2, numero:2, tipo:"compra", estado:"proceso", cliente_id:c2, obra_id:"katana", formato:"imp", monto:350000, pago:"pagado", pagado_en:new Date(ahora - 8 * dia).toISOString(), fecha_entrega:new Date(ahora + 3 * dia).toISOString().slice(0, 10), notas:"", creado:new Date(ahora - 8 * dia).toISOString()},
+      {id:p3, numero:3, tipo:"comision", estado:"espera", cliente_id:c3, comision_n:1, formato:"dig", especificaciones:"Ejemplo: retrato para avatar.", monto:250000, pago:"sin", notas:"Llegó desde la web (es)", creado:new Date(ahora - 2 * dia).toISOString()},
+      {id:p4, numero:4, tipo:"compra", estado:"finalizado", cliente_id:c1, obra_id:"tigre", formato:"enm", monto:400000, pago:"pagado", pagado_en:new Date(ahora - 30 * dia).toISOString(), notas:"", creado:new Date(ahora - 30 * dia).toISOString()},
+      {id:uid(), numero:5, tipo:"compra", estado:"finalizado", cliente_id:c2, obra_id:"katana", formato:"imp", monto:350000, pago:"pagado", pagado_en:f(-22), notas:"", creado:f(-22)},
+      {id:uid(), numero:6, tipo:"compra", estado:"finalizado", cliente_id:c4, obra_id:"espinas", formato:"enm", monto:450000, pago:"pagado", pagado_en:f(-14), notas:"", creado:f(-14)},
+      {id:uid(), numero:7, tipo:"comision", estado:"proceso", cliente_id:c4, comision_n:3, formato:"imp", especificaciones:"Ejemplo: dos personajes en un mercado nocturno.", monto:750000, pago:"pagado", pagado_en:f(-25), fecha_entrega:f(-2).slice(0, 10), notas:"", creado:f(-27)},
+      {id:uid(), numero:8, tipo:"compra", estado:"finalizado", cliente_id:c1, obra_id:"katana", formato:"dig", monto:350000, pago:"pagado", pagado_en:f(-6), notas:"", creado:f(-6)},
+      {id:uid(), numero:9, tipo:"comision", estado:"finalizado", cliente_id:c2, comision_n:1, formato:"dig", especificaciones:"Ejemplo: retrato con máscara.", monto:250000, pago:"sin", notas:"", creado:f(-33)},
+      {id:uid(), numero:10, tipo:"compra", estado:"espera", cliente_id:c3, obra_id:"oni", formato:"imp", monto:420000, pago:"proceso", notas:"", creado:f(0)},
+      {id:uid(), numero:11, tipo:"compra", estado:"finalizado", cliente_id:c4, obra_id:"espinas", formato:"dig", monto:450000, pago:"pagado", pagado_en:f(-40), notas:"", creado:f(-40)}],
     pedido_eventos:[{id:uid(), pedido_id:p1, estado:"espera", nota:"Solicitud recibida desde la web", creado:new Date(ahora - 18 * dia).toISOString()}, {id:uid(), pedido_id:p1, estado:"proceso", nota:"", creado:new Date(ahora - 10 * dia).toISOString()}],
-    v:3
+    v:4
   };
 }
 const VIEJOS = {nueva:"espera", cotizada:"espera", pendiente:"espera", cancelada:"espera", anticipo:"proceso", boceto:"proceso", pagada:"proceso", enviada:"proceso", entregada:"finalizado"};
 function migrar(d){   // datos de una demostración anterior
   d.obras.forEach(o => { if (o.agotada == null) o.agotada = !(+o.copias > 0); delete o.copias; });
-  (d.pedidos || []).forEach(p => { p.estado = VIEJOS[p.estado] || p.estado; if (typeof p.pagado !== "boolean") p.pagado = +p.pagado > 0; delete p.anticipo; });
+  (d.pedidos || []).forEach(p => { p.estado = VIEJOS[p.estado] || p.estado; if (!p.pago) p.pago = p.pagado === true || +p.pagado > 0 ? "pagado" : "sin"; delete p.pagado; delete p.anticipo; });
   (d.pedido_eventos || []).forEach(e => { if (e.estado) e.estado = VIEJOS[e.estado] || e.estado; }); delete d.ajustes;
   if ((d.v || 0) < 3){   // r56: sin instagram ni dirección; se suman pedidos de ejemplo si solo están los de ejemplo
     d.clientes.forEach(x => { delete x.instagram; delete x.direccion; });
     if (d.clientes.length === 3 && d.pedidos.length === 4 && d.clientes.every(x => /^Cliente de ejemplo \d$/.test(x.nombre))){ const s = semilla(), id = {}; s.clientes.forEach(x => { const v = d.clientes.find(y => y.nombre === x.nombre); id[x.id] = v ? v.id : x.id; if (!v) d.clientes.push(x); }); s.pedidos.filter(p => p.numero > 4).forEach(p => d.pedidos.push({...p, cliente_id:id[p.cliente_id]})); }
   }
-  d.v = 3;
+  d.v = 4;
 }
 const demo = {
-  leer(){ try { const d = JSON.parse(localStorage.getItem(LS)); if (d && d.obras){ if (d.v !== 3){ migrar(d); this.escribir(d); } return d; } } catch(e){} const d = semilla(); this.escribir(d); return d; },
-  escribir(d){ try { localStorage.setItem(LS, JSON.stringify(d)); } catch(e){ avisar("No hay espacio en este navegador: usa imágenes más livianas."); throw e; } }
+  leer(){ try { const d = JSON.parse(localStorage.getItem(LS)); if (d && d.obras){ if (d.v !== 4){ migrar(d); this.escribir(d); } return d; } } catch(e){} const d = semilla(); this.escribir(d); return d; },
+  escribir(d){ try { localStorage.setItem(LS, JSON.stringify(d)); } catch(e){ throw new Error(tr("No hay espacio en este navegador: usa imágenes más livianas.", "There is no space left in this browser: use lighter images.")); } }
 };
 const db = {
   async lista(t){
-    if (DEMO) return structuredClone(demo.leer()[t] || []);
-    const {data, error} = await sb.from(t).select("*"); if (error) throw error; return data;
+    const pag = l => { if (t === "pedidos") l.forEach(p => { p.pagado = p.pago === "pagado"; }); return l; };
+    if (DEMO) return pag(structuredClone(demo.leer()[t] || []));
+    const {data, error} = await sb.from(t).select("*"); if (error) throw error; return pag(data);
   },
   async guardar(t, fila){
-    const k = TABLAS[t];
+    const k = TABLAS[t]; if (t === "pedidos") delete (fila = {...fila}).pagado;   // se calcula de "pago"
     if (DEMO){ const d = demo.leer(), arr = d[t] = d[t] || [];
       if (t === "pedidos" && !fila.numero) fila.numero = arr.reduce((m, x) => Math.max(m, x.numero || 0), 0) + 1;
       if (fila[k] == null || fila[k] === "") fila[k] = t === "comision_tipos" ? arr.reduce((m, x) => Math.max(m, x.n), 0) + 1 : uid();
@@ -524,36 +611,36 @@ async function achicar(archivo, maxLado, calidad){
 let modoLogin = "codigo", codigoEnviado = false, usuario = "";
 function pintarLogin(){
   $("#lClaveC").hidden = modoLogin !== "clave"; $("#lCodigoC").hidden = !(modoLogin === "codigo" && codigoEnviado);
-  $("#lBoton").textContent = modoLogin === "clave" ? "Entrar" : codigoEnviado ? "Entrar" : "Enviarme el código";
+  $("#lBoton").textContent = modoLogin === "clave" ? tr("Entrar", "Sign in") : codigoEnviado ? tr("Entrar", "Sign in") : tr("Enviarme el código", "Send me the code");
   document.querySelectorAll("#fLogin .seg button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.modo === modoLogin)));
 }
 document.querySelectorAll("#fLogin .seg button").forEach(b => b.addEventListener("click", () => { modoLogin = b.dataset.modo; codigoEnviado = false; $("#lNota").textContent = ""; pintarLogin(); }));
 $("#fLogin").addEventListener("submit", async ev => {
   ev.preventDefault(); const correo = $("#lCorreo").value.trim().toLowerCase(), nota = $("#lNota"), bt = $("#lBoton");
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)){ nota.textContent = "Escribe un correo válido."; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)){ nota.textContent = tr("Escribe un correo válido.", "Enter a valid email."); return; }
   bt.disabled = true;
   try {
     if (modoLogin === "codigo" && !codigoEnviado){
       if (!DEMO){ const {error} = await sb.auth.signInWithOtp({email:correo, options:{shouldCreateUser:false}}); if (error) throw error; }
-      codigoEnviado = true; nota.textContent = DEMO ? "Modo demostración: el código es 123456." : "Te enviamos un código a tu correo. Vence en unos minutos."; pintarLogin(); $("#lCodigo").focus();
+      codigoEnviado = true; nota.textContent = DEMO ? tr("Modo demostración: el código es 123456.", "Demo mode: the code is 123456.") : tr("Te enviamos un código a tu correo. Vence en unos minutos.", "We sent a code to your email. It expires in a few minutes."); pintarLogin(); $("#lCodigo").focus();
     } else if (modoLogin === "codigo"){
       const cod = $("#lCodigo").value.trim();
-      if (DEMO){ if (cod !== "123456") throw new Error("Código incorrecto."); entrar(correo); }
+      if (DEMO){ if (cod !== "123456") throw new Error(tr("Código incorrecto.", "Wrong code.")); entrar(correo); }
       else { const {error} = await sb.auth.verifyOtp({email:correo, token:cod, type:"email"}); if (error) throw error; await comprobarAdmin(correo); }
     } else {
-      const clave = $("#lClave").value; if (!clave) throw new Error("Escribe la contraseña.");
+      const clave = $("#lClave").value; if (!clave) throw new Error(tr("Escribe la contraseña.", "Enter the password."));
       if (DEMO) entrar(correo);
       else { const {error} = await sb.auth.signInWithPassword({email:correo, password:clave}); if (error) throw error; await comprobarAdmin(correo); }
     }
-  } catch(e){ nota.textContent = /Invalid login|invalid/i.test(e.message) ? "Correo, contraseña o código incorrectos." : e.message || "No se pudo entrar."; }
+  } catch(e){ nota.textContent = /Invalid login|invalid/i.test(e.message) ? tr("Correo, contraseña o código incorrectos.", "Wrong email, password or code.") : e.message || tr("No se pudo entrar.", "Could not sign in."); }
   bt.disabled = false;
 });
 async function comprobarAdmin(correo){
   const {data, error} = await sb.from("administradores").select("correo").limit(1);
-  if (error || !data || !data.length){ await sb.auth.signOut(); throw new Error("Este correo no tiene permiso para el panel."); }
+  if (error || !data || !data.length){ await sb.auth.signOut(); throw new Error(tr("Este correo no tiene permiso para el panel.", "This email is not allowed in the panel.")); }
   entrar(correo);
 }
-function entrar(correo){ usuario = correo; if (DEMO) sessionStorage.setItem("agrio-panel-demo-sesion", correo); $("#vLogin").hidden = true; $("#vApp").hidden = false; document.querySelectorAll("[data-quien]").forEach(e => { e.textContent = correo; }); document.querySelectorAll("[data-modo-txt]").forEach(e => { e.textContent = DEMO ? "Modo demostración" : "Sesión iniciada"; }); ir(location.hash.slice(1) || "home"); }
+function entrar(correo){ usuario = correo; if (DEMO) sessionStorage.setItem("agrio-panel-demo-sesion", correo); $("#vLogin").hidden = true; $("#vApp").hidden = false; document.querySelectorAll("[data-quien]").forEach(e => { e.textContent = correo; }); document.querySelectorAll("[data-modo-txt]").forEach(e => { e.textContent = DEMO ? tr("Modo demostración", "Demo mode") : tr("Sesión iniciada", "Signed in"); }); ir(location.hash.slice(1) || "home"); completarIngles(); }
 document.querySelectorAll("[data-salir]").forEach(b => b.onclick = async () => { if (DEMO) sessionStorage.removeItem("agrio-panel-demo-sesion"); else await sb.auth.signOut(); location.hash = ""; location.reload(); });
 
 /* ---------- navegación ---------- */
@@ -566,21 +653,20 @@ const I = {
   ajustes:'<path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/>',
   sale:'<path d="M7 17L17 7M9 7h8v8"/>', mas:'<path d="M12 5v14M5 12h14"/>', lapiz:'<path d="M4.5 19.5h4L19 9l-4-4L4.5 15.5z"/>', correo:'<rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/>',
   wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8.2 18.8z"/><path d="M9 9.2c.2 2.8 2.6 5.4 5.6 5.7l1-1.7-2-1-1 .9c-.9-.5-1.5-1.2-1.8-2l.8-.9-.8-2z"/>', cal:'<rect x="4" y="5" width="16" height="15.5" rx="2.5"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/>', izq:'<path d="M14.5 6l-6 6 6 6"/>', der:'<path d="M9.5 6l6 6-6 6"/>',
-  persona:'<circle cx="12" cy="8" r="3.7"/><path d="M5 20.5c.8-4 3.6-6 7-6s6.2 2 7 6"/>', lugar:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>', pago:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>', barras:'<path d="M5 20v-7M12 20V5M19 20v-11"/>', arriba:'<path d="M12 19V5M6 11l6-6 6 6"/>', nube:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9 6 6 0 0 1 11.6 1.4A3.9 3.9 0 0 1 17.6 18.5z"/>', bajar:'<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>', vuelve:'<path d="M5 5v5h5"/><path d="M5.5 10a7.5 7.5 0 1 1-1 5"/>', ojo:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', lupa:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', check:'<path d="M4.5 12.5l5 5 10-11"/>', basura:'<path d="M4 6.5h16M9 6.5V4h6v2.5M6 6.5l1 13.5h10l1-13.5M10 10.5v5.5M14 10.5v5.5"/>', subir:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>', grip:'<path d="M9 5.5v.01M9 12v.01M9 18.5v.01M15 5.5v.01M15 12v.01M15 18.5v.01" stroke-width="3"/>', tablero:'<rect x="3.5" y="4" width="4.6" height="16" rx="1.6"/><rect x="9.8" y="4" width="4.6" height="11" rx="1.6"/><rect x="16" y="4" width="4.6" height="7" rx="1.6"/>', lista:'<path d="M8.5 6h12M8.5 12h12M8.5 18h12M4 6v.01M4 12v.01M4 18v.01"/>', sol:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3L7 7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/>', luna:'<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'
+  persona:'<circle cx="12" cy="8" r="3.7"/><path d="M5 20.5c.8-4 3.6-6 7-6s6.2 2 7 6"/>', lugar:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>', pago:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>', barras:'<path d="M5 20v-7M12 20V5M19 20v-11"/>', arriba:'<path d="M12 19V5M6 11l6-6 6 6"/>', nube:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9 6 6 0 0 1 11.6 1.4A3.9 3.9 0 0 1 17.6 18.5z"/>', bajar:'<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>', vuelve:'<path d="M5 5v5h5"/><path d="M5.5 10a7.5 7.5 0 1 1-1 5"/>', ojo:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>', lupa:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20.5 20.5"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', alerta:'<path d="M12 4L2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.2v.01"/>', info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>', reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', vacio:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>', agotada:'<path d="M12 3.5l8.5 8.5-8.5 8.5L3.5 12z"/><path d="M8.5 12h7"/>', candado:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>', check:'<path d="M4.5 12.5l5 5 10-11"/>', basura:'<path d="M4 6.5h16M9 6.5V4h6v2.5M6 6.5l1 13.5h10l1-13.5M10 10.5v5.5M14 10.5v5.5"/>', subir:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>', grip:'<path d="M9 5.5v.01M9 12v.01M9 18.5v.01M15 5.5v.01M15 12v.01M15 18.5v.01" stroke-width="3"/>', tablero:'<rect x="3.5" y="4" width="4.6" height="16" rx="1.6"/><rect x="9.8" y="4" width="4.6" height="11" rx="1.6"/><rect x="16" y="4" width="4.6" height="7" rx="1.6"/>', lista:'<path d="M8.5 6h12M8.5 12h12M8.5 18h12M4 6v.01M4 12v.01M4 18v.01"/>'
 };
 const ico = k => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
-const INICIO = /^es\b/i.test(navigator.language || "es") ? "Inicio" : "Home";   // cambia con el idioma del navegador
-const SECC = [["home", INICIO], ["pedidos", "Pedidos"], ["clientes", "Clientes"], ["obras", "Ilustraciones"], ["comisiones", "Comisiones"], ["ajustes", "Ajustes"]];
+const SECC = [["home", tr("Inicio", "Home")], ["obras", tr("Galería", "Gallery")], ["comisiones", tr("Comisiones", "Commissions")], ["clientes", tr("Clientes", "Customers")], ["ajustes", tr("Ajustes", "Settings")]];
 let seccion = "home", nuevos = 0;
 function pintarNav(){
-  const lista = SECC.map(([k, n]) => `<button class="nav" type="button" data-s="${k}" aria-label="${n}${k === "pedidos" && nuevos ? `, ${nuevos} en espera por confirmar` : ""}" ${k === seccion ? 'aria-current="page"' : ""}>${ico(k)}<b>${n}</b>${k === "pedidos" && nuevos ? `<em>${nuevos}</em>` : ""}</button>`).join("");
+  const lista = SECC.map(([k, n]) => `<button class="nav" type="button" data-s="${k}" aria-label="${n}${k === "comisiones" && nuevos ? tr(`, ${nuevos} en espera por confirmar`, `, ${nuevos} awaiting confirmation`) : ""}" ${k === seccion ? 'aria-current="page"' : ""}>${ico(k)}<b>${n}</b>${k === "comisiones" && nuevos ? `<em>${nuevos}</em>` : ""}</button>`).join("");
   $("#nav").innerHTML = lista; $("#navM").innerHTML = lista; $("#donde").textContent = SECC.find(x => x[0] === seccion)[1]; abrirMenu(false);
   document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { if (esTab()) plegar(true); ir(b.dataset.s); });
 }
 /* el menú lateral se despliega y se retrae; en tablet arranca retraído y se abre por encima del contenido */
 const esTab = () => innerWidth <= 1180;
 let minimo = false; try { minimo = localStorage.getItem("agrio-panel-menu") === "min"; } catch(e){}
-function plegar(si, guardar){ $("#vApp").classList.toggle("min", si); const b = $("#plegar"); b.setAttribute("aria-expanded", String(!si)); b.lastElementChild.textContent = si ? "Abrir" : "Retraer"; b.setAttribute("aria-label", si ? "Abrir menú" : "Retraer menú"); if (guardar && !esTab()){ minimo = si; try { localStorage.setItem("agrio-panel-menu", si ? "min" : "max"); } catch(e){} } }
+function plegar(si, guardar){ $("#vApp").classList.toggle("min", si); const b = $("#plegar"); b.setAttribute("aria-expanded", String(!si)); b.setAttribute("aria-label", si ? tr("Abrir menú", "Open menu") : tr("Retraer menú", "Collapse menu")); if (guardar && !esTab()){ minimo = si; try { localStorage.setItem("agrio-panel-menu", si ? "min" : "max"); } catch(e){} } }
 $("#plegar").onclick = () => plegar(!$("#vApp").classList.contains("min"), true);
 let eraTab = esTab(); plegar(eraTab || minimo);
 addEventListener("resize", () => { if (esTab() !== eraTab){ eraTab = esTab(); plegar(eraTab || minimo); } });
@@ -589,16 +675,17 @@ function abrirMenu(si){ $("#menuM").hidden = !si; $("#menuB").setAttribute("aria
 $("#menuB").onclick = () => abrirMenu($("#menuM").hidden);
 document.addEventListener("click", e => { if (!e.target.closest(".movil")) abrirMenu(false); });
 /* modo día / noche */
-function pintarTema(){ const n = document.documentElement.dataset.tema === "noche"; document.querySelector('meta[name="theme-color"]').content = n ? "#1C1C1D" : "#F2F0EB"; document.querySelectorAll("[data-tema-b]").forEach(b => { b.innerHTML = ico(n ? "sol" : "luna") + `<b>${n ? "Modo día" : "Modo noche"}</b>`; }); }
-document.querySelectorAll("[data-tema-b]").forEach(b => b.onclick = () => { const r = document.documentElement; if (r.dataset.tema === "noche") delete r.dataset.tema; else r.dataset.tema = "noche"; try { localStorage.setItem("agrio-panel-tema", r.dataset.tema || "dia"); } catch(e){} pintarTema(); });
+function pintarTema(){ const n = document.documentElement.dataset.tema === "noche"; document.querySelector('meta[name="theme-color"]').content = n ? "#1C1C1D" : "#F2F0EB"; document.querySelectorAll("[data-tema-k]").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.temaK === "noche") === n))); }
+document.querySelectorAll("[data-tema-k]").forEach(b => b.onclick = () => { const r = document.documentElement; if (b.dataset.temaK === "noche") r.dataset.tema = "noche"; else delete r.dataset.tema; try { localStorage.setItem("agrio-panel-tema", b.dataset.temaK); } catch(e){} pintarTema(); });
 pintarTema();
 /* vuelve a pintar la sección sin perder el sitio */
 async function refrescar(){ const y = scrollY; nuevos = (await db.lista("pedidos")).filter(x => x.estado === "espera").length; pintarNav(); await VISTAS[seccion]($("#contenido")); window.scrollTo(0, y); }
 async function ir(s){
+  if (s === "pedidos"){ cTab = "pedidos"; s = "comisiones"; }
   seccion = SECC.some(x => x[0] === s) ? s : "home"; location.hash = seccion; cerrarEditor();
   const p = await db.lista("pedidos").catch(() => []); nuevos = p.filter(x => x.estado === "espera").length; pintarNav();
-  const c = $("#contenido"); c.innerHTML = '<p class="peq">Cargando…</p>';
-  try { await VISTAS[seccion](c); } catch(e){ console.error(e); c.innerHTML = `<div class="bloque"><div class="vacio">No se pudo cargar: ${esc(e.message)}</div></div>`; }
+  const c = $("#contenido"); c.innerHTML = `<p class="peq">${tr("Cargando…", "Loading…")}</p>`;
+  try { await VISTAS[seccion](c); } catch(e){ console.error(e); c.innerHTML = `<div class="bloque"><div class="vacio">${tr("No se pudo cargar: ", "Could not load: ")}${esc(e.message)}</div></div>`; }
   window.scrollTo(0, 0);
 }
 addEventListener("hashchange", () => { const s = location.hash.slice(1); if (s && s !== seccion && !$("#vApp").hidden) ir(s); });
@@ -607,38 +694,40 @@ addEventListener("hashchange", () => { const s = location.hash.slice(1); if (s &
 function abrirEditor(html, alGuardar, extra){
   const ed = $("#editor"); ed.innerHTML = html; ed.hidden = false; $("#capa").hidden = false;
   ed.querySelector(".x").onclick = cerrarEditor; $("#capa").onclick = cerrarEditor;
-  const g = ed.querySelector("[data-guardar]"); if (g) g.onclick = async () => { g.disabled = true; try { await alGuardar(ed); } catch(e){ console.error(e); avisar("No se pudo guardar: " + (e.message || e)); } g.disabled = false; };
+  const g = ed.querySelector("[data-guardar]"); if (g) g.onclick = async () => { g.disabled = true; try { await alGuardar(ed); } catch(e){ error(tr("No se pudo guardar", "Could not save"), e); } g.disabled = false; };
   if (extra) extra(ed); setTimeout(() => { const f = ed.querySelector("input,textarea,select"); if (f && matchMedia("(pointer:fine)").matches) f.focus(); }, 50);
 }
 function cerrarEditor(){ $("#editor").hidden = true; $("#capa").hidden = true; }
-addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".fila[role=button]")){ e.preventDefault(); e.target.click(); return; } if (e.key === "Escape"){ cerrarEditor(); abrirMenu(false); if (esTab()) plegar(true); } });
+addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".fila[role=button]")){ e.preventDefault(); e.target.click(); return; } if (e.key === "Escape" && !$("#popup").open){ cerrarEditor(); abrirMenu(false); if (esTab()) plegar(true); } });
 const val = (ed, n) => { const el = ed.querySelector(`[name="${n}"]`); return el ? el.value.trim() : ""; };
+/* falta un dato: se avisa y se lleva el cursor al campo */
+function falta(ed, n, titulo, detalle){ avisar(titulo, {tipo:"mal", detalle}); const c = ed.querySelector(`[name="${n}"]`); if (c) c.focus(); }
 const num = (ed, n) => { const v = val(ed, n).replace(/[^\d]/g, ""); return v === "" ? null : +v; };
 
 /* ---------- vistas ---------- */
 const VISTAS = {};
 const iniciales = n => { const w = String(n || "?").trim().split(/\s+/); return (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase(); };
 const urlImg = u => `background-image:url("${String(u).replace(/["'()\\\s]/g, "")}")`.replace(/"/g, "&quot;");
-const cab = (t, sub, boton) => `<div class="cabeza"><div><h1>${t}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${boton || ""}</div>${DEMO ? '<p class="demo">Modo demostración: los cambios se guardan solo en este navegador. Para que se vean en la web hay que conectar la base de datos (Ajustes).</p>' : ""}`;
+const cab = (t, sub, boton) => `<div class="cabeza"><div><h1>${t}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${boton || ""}</div>${DEMO ? `<p class="demo">${tr("Modo demostración: los cambios se guardan solo en este navegador. Para que se vean en la web hay que conectar la base de datos (Ajustes).", "Demo mode: changes are saved only in this browser. To show them on the site, connect the database (Settings).")}</p>` : ""}`;
 
 /* HOME */
 const dia = f => f ? new Date(f + "T12:00:00") : null;   // las fechas de entrega son días, sin hora
 const DIA = 864e5, hoyMedio = () => { const d = new Date(); d.setHours(12, 0, 0, 0); return d; };
-const hace = n => n <= 0 ? "hoy" : n === 1 ? "hace 1 día" : `hace ${n} días`;
+const hace = n => EN ? (n <= 0 ? "today" : n === 1 ? "1 day ago" : `${n} days ago`) : n <= 0 ? "hoy" : n === 1 ? "hace 1 día" : `hace ${n} días`;
 /* qué tan urgente es un pedido y por qué (el motivo más fuerte manda) */
 function atencion(p){
   const curso = p.estado !== "finalizado", d = p.fecha_entrega ? Math.round((dia(p.fecha_entrega) - hoyMedio()) / DIA) : null, edad = Math.max(0, Math.floor((Date.now() - new Date(p.creado)) / DIA));
-  if (curso && d != null && d < 0) return {peso:1000 - d, alta:true, txt:`Entrega vencida ${hace(-d)}`};
-  if (curso && d != null && d <= 3) return {peso:900 - d, alta:d <= 1, txt:d === 0 ? "Entrega hoy" : d === 1 ? "Entrega mañana" : `Entrega en ${d} días`};
-  if (!curso) return p.pagado ? null : {peso:700, alta:true, txt:"Finalizado sin pagar"};
-  if (p.estado === "espera") return {peso:500 + edad, alta:edad >= 3, txt:edad ? `Sin confirmar ${hace(edad)}` : "Llegó hoy"};
-  if (!p.pagado) return {peso:600, alta:false, txt:"En proceso sin pagar"};
-  if (d == null) return {peso:400, alta:false, txt:"Sin fecha de entrega"};
-  return d <= 7 ? {peso:300 - d, alta:false, txt:`Entrega en ${d} días`} : null;
+  if (curso && d != null && d < 0) return {peso:1000 - d, alta:true, txt:tr(`Entrega vencida ${hace(-d)}`, `Overdue, ${hace(-d)}`)};
+  if (curso && d != null && d <= 3) return {peso:900 - d, alta:d <= 1, txt:d === 0 ? tr("Entrega hoy", "Due today") : d === 1 ? tr("Entrega mañana", "Due tomorrow") : tr(`Entrega en ${d} días`, `Due in ${d} days`)};
+  if (!curso) return p.pagado ? null : {peso:700, alta:true, txt:tr("Finalizado sin pagar", "Completed, unpaid")};
+  if (p.estado === "espera") return {peso:500 + edad, alta:edad >= 3, txt:edad ? tr(`Sin confirmar ${hace(edad)}`, `Unconfirmed, ${hace(edad)}`) : tr("Llegó hoy", "Arrived today")};
+  if (!p.pagado) return {peso:600, alta:false, txt:p.pago === "proceso" ? tr("Pago en proceso", "Payment in process") : tr("En proceso sin pagar", "In progress, unpaid")};
+  if (d == null) return {peso:400, alta:false, txt:tr("Sin fecha de entrega", "No delivery date")};
+  return d <= 7 ? {peso:300 - d, alta:false, txt:tr(`Entrega en ${d} días`, `Due in ${d} days`)} : null;
 }
 VISTAS.home = async c => {
   const [P, C, O, T] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos")]), cli = Object.fromEntries(C.map(x => [x.id, x])), ob = Object.fromEntries(O.map(x => [x.id, x]));
-  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = txt(t, "nombre"); });
   const mes0 = new Date(); mes0.setDate(1); mes0.setHours(0, 0, 0, 0);
   const sem0 = new Date(Date.now() - 7 * DIA), suma = l => l.reduce((s, p) => s + (+p.monto || 0), 0), pag = P.filter(p => p.pagado), cuando = p => new Date(p.pagado_en || p.creado);
   const pagMes = suma(pag.filter(p => cuando(p) >= mes0)), pagSem = suma(pag.filter(p => cuando(p) >= sem0)), cliMes = C.filter(x => new Date(x.creado) >= mes0).length, agot = O.filter(o => o.agotada).length, porConf = P.filter(p => p.estado === "espera"), enProc = P.filter(p => p.estado === "proceso").length;
@@ -648,25 +737,25 @@ VISTAS.home = async c => {
   const top = Object.entries(ventas).sort((a, b) => b[1] - a[1]).slice(0, 6), gasto = id => suma(pag.filter(p => p.cliente_id === id)), nPed = id => P.filter(p => p.cliente_id === id).length;
   const mejores = C.map(x => ({x, g:gasto(x.id), n:nPed(x.id)})).sort((a, b) => b.g - a.g || (b.x.creado || "").localeCompare(a.x.creado || "")).slice(0, 5);
   const metrica = (i, v, n, sello) => `<section class="carta metrica"><span class="ic">${ico(i)}</span><div><b>${v}</b><span>${n}</span>${sello || ""}</div></section>`;
-  const verTodo = k => `<button class="boton chico" type="button" data-ir="${k}">${ico("sale")}Ver todas</button>`;
-  const fila = p => { const o = ob[p.obra_id], n = cli[p.cliente_id]?.nombre || "Sin cliente", com = p.tipo === "comision";
-    return `<button class="rg" type="button" data-pedido="${p.id}">${com ? `<span class="ic">${ico("comisiones")}</span>` : `<span class="mini" style="${o ? urlImg(imgDe(o)) : ""}"></span>`}<b>${esc(com ? tipoCom[p.comision_n] || "Sin tipo" : o ? o.nombre_es : "Sin ilustración")}</b><span class="m">${pesos(p.monto)}</span><small>${esc(n)}${com && p.estado !== "finalizado" && p.fecha_entrega ? " · " + entregaTxt(p) : ""}</small>${etq(p.estado)}</button>`; };
-  c.innerHTML = cab(INICIO, "", `<button class="boton verde" type="button" data-nuevo>${ico("mas")}Nuevo pedido</button>`) + `
+  const verTodo = k => `<button class="boton chico" type="button" data-ir="${k}">${ico("sale")}${tr("Ver todas", "View all")}</button>`;
+  const fila = p => { const o = ob[p.obra_id], n = cli[p.cliente_id]?.nombre || tr("Sin cliente", "No customer"), com = p.tipo === "comision";
+    return `<button class="rg" type="button" data-pedido="${p.id}">${com ? `<span class="ic">${ico("comisiones")}</span>` : `<span class="mini" style="${o ? urlImg(imgDe(o)) : ""}"></span>`}<b>${esc(com ? tipoCom[p.comision_n] || tr("Sin tipo", "No type") : o ? txt(o, "nombre") : tr("Sin ilustración", "No illustration"))}</b><span class="m">${pesos(p.monto)}</span><small>${esc(n)}${com && p.estado !== "finalizado" && p.fecha_entrega ? " · " + entregaTxt(p) : ""}</small><span class="ets">${etq(p.estado)}${pagoTxt(p)}</span></button>`; };
+  c.innerHTML = cab(tr("Inicio", "Home"), "", `<button class="boton verde" type="button" data-nuevo>${ico("mas")}${tr("Nuevo pedido", "New order")}</button>`) + `
     <div class="bento home">
-      <div class="b-met">${metrica("barras", pesos(pagMes), "Pagado este mes", pagSem ? `<span class="sello">+${pesos(pagSem)} en 7 días</span>` : "")}${metrica("pedidos", porConf.length, porConf.length === 1 ? "Pedido por confirmar" : "Pedidos por confirmar", enProc ? `<span class="sello n">${enProc} en proceso</span>` : "")}${metrica("persona", C.length, C.length === 1 ? "Cliente" : "Clientes", cliMes ? `<span class="sello n">+${cliMes} este mes</span>` : "")}${metrica("obras", `${agot} de ${O.length}`, "Ilustraciones agotadas")}</div>
-      <section class="carta b-ilu"><div class="cartaT"><h2>Compras de ilustraciones</h2>${verTodo("compra")}</div>${rec("compra").map(fila).join("") || '<p class="peq">Aún no hay compras.</p>'}</section>
-      <section class="carta b-com"><div class="cartaT"><h2>Compras de comisiones</h2>${verTodo("comision")}</div>${rec("comision").map(fila).join("") || '<p class="peq">Aún no hay comisiones.</p>'}</section>
-      <section class="carta b-car" aria-label="Ilustraciones más vendidas"><div class="cartaT"><h2>Ilustraciones más vendidas</h2></div>
-        ${top.length ? `<div class="carrete" id="carrete" tabindex="0" role="group" aria-label="Carrete">${top.map(([id, n], i) => `<button class="cuadro" type="button" data-obra="${esc(id)}" style="${urlImg(imgDe(ob[id]))}" aria-label="${i + 1}. ${esc(ob[id].nombre_es)}, ${n} ${n === 1 ? "venta" : "ventas"}"><i aria-hidden="true">${i + 1}</i><span><b>${esc(ob[id].nombre_es)}</b>${n} ${n === 1 ? "venta" : "ventas"}</span></button>`).join("")}</div>${top.length > 1 ? `<div class="pasos"><button class="boton chico" type="button" data-paso="-1">${ico("izq")}Anterior</button><button class="boton chico" type="button" data-paso="1">Siguiente${ico("der")}</button></div>` : ""}` : '<p class="peq">Aún no hay ilustraciones vendidas.</p>'}</section>
-      <section class="carta b-ate"><div class="cartaT"><h2>Pedidos que requieren atención</h2></div>
-        ${urg.length ? `<div class="tira">${urg.map(({p, a}, i) => `<button class="hoja ${i ? "" : "una"}" type="button" data-pedido="${p.id}"><span class="razon ${a.alta ? "alta" : ""}">${a.txt}</span><b>${esc(cli[p.cliente_id]?.nombre || "Sin cliente")}</b><span class="detalle">${esc(detallePedido(p, O))}</span><span class="monto">${pesos(p.monto)}</span><small>Pedido #${p.numero || "—"} · ${est(p.estado)[1]}</small></button>`).join("")}</div>` : '<p class="peq">Todo al día: ningún pedido requiere atención.</p>'}</section>
-      <section class="carta b-cli"><div class="cartaT"><h2>Clientes</h2><button class="boton chico" type="button" data-ir="clientes">${ico("sale")}Ver todos</button></div>${mejores.map(({x, g, n}, i) => `<button class="rg cl" type="button" data-cli="${x.id}"><span class="cara ${i ? "" : "r"}">${esc(iniciales(x.nombre))}</span><b>${esc(x.nombre)}</b><span class="m">${pesos(g)}</span><small>${n} ${n === 1 ? "pedido" : "pedidos"}${x.ciudad ? " · " + esc(x.ciudad) : ""}</small></button>`).join("") || '<p class="peq">Aún no hay clientes.</p>'}</section>
+      <div class="b-met">${metrica("barras", pesos(pagMes), tr("Pagado este mes", "Paid this month"), pagSem ? `<span class="sello">+${pesos(pagSem)} ${tr("en 7 días", "in 7 days")}</span>` : "")}${metrica("pedidos", porConf.length, porConf.length === 1 ? tr("Pedido por confirmar", "Order to confirm") : tr("Pedidos por confirmar", "Orders to confirm"), enProc ? `<span class="sello n">${enProc} ${tr("en proceso", "in progress")}</span>` : "")}${metrica("persona", C.length, C.length === 1 ? tr("Cliente", "Customer") : tr("Clientes", "Customers"), cliMes ? `<span class="sello n">+${cliMes} ${tr("este mes", "this month")}</span>` : "")}${metrica("obras", `${agot} ${tr("de", "of")} ${O.length}`, tr("Ilustraciones agotadas", "Sold-out illustrations"))}</div>
+      <section class="carta b-ilu"><div class="cartaT"><h2>${tr("Compras de ilustraciones", "Illustration purchases")}</h2>${verTodo("compra")}</div>${rec("compra").map(fila).join("") || `<p class="peq">${tr("Aún no hay compras.", "No purchases yet.")}</p>`}</section>
+      <section class="carta b-com"><div class="cartaT"><h2>${tr("Compras de comisiones", "Commission purchases")}</h2>${verTodo("comision")}</div>${rec("comision").map(fila).join("") || `<p class="peq">${tr("Aún no hay comisiones.", "No commissions yet.")}</p>`}</section>
+      <section class="carta b-car" aria-label="${tr('Ilustraciones más vendidas', 'Best-selling illustrations')}"><div class="cartaT"><h2>${tr("Ilustraciones más vendidas", "Best-selling illustrations")}</h2></div>
+        ${top.length ? `<div class="carrete" id="carrete" tabindex="0" role="group" aria-label="${tr('Carrete', 'Reel')}">${top.map(([id, n], i) => `<button class="cuadro" type="button" data-obra="${esc(id)}" style="${urlImg(imgDe(ob[id]))}" aria-label="${i + 1}. ${esc(txt(ob[id], "nombre"))}, ${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}"><i aria-hidden="true">${i + 1}</i><span><b>${esc(txt(ob[id], "nombre"))}</b>${n} ${n === 1 ? tr("venta", "sale") : tr("ventas", "sales")}</span></button>`).join("")}</div>${top.length > 1 ? `<div class="pasos"><button class="boton chico" type="button" data-paso="-1">${ico("izq")}${tr("Anterior", "Previous")}</button><button class="boton chico" type="button" data-paso="1">${tr("Siguiente", "Next")}${ico("der")}</button></div>` : ""}` : `<p class="peq">${tr("Aún no hay ilustraciones vendidas.", "No illustrations sold yet.")}</p>`}</section>
+      <section class="carta b-ate"><div class="cartaT"><h2>${tr("Pedidos que requieren atención", "Orders that need attention")}</h2></div>
+        ${urg.length ? `<div class="tira">${urg.map(({p, a}, i) => `<button class="hoja ${i ? "" : "una"}" type="button" data-pedido="${p.id}"><span class="razon ${a.alta ? "alta" : ""}">${a.txt}</span><b>${esc(cli[p.cliente_id]?.nombre || tr("Sin cliente", "No customer"))}</b><span class="detalle">${esc(detallePedido(p, O))}</span><span class="monto">${pesos(p.monto)}</span>${pagoTxt(p)}<small>${tr("Pedido", "Order")} #${p.numero || "—"} · ${est(p.estado)[1]}</small></button>`).join("")}</div>` : `<p class="peq">${tr("Todo al día: ningún pedido requiere atención.", "All caught up: no order needs attention.")}</p>`}</section>
+      <section class="carta b-cli"><div class="cartaT"><h2>${tr("Clientes", "Customers")}</h2><button class="boton chico" type="button" data-ir="clientes">${ico("sale")}${tr("Ver todos", "View all")}</button></div>${mejores.map(({x, g, n}, i) => `<button class="rg cl" type="button" data-cli="${x.id}"><span class="cara ${i ? "" : "r"}">${esc(iniciales(x.nombre))}</span><b>${esc(x.nombre)}</b><span class="m">${pesos(g)}</span><small>${n} ${n === 1 ? tr("pedido", "order") : tr("pedidos", "orders")}${x.ciudad ? " · " + esc(x.ciudad) : ""}</small></button>`).join("") || `<p class="peq">${tr("Aún no hay clientes.", "No customers yet.")}</p>`}</section>
     </div>`;
   c.querySelector("[data-nuevo]").onclick = () => editarPedido(null);
   c.querySelectorAll("[data-pedido]").forEach(b => b.onclick = () => editarPedido(b.dataset.pedido));
   c.querySelectorAll("[data-cli]").forEach(b => b.onclick = () => editarCliente(b.dataset.cli));
   c.querySelectorAll("[data-obra]").forEach(b => b.onclick = () => editarObra(b.dataset.obra));
-  c.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { if (b.dataset.ir === "clientes") return ir("clientes"); fTipo = b.dataset.ir; fEstado = ""; fBusca = ""; ir("pedidos"); });
+  c.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { if (b.dataset.ir === "clientes") return ir("clientes"); fTipo = b.dataset.ir; fEstado = ""; fBusca = ""; cTab = "pedidos"; ir("comisiones"); });
   const ca = c.querySelector("#carrete"), ps = c.querySelectorAll("[data-paso]");
   if (ca && ps.length){
     const paso = () => ca.children[1].offsetLeft - ca.children[0].offsetLeft, topes = () => { ps[0].disabled = ca.scrollLeft < 4; ps[1].disabled = ca.scrollLeft > ca.scrollWidth - ca.clientWidth - 4; };
@@ -675,47 +764,47 @@ VISTAS.home = async c => {
 };
 const tipoCom = {};
 function detallePedido(p, O){
-  if (p.tipo === "comision") return "Comisión · " + (tipoCom[p.comision_n] || "sin tipo");
-  const o = (O || []).find(x => x.id === p.obra_id); return "Ilustración · " + (o ? o.nombre_es : p.obra_id || "sin elegir");
+  if (p.tipo === "comision") return tr("Comisión · ", "Commission · ") + (tipoCom[p.comision_n] || tr("sin tipo", "no type"));
+  const o = (O || []).find(x => x.id === p.obra_id); return tr("Ilustración · ", "Illustration · ") + (o ? txt(o, "nombre") : p.obra_id || tr("sin elegir", "not chosen"));
 }
 let CACHE_O = [];
-const entregaTxt = p => p.fecha_entrega ? "Entrega " + diaMes(dia(p.fecha_entrega)) : p.estado === "finalizado" ? "" : "Sin fecha de entrega";
-const pagoTxt = p => `<span class="pago ${p.pagado ? "si" : ""}">${p.pagado ? "Pagado" : "Sin pagar"}</span>`;
+const entregaTxt = p => p.fecha_entrega ? tr("Entrega ", "Due ") + diaMes(dia(p.fecha_entrega)) : p.estado === "finalizado" ? "" : tr("Sin fecha de entrega", "No delivery date");
+const PAGOS = [["sin", tr("Sin pagar", "Unpaid"), "vacio"], ["proceso", tr("Pago en proceso", "Payment in process"), "reloj"], ["pagado", tr("Pagado", "Paid"), "check"]];
+const pagoDe = p => PAGOS.find(x => x[0] === p.pago) || PAGOS[0];
+const pagoTxt = p => { const [k, n, i] = pagoDe(p); return `<span class="pago ${k}">${ico(i)}${n}</span>`; };
 
 /* PEDIDOS: como tareas, se arrastran para moverlas */
 let fTipo = "todos", fVista = "tablero", fBusca = "", fEstado = ""; try { if (localStorage.getItem("agrio-panel-pedidos") === "lista") fVista = "lista"; } catch(e){}
-VISTAS.pedidos = async c => {
+async function verPedidos(c){
   const [P, C, O, T] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos")]);
-  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
-  const cli = Object.fromEntries(C.map(x => [x.id, x])), q = fBusca.toLowerCase(), nombre = p => esc(cli[p.cliente_id]?.nombre || "Sin cliente");
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = txt(t, "nombre"); });
+  const cli = Object.fromEntries(C.map(x => [x.id, x])), q = fBusca.toLowerCase(), nombre = p => esc(cli[p.cliente_id]?.nombre || tr("Sin cliente", "No customer"));
   const L = P.filter(p => (fTipo === "todos" || p.tipo === fTipo) && (!q || [cli[p.cliente_id]?.nombre, cli[p.cliente_id]?.correo, "#" + p.numero, detallePedido(p, O)].join(" ").toLowerCase().includes(q)))
     .sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
-  const tarea = p => `<article class="tarea tarjetaP" data-tarea="${p.id}"><div class="arr">${ico("grip").replace('class="i"', 'class="i grip"')}<span>#${p.numero || "—"} · ${p.tipo === "comision" ? "Comisión" : "Ilustración"}</span>${etq(p.estado)}</div><button class="abre" type="button" data-pedido="${p.id}">${nombre(p)}</button><span class="peq">${esc(detallePedido(p, O).replace(/^.*? · /, ""))}</span><div class="pie"><span class="m">${pesos(p.monto)}${pagoTxt(p)}</span><span class="peq">${entregaTxt(p)}</span></div></article>`;
+  const tarea = p => `<article class="tarea tarjetaP" data-tarea="${p.id}"><div class="arr">${ico("grip").replace('class="i"', 'class="i grip"')}<span>#${p.numero || "—"} · ${p.tipo === "comision" ? tr("Comisión", "Commission") : tr("Ilustración", "Illustration")}</span>${etq(p.estado)}</div><button class="abre" type="button" data-pedido="${p.id}">${nombre(p)}</button><span class="peq">${esc(detallePedido(p, O).replace(/^.*? · /, ""))}</span><div class="pie"><span class="m">${pesos(p.monto)}${pagoTxt(p)}</span><span class="peq">${entregaTxt(p)}</span></div></article>`;
   const renglon = p => `<article class="fila fp tarea" data-tarea="${p.id}">${ico("grip").replace('class="i"', 'class="i grip"')}<span class="peq ocultaTab">#${p.numero || "—"}</span><div class="nombre"><button class="abre" type="button" data-pedido="${p.id}">${nombre(p)}</button><span>${esc(detallePedido(p, O))}</span></div><span><span class="precio">${pesos(p.monto)}</span><br>${pagoTxt(p)}</span><span class="peq ocultaTab">${entregaTxt(p)}</span><span class="selE">${etq(p.estado)}</span></article>`;
   const de = k => L.filter(p => p.estado === k), abierta = k => !fEstado || fEstado === k;
-  const col = ([k, n]) => `<section class="col ${abierta(k) ? "abierta" : ""}" data-col="${k}" aria-label="${n}"><h3>${n}<span>${de(k).length}</span></h3>${abierta(k) ? `<div class="tareas">${de(k).map(tarea).join("") || '<p class="peq nada">Nada por aquí.</p>'}</div>` : ""}</section>`;
-  const grupo = ([k, n]) => abierta(k) ? `<section class="bloque grupoL" data-col="${k}" aria-label="${n}"><h3>${n}<span>${de(k).length}</span></h3>${de(k).map(renglon).join("") || '<div class="fila peq">Nada por aquí.</div>'}</section>` : "";
+  const col = ([k, n]) => `<section class="col ${abierta(k) ? "abierta" : ""}" data-col="${k}" aria-label="${n}"><h3>${n}<span>${de(k).length}</span></h3>${abierta(k) ? `<div class="tareas">${de(k).map(tarea).join("") || `<p class="peq nada">${tr("Nada por aquí.", "Nothing here.")}</p>`}</div>` : ""}</section>`;
+  const grupo = ([k, n]) => abierta(k) ? `<section class="bloque grupoL" data-col="${k}" aria-label="${n}"><h3>${n}<span>${de(k).length}</span></h3>${de(k).map(renglon).join("") || `<div class="fila peq">${tr("Nada por aquí.", "Nothing here.")}</div>`}</section>` : "";
   const seg = (attr, arr, v) => arr.map(([k, n, i]) => `<button type="button" data-${attr}="${k}" data-foco="${attr}${k}" aria-pressed="${v === k}">${i ? ico(i) : ""}${n}</button>`).join("");
-  c.innerHTML = cab("Pedidos", "Arrastra cada pedido para cambiar su estado.", `<button class="boton verde" type="button" id="nuevoP">${ico("mas")}Nuevo pedido</button>`) + `
-    <div class="filtros p"><div class="grupoF" role="group" aria-labelledby="gT"><span id="gT">Tipo</span><div class="seg">${seg("ft", [["todos", "Todos"], ["compra", "Ilustraciones"], ["comision", "Comisiones"]], fTipo)}</div></div>
-      <div class="grupoF" role="group" aria-labelledby="gE"><span id="gE">Estado</span><div class="seg">${seg("fe", [["", "Todos"], ["espera", "En espera"], ["proceso", "En proceso"], ["finalizado", "Finalizado"]], fEstado)}</div></div>
-      <label class="buscar">${ico("lupa")}<input id="bP" type="search" aria-label="Buscar pedidos" placeholder="Buscar pedido…" value="${esc(fBusca)}"></label>
-      <div class="seg fin" role="group" aria-label="Ver como">${seg("fv", [["tablero", "Tablero", "tablero"], ["lista", "Lista", "lista"]], fVista)}</div></div>
+  c.innerHTML = `<div class="filtros p"><div class="grupoF" role="group" aria-labelledby="gT"><span id="gT">${tr("Tipo", "Type")}</span><div class="seg">${seg("ft", [["todos", tr("Todos", "All")], ["compra", tr("Ilustraciones", "Illustrations")], ["comision", tr("Comisiones", "Commissions")]], fTipo)}</div></div>
+      <div class="grupoF" role="group" aria-labelledby="gE"><span id="gE">${tr("Estado", "Status")}</span><div class="seg">${seg("fe", [["", tr("Todos", "All")], ["espera", tr("En espera", "Awaiting")], ["proceso", tr("En proceso", "In progress")], ["finalizado", tr("Finalizado", "Completed")]], fEstado)}</div></div>
+      <label class="buscar">${ico("lupa")}<input id="bP" type="search" aria-label="${tr('Buscar pedidos', 'Search orders')}" placeholder="${tr('Buscar pedido…', 'Search order…')}" value="${esc(fBusca)}"></label>
+      <div class="seg fin" role="group" aria-label="${tr('Ver como', 'View as')}">${seg("fv", [["tablero", tr("Tablero", "Board"), "tablero"], ["lista", tr("Lista", "List"), "lista"]], fVista)}</div></div>
     ${fVista === "tablero" ? `<div class="tablero ${fEstado ? "solo" : ""}" data-solo="${fEstado}">${ESTADOS.map(col).join("")}</div>` : ESTADOS.map(grupo).join("")}`;
-  const otra = async foco => { await VISTAS.pedidos(c); const f = foco && c.querySelector(`[data-foco="${foco}"]`); if (f) f.focus({preventScroll:true}); };
+  const otra = async foco => { await verPedidos(c); const f = foco && c.querySelector(`[data-foco="${foco}"]`); if (f) f.focus({preventScroll:true}); };
   c.querySelectorAll("[data-ft]").forEach(b => b.onclick = () => { fTipo = b.dataset.ft; otra(b.dataset.foco); });
   c.querySelectorAll("[data-fe]").forEach(b => b.onclick = () => { fEstado = b.dataset.fe; otra(b.dataset.foco); });
   c.querySelectorAll("[data-fv]").forEach(b => b.onclick = () => { fVista = b.dataset.fv; try { localStorage.setItem("agrio-panel-pedidos", fVista); } catch(e){} otra(b.dataset.foco); });
-  const bp = c.querySelector("#bP"); bp.oninput = () => { fBusca = bp.value; clearTimeout(bp.t); bp.t = setTimeout(async () => { await VISTAS.pedidos(c); const n = c.querySelector("#bP"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+  const bp = c.querySelector("#bP"); bp.oninput = () => { fBusca = bp.value; clearTimeout(bp.t); bp.t = setTimeout(async () => { await verPedidos(c); const n = c.querySelector("#bP"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
   c.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => { if (!arrastre.recien()) editarPedido(f.dataset.pedido); });
-  c.querySelector("#nuevoP").onclick = () => editarPedido(null);
   const mover = async (id, estado) => {
     const p = P.find(x => x.id === id); if (!p || p.estado === estado) return;
-    try { await db.guardar("pedidos", {...p, estado}); await db.guardar("pedido_eventos", {pedido_id:id, estado, nota:""}); avisar(`Pedido #${p.numero || ""}: ${est(estado)[1]}`); } catch(e){ console.error(e); avisar("No se pudo mover: " + (e.message || e)); }
+    try { await db.guardar("pedidos", {...p, estado}); await db.guardar("pedido_eventos", {pedido_id:id, estado, nota:""}); avisar(tr("Estado: cambio guardado", "Status: change saved"), {detalle:`${tr("Pedido", "Order")} #${p.numero || ""}: ${est(p.estado)[1]} → ${est(estado)[1]}`}); } catch(e){ error(tr("No se pudo mover el pedido", "Could not move the order"), e); }
     await refrescar();
   };
   c.querySelectorAll("[data-tarea]").forEach(t => arrastre.activar(t, mover));
-};
+}
 /* arrastrar: con el mouse de inmediato; con el dedo, al mantener presionado (así se puede seguir bajando la página).
    En pantallas angostas aparecen abajo los tres estados para soltar sin recorrer la página. */
 const arrastre = (() => {
@@ -750,48 +839,52 @@ const arrastre = (() => {
 })();
 async function editarPedido(id, clientePre){
   const [P, C, O, T, E] = await Promise.all([db.lista("pedidos"), db.lista("clientes"), db.lista("obras"), db.lista("comision_tipos"), db.lista("pedido_eventos")]);
-  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
-  const p = {...(P.find(x => x.id === id) || {tipo:"comision", estado:"espera", formato:"dig", pagado:false})}; if (clientePre) p.cliente_id = clientePre;
+  CACHE_O = O; T.forEach(t => { tipoCom[t.n] = txt(t, "nombre"); });
+  const p = {...(P.find(x => x.id === id) || {tipo:"comision", estado:"espera", formato:"dig", pago:"sin"})}; if (clientePre) p.cliente_id = clientePre;
   const cl = C.find(x => x.id === p.cliente_id);
   const ev = E.filter(e => e.pedido_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
   const opc = (arr, v) => arr.map(([k, n]) => `<option value="${esc(k)}" ${String(k) === String(v ?? "") ? "selected" : ""}>${esc(n)}</option>`).join("");
   const wa = cl && cl.whatsapp ? cl.whatsapp.replace(/\D/g, "") : "";
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? "Pedido #" + (p.numero || "") : "Nuevo pedido"}</h2><button class="boton chico x" type="button">${ico("x")}Cerrar</button></div>
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Pedido #", "Order #") + (p.numero || "") : tr("Nuevo pedido", "New order")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
     <div class="cuerpo">
-      ${cl ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${cl.correo ? `<a class="boton chico" href="mailto:${esc(cl.correo)}?subject=${encodeURIComponent("Tu pedido Agrio Art #" + (p.numero || ""))}">${ico("correo")}Correo</a>` : ""}<a class="boton chico" href="#clientes" data-vercli="${cl.id}">${ico("persona")}Ver cliente</a></div>` : ""}
-      <label class="campo"><span>Fecha de entrega</span><input class="entrada" type="date" name="fecha_entrega" value="${esc(p.fecha_entrega || "")}"><small class="peq">La que acordaron por correo. Puedes dejarla vacía.</small></label>
-      <div class="dos"><label class="campo"><span>Tipo</span><select class="entrada" name="tipo">${opc([["comision", "Comisión"], ["compra", "Ilustración"]], p.tipo)}</select></label>
-        <label class="campo"><span>Estado</span><select class="entrada" name="estado">${opc(ESTADOS, p.estado)}</select></label></div>
-      <label class="campo"><span>Cliente</span><select class="entrada" name="cliente_id"><option value="">— Elegir —</option>${opc(C.sort((a, b) => a.nombre.localeCompare(b.nombre)).map(x => [x.id, x.nombre + (x.correo ? " · " + x.correo : "")]), p.cliente_id)}<option value="__nuevo">+ Cliente nuevo…</option></select></label>
-      <div class="dos"><label class="campo" data-solo="comision"><span>Tipo de comisión</span><select class="entrada" name="comision_n"><option value="">—</option>${opc(T.sort((a, b) => a.n - b.n).map(t => [t.n, t.nombre_es]), p.comision_n)}</select></label>
-        <label class="campo" data-solo="compra"><span>Ilustración</span><select class="entrada" name="obra_id"><option value="">—</option>${opc(O.map(o => [o.id, o.nombre_es]), p.obra_id)}</select></label>
-        <label class="campo"><span>Formato</span><select class="entrada" name="formato">${opc(Object.entries(FORMATOS), p.formato)}</select></label></div>
-      <label class="campo" data-solo="comision"><span>Especificaciones</span><textarea class="entrada" name="especificaciones">${esc(p.especificaciones)}</textarea></label>
-      <div class="dos"><label class="campo"><span>Valor total (COP)</span><input class="entrada" name="monto" inputmode="numeric" value="${p.monto ?? ""}"></label>
-        <div class="campo"><span>Pago total recibido</span><span class="linSw"><button type="button" class="sw" role="switch" aria-checked="${!!p.pagado}" aria-label="Pago total recibido" id="eSwPago"></button><b id="eTxPago">${p.pagado ? "Pagado" : "Sin pagar"}</b></span></div></div>
-      <div class="dos"><label class="campo"><span>Envío / dirección</span><input class="entrada" name="envio" value="${esc(p.envio)}"></label>
-        <label class="campo"><span>Guía de envío</span><input class="entrada" name="guia" value="${esc(p.guia)}"></label></div>
-      <label class="campo"><span>Notas internas</span><textarea class="entrada" name="notas">${esc(p.notas)}</textarea></label>
-      ${id ? `<label class="campo"><span>Agregar al historial</span><input class="entrada" name="nota_evento" placeholder="Ej.: envié el boceto por WhatsApp"></label>
-      <span class="campo"><span>Historial</span></span><ul class="historia">${ev.map(e => `<li><b>${e.estado ? esc(est(e.estado)[1]) : "Nota"}</b>${e.nota ? " · " + esc(e.nota) : ""}<time>${fechaHora(e.creado)}</time></li>`).join("") || '<li class="peq">Sin movimientos todavía.</li>'}</ul>` : ""}
+      ${cl ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${cl.correo ? `<a class="boton chico" href="mailto:${esc(cl.correo)}?subject=${encodeURIComponent(tr("Tu pedido Agrio Art #", "Your Agrio Art order #") + (p.numero || ""))}">${ico("correo")}${tr("Correo", "Email")}</a>` : ""}<a class="boton chico" href="#clientes" data-vercli="${cl.id}">${ico("persona")}${tr("Ver cliente", "View customer")}</a></div>` : ""}
+      <label class="campo"><span>${tr("Fecha de entrega", "Delivery date")}</span><input class="entrada" type="date" name="fecha_entrega" value="${esc(p.fecha_entrega || "")}"><small class="peq">${tr("La que acordaron por correo. Puedes dejarla vacía.", "The one agreed by email. You can leave it empty.")}</small></label>
+      <div class="dos"><label class="campo"><span>${tr("Tipo", "Type")}</span><select class="entrada" name="tipo">${opc([["comision", tr("Comisión", "Commission")], ["compra", tr("Ilustración", "Illustration")]], p.tipo)}</select></label>
+        <label class="campo"><span>${tr("Estado", "Status")}</span><select class="entrada" name="estado">${opc(ESTADOS, p.estado)}</select></label></div>
+      <label class="campo"><span>${tr("Cliente", "Customer")}</span><select class="entrada" name="cliente_id"><option value="">${tr("— Elegir —", "— Choose —")}</option>${opc(C.sort((a, b) => a.nombre.localeCompare(b.nombre)).map(x => [x.id, x.nombre + (x.correo ? " · " + x.correo : "")]), p.cliente_id)}<option value="__nuevo">${tr("+ Cliente nuevo…", "+ New customer…")}</option></select></label>
+      <div class="dos"><label class="campo" data-solo="comision"><span>${tr("Tipo de comisión", "Commission type")}</span><select class="entrada" name="comision_n"><option value="">—</option>${opc(T.sort((a, b) => a.n - b.n).map(t => [t.n, txt(t, "nombre")]), p.comision_n)}</select></label>
+        <label class="campo" data-solo="compra"><span>${tr("Ilustración", "Illustration")}</span><select class="entrada" name="obra_id"><option value="">—</option>${opc(O.map(o => [o.id, txt(o, "nombre")]), p.obra_id)}</select></label>
+        <label class="campo"><span>${tr("Formato", "Format")}</span><select class="entrada" name="formato">${opc(Object.entries(FORMATOS), p.formato)}</select></label></div>
+      <label class="campo" data-solo="comision"><span>${tr("Especificaciones", "Specifications")}</span><textarea class="entrada" name="especificaciones">${esc(p.especificaciones)}</textarea></label>
+      <div class="dos"><label class="campo"><span>${tr("Valor total (COP)", "Total price (COP)")}</span><input class="entrada" name="monto" inputmode="numeric" value="${p.monto ?? ""}"></label>
+        </div>
+      <div class="campo"><span>${tr("Pago total", "Full payment")}</span><div class="seg" role="group" aria-label="${tr('Pago total', 'Full payment')}">${PAGOS.map(([k, n, i]) => `<button type="button" data-pago="${k}" aria-pressed="${pagoDe(p)[0] === k}">${ico(i)}${n}</button>`).join("")}</div></div>
+      <div class="dos"><label class="campo"><span>${tr("Envío / dirección", "Shipping / address")}</span><input class="entrada" name="envio" value="${esc(p.envio)}"></label>
+        <label class="campo"><span>${tr("Guía de envío", "Tracking number")}</span><input class="entrada" name="guia" value="${esc(p.guia)}"></label></div>
+      <label class="campo"><span>${tr("Notas internas", "Internal notes")}</span><textarea class="entrada" name="notas">${esc(p.notas)}</textarea></label>
+      ${id ? `<label class="campo"><span>${tr("Agregar al historial", "Add to history")}</span><input class="entrada" name="nota_evento" placeholder="${tr('Ej.: envié el boceto por WhatsApp', 'E.g.: sent the sketch on WhatsApp')}"></label>
+      <span class="campo"><span>${tr("Historial", "History")}</span></span><ul class="historia">${ev.map(e => `<li><b>${e.estado ? esc(est(e.estado)[1]) : tr("Nota", "Note")}</b>${e.nota ? " · " + esc(e.nota) : ""}<time>${fechaHora(e.creado)}</time></li>`).join("") || `<li class="peq">${tr("Sin movimientos todavía.", "No activity yet.")}</li>`}</ul>` : ""}
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}Borrar</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}Guardar</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     let cliente_id = val(ed, "cliente_id");
-    if (cliente_id === "__nuevo"){ avisar("Primero crea el cliente."); return; }
-    const tipo = val(ed, "tipo"), pagado = ed.querySelector("#eSwPago").getAttribute("aria-checked") === "true", fila = {id:id || null, tipo, estado:val(ed, "estado"), cliente_id:cliente_id || null, comision_n:tipo === "comision" ? num(ed, "comision_n") : null, obra_id:tipo === "compra" ? (val(ed, "obra_id") || null) : null,
-      formato:val(ed, "formato"), especificaciones:val(ed, "especificaciones"), monto:num(ed, "monto"), pagado, pagado_en:pagado ? p.pagado_en || new Date().toISOString() : null, fecha_entrega:val(ed, "fecha_entrega") || null, envio:val(ed, "envio"), guia:val(ed, "guia"), notas:val(ed, "notas")};
+    if (cliente_id === "__nuevo"){ avisar(tr("No se guardó el pedido", "The order was not saved"), {tipo:"mal", detalle:tr("Primero crea el cliente.", "Create the customer first.")}); return; }
+    const tipo = val(ed, "tipo"), pago = ed.querySelector("[data-pago][aria-pressed=true]").dataset.pago, fila = {id:id || null, tipo, estado:val(ed, "estado"), cliente_id:cliente_id || null, comision_n:tipo === "comision" ? num(ed, "comision_n") : null, obra_id:tipo === "compra" ? (val(ed, "obra_id") || null) : null,
+      formato:val(ed, "formato"), especificaciones:val(ed, "especificaciones"), monto:num(ed, "monto"), pago, pagado_en:pago === "pagado" ? p.pagado_en || new Date().toISOString() : null, fecha_entrega:val(ed, "fecha_entrega") || null, envio:val(ed, "envio"), guia:val(ed, "guia"), notas:val(ed, "notas")};
     if (id) fila.numero = p.numero;
     const g = await db.guardar("pedidos", fila), nota = val(ed, "nota_evento");
-    if (!id || p.estado !== fila.estado || nota) await db.guardar("pedido_eventos", {pedido_id:g.id, estado:!id || p.estado !== fila.estado ? fila.estado : null, nota:!id ? "Pedido creado en el panel" : nota});
-    avisar("Pedido guardado"); cerrarEditor(); refrescar();
+    if (!id || p.estado !== fila.estado || nota) await db.guardar("pedido_eventos", {pedido_id:g.id, estado:!id || p.estado !== fila.estado ? fila.estado : null, nota:!id ? tr("Pedido creado en el panel", "Order created in the panel") : nota});
+    const nomCli = v => C.find(x => x.id === v)?.nombre || "—", nom = `${tr("Pedido", "Order")} #${g.numero || p.numero || ""}`;
+    if (!id) avisar(tr("Pedido creado", "Order created"), {detalle:`${nom} · ${nomCli(fila.cliente_id)}`});
+    else avisarCambios(nom, cambios(p, fila, [["estado", tr("Estado", "Status"), v => est(v)[1]], ["pago", tr("Pago", "Payment"), v => pagoDe({pago:v})[1]], ["monto", tr("Precio", "Price"), pesos], ["fecha_entrega", tr("Fecha de entrega", "Delivery date"), v => v ? fecha(dia(v)) : "—"], ["cliente_id", tr("Cliente", "Customer"), nomCli], ["tipo", tr("Tipo", "Type"), null], ["comision_n", tr("Tipo de comisión", "Commission type"), v => tipoCom[v] || "—"], ["obra_id", tr("Ilustración", "Illustration"), v => { const o = O.find(x => x.id === v); return o ? txt(o, "nombre") : "—"; }], ["formato", tr("Formato", "Format"), v => FORMATOS[v] || "—"], ["especificaciones", tr("Especificaciones", "Specifications"), null], ["envio", tr("Envío / dirección", "Shipping / address"), null], ["guia", tr("Guía de envío", "Tracking number")], ["notas", tr("Notas internas", "Internal notes"), null]]).concat(nota ? [{n:tr("Nota en el historial", "History note"), txt:""}] : []));
+    cerrarEditor(); refrescar();
   },
   ed => {
     const tipoSel = ed.querySelector('[name="tipo"]'), sinc = () => ed.querySelectorAll("[data-solo]").forEach(e => { e.hidden = e.dataset.solo !== tipoSel.value; });
     tipoSel.onchange = sinc; sinc();
-    const sp = ed.querySelector("#eSwPago"); sp.onclick = () => { const si = sp.getAttribute("aria-checked") !== "true"; sp.setAttribute("aria-checked", String(si)); ed.querySelector("#eTxPago").textContent = si ? "Pagado" : "Sin pagar"; };
+    const pg = ed.querySelectorAll("[data-pago]"); pg.forEach(b => b.onclick = () => pg.forEach(x => x.setAttribute("aria-pressed", String(x === b))));
     ed.querySelector('[name="cliente_id"]').onchange = e => { if (e.target.value === "__nuevo") editarCliente(null, {pedido:id}); };
-    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm("¿Borrar este pedido y su historial? No se puede deshacer.")) return; await db.borrar("pedidos", id); avisar("Pedido borrado"); cerrarEditor(); refrescar(); };
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Borrar el pedido #${p.numero}?`, `Delete order #${p.numero}?`), texto:tr("También se borra su historial. No se puede deshacer.", "Its history is deleted too. This cannot be undone."), boton:tr("Borrar", "Delete")})) return; try { await db.borrar("pedidos", id); } catch(e){ return error(tr("No se pudo borrar el pedido", "Could not delete the order"), e); } avisar(tr("Pedido borrado", "Order deleted"), {detalle:`#${p.numero}`}); cerrarEditor(); refrescar(); };
     const vc = ed.querySelector("[data-vercli]"); if (vc) vc.onclick = e => { e.preventDefault(); editarCliente(vc.dataset.vercli); };
   });
 }
@@ -799,18 +892,18 @@ async function editarPedido(id, clientePre){
 /* CLIENTES */
 let cBusca = "", cSel = null;
 VISTAS.clientes = async c => {
-  const [C, P, O, T] = await Promise.all([db.lista("clientes"), db.lista("pedidos"), db.lista("obras"), db.lista("comision_tipos")]), q = cBusca.toLowerCase(); CACHE_O = O; T.forEach(t => { tipoCom[t.n] = t.nombre_es; });
+  const [C, P, O, T] = await Promise.all([db.lista("clientes"), db.lista("pedidos"), db.lista("obras"), db.lista("comision_tipos")]), q = cBusca.toLowerCase(); CACHE_O = O; T.forEach(t => { tipoCom[t.n] = txt(t, "nombre"); });
   const tot = id => P.filter(p => p.cliente_id === id), suma = l => l.reduce((s, p) => s + (p.pagado ? +p.monto || 0 : 0), 0), L = C.filter(x => !q || [x.nombre, x.correo, x.whatsapp, x.ciudad].join(" ").toLowerCase().includes(q)).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
   if (!L.some(x => x.id === cSel)) cSel = L.length ? L[0].id : null;
   const z = C.find(x => x.id === cSel), zP = z ? tot(z.id).sort((a, b) => (b.creado || "").localeCompare(a.creado || "")) : [], zw = z ? (z.whatsapp || "").replace(/\D/g, "") : "";
   const lin = (i, n, v) => `<div class="lin"><span class="ic">${ico(i)}</span><div><dt>${n}</dt><dd>${esc(v) || "—"}</dd></div></div>`;
-  c.innerHTML = cab("Clientes", `${C.length} en la base de datos.`, `<div class="accC"><button class="boton" type="button" id="csv">${ico("bajar")}Exportar CSV</button><button class="boton verde" type="button" id="nuevoC">${ico("mas")}Nuevo cliente</button></div>`) + `
-    <div class="filtros"><label class="buscar">${ico("lupa")}<input id="bC" type="search" aria-label="Buscar clientes" placeholder="Buscar por nombre, correo o ciudad…" value="${esc(cBusca)}"></label></div>
-    <div class="bento dosC"><div class="bloque"><div class="fila fc titulos"><span></span><span>Cliente</span><span>Contacto</span><span>Pedidos</span><span>Total gastado</span></div>
-    ${L.map(x => { const t = tot(x.id); return `<div class="fila fc click ${x.id === cSel ? "elegida" : ""}" role="button" tabindex="0" data-cli="${x.id}"><span class="cara ${x.id === cSel ? "r" : ""}">${esc(iniciales(x.nombre))}</span><div class="nombre"><b>${esc(x.nombre)}</b><span>${esc(x.ciudad || "")}</span></div><span class="peq cont">${esc(x.correo || "")}${x.whatsapp ? "<br>" + esc(x.whatsapp) : ""}</span><span class="oc">${t.length}</span><span class="precio">${pesos(suma(t))}</span></div>`; }).join("") || '<div class="vacio">No hay clientes con esa búsqueda.</div>'}</div>
-    ${z ? `<div class="ladoC bento"><section class="carta cliT"><span class="cara r">${esc(iniciales(z.nombre))}</span><b>${esc(z.nombre)}</b><small>Cliente desde ${fecha(z.creado)}</small><div class="gasto"><span>Total gastado</span><b>${pesos(suma(zP))}</b></div><div class="dosB"><button class="boton chico" type="button" data-edcli>${ico("lapiz")}Editar</button><button class="boton chico" type="button" data-pedcli>${ico("mas")}Nuevo pedido</button><a class="boton chico" ${z.correo ? `href="mailto:${esc(z.correo)}"` : 'aria-disabled="true"'}>${ico("correo")}Correo</a><a class="boton chico" ${zw ? `href="https://wa.me/${zw}" target="_blank" rel="noopener"` : 'aria-disabled="true"'}>${ico("wa")}WhatsApp</a></div></section>
-      <section class="carta"><div class="cartaT"><h2>Información</h2></div><dl class="datosL">${lin("correo", "Correo", z.correo)}${lin("wa", "WhatsApp", z.whatsapp)}${lin("lugar", "Ciudad", z.ciudad)}</dl></section>
-      <section class="carta"><div class="cartaT"><h2>Pedidos</h2><span class="sello n">${zP.length}</span></div>${zP.map(p => `<button class="tarjetaP" type="button" data-pedido="${p.id}"><span class="arr"><span>#${p.numero}</span>${etq(p.estado)}</span><b>${esc(detallePedido(p, CACHE_O))}</b><span class="peq">${pesos(p.monto)} · ${p.pagado ? "Pagado" : "Sin pagar"}</span></button>`).join("") || '<p class="peq">Sin pedidos.</p>'}</section></div>` : ""}</div>`;
+  c.innerHTML = cab(tr("Clientes", "Customers"), `${C.length} ${tr("en la base de datos.", "in the database.")}`, `<div class="accC"><button class="boton" type="button" id="csv">${ico("bajar")}${tr("Exportar CSV", "Export CSV")}</button><button class="boton verde" type="button" id="nuevoC">${ico("mas")}${tr("Nuevo cliente", "New customer")}</button></div>`) + `
+    <div class="filtros"><label class="buscar">${ico("lupa")}<input id="bC" type="search" aria-label="${tr('Buscar clientes', 'Search customers')}" placeholder="${tr('Buscar por nombre, correo o ciudad…', 'Search by name, email or city…')}" value="${esc(cBusca)}"></label></div>
+    <div class="bento dosC"><div class="bloque"><div class="fila fc titulos"><span></span><span>${tr("Cliente", "Customer")}</span><span>${tr("Contacto", "Contact")}</span><span>${tr("Pedidos", "Orders")}</span><span>${tr("Total gastado", "Total spent")}</span></div>
+    ${L.map(x => { const t = tot(x.id); return `<div class="fila fc click ${x.id === cSel ? "elegida" : ""}" role="button" tabindex="0" data-cli="${x.id}"><span class="cara ${x.id === cSel ? "r" : ""}">${esc(iniciales(x.nombre))}</span><div class="nombre"><b>${esc(x.nombre)}</b><span>${esc(x.ciudad || "")}</span></div><span class="peq cont">${esc(x.correo || "")}${x.whatsapp ? "<br>" + esc(x.whatsapp) : ""}</span><span class="oc">${t.length}</span><span class="precio">${pesos(suma(t))}</span></div>`; }).join("") || `<div class="vacio">${tr("No hay clientes con esa búsqueda.", "No customers match that search.")}</div>`}</div>
+    ${z ? `<div class="ladoC bento"><section class="carta cliT"><span class="cara r">${esc(iniciales(z.nombre))}</span><b>${esc(z.nombre)}</b><small>${tr("Cliente desde", "Customer since")} ${fecha(z.creado)}</small><div class="gasto"><span>${tr("Total gastado", "Total spent")}</span><b>${pesos(suma(zP))}</b></div><div class="dosB"><button class="boton chico" type="button" data-edcli>${ico("lapiz")}${tr("Editar", "Edit")}</button><button class="boton chico" type="button" data-pedcli>${ico("mas")}${tr("Nuevo pedido", "New order")}</button><a class="boton chico" ${z.correo ? `href="mailto:${esc(z.correo)}"` : 'aria-disabled="true"'}>${ico("correo")}${tr("Correo", "Email")}</a><a class="boton chico" ${zw ? `href="https://wa.me/${zw}" target="_blank" rel="noopener"` : 'aria-disabled="true"'}>${ico("wa")}WhatsApp</a></div></section>
+      <section class="carta"><div class="cartaT"><h2>${tr("Información", "Information")}</h2></div><dl class="datosL">${lin("correo", tr("Correo", "Email"), z.correo)}${lin("wa", tr("WhatsApp", "WhatsApp"), z.whatsapp)}${lin("lugar", tr("Ciudad", "City"), z.ciudad)}</dl></section>
+      <section class="carta"><div class="cartaT"><h2>${tr("Pedidos", "Orders")}</h2><span class="sello n">${zP.length}</span></div>${zP.map(p => `<button class="tarjetaP" type="button" data-pedido="${p.id}"><span class="arr"><span>#${p.numero}</span>${etq(p.estado)}</span><b>${esc(detallePedido(p, CACHE_O))}</b><span class="peq">${pesos(p.monto)} </span>${pagoTxt(p)}</button>`).join("") || `<p class="peq">${tr("Sin pedidos.", "No orders.")}</p>`}</section></div>` : ""}</div>`;
   c.querySelectorAll("[data-cli]").forEach(f => f.onclick = () => { if (innerWidth <= 1180){ editarCliente(f.dataset.cli); return; } cSel = f.dataset.cli; VISTAS.clientes(c); });
   c.querySelectorAll("[data-edcli]").forEach(b => b.onclick = () => editarCliente(cSel));
   c.querySelectorAll("[data-pedido]").forEach(b => b.onclick = () => editarPedido(b.dataset.pedido));
@@ -818,7 +911,7 @@ VISTAS.clientes = async c => {
   c.querySelector("#nuevoC").onclick = () => editarCliente(null);
   const b = c.querySelector("#bC"); b.oninput = () => { cBusca = b.value; clearTimeout(b.t); b.t = setTimeout(async () => { await VISTAS.clientes(c); const n = c.querySelector("#bC"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
   c.querySelector("#csv").onclick = () => {
-    const filas = [["Nombre", "Correo", "WhatsApp", "Ciudad", "Pedidos", "Total gastado", "Cliente desde", "Notas"]].concat(C.map(x => { const t = tot(x.id); return [x.nombre, x.correo, x.whatsapp, x.ciudad, t.length, suma(t), (x.creado || "").slice(0, 10), x.notas]; }));
+    const filas = [[tr("Nombre", "Name"), tr("Correo", "Email"), tr("WhatsApp", "WhatsApp"), tr("Ciudad", "City"), tr("Pedidos", "Orders"), tr("Total gastado", "Total spent"), tr("Cliente desde", "Customer since"), tr("Notas", "Notes")]].concat(C.map(x => { const t = tot(x.id); return [x.nombre, x.correo, x.whatsapp, x.ciudad, t.length, suma(t), (x.creado || "").slice(0, 10), x.notas]; }));
     const csv = "\ufeff" + filas.map(f => f.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\n"), a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"})); a.download = `clientes-agrio-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
   };
@@ -826,28 +919,29 @@ VISTAS.clientes = async c => {
 async function editarCliente(id, desdePedido){
   const [C, P] = await Promise.all([db.lista("clientes"), db.lista("pedidos")]), x = C.find(y => y.id === id) || {}, ped = P.filter(p => p.cliente_id === id).sort((a, b) => (b.creado || "").localeCompare(a.creado || ""));
   const wa = (x.whatsapp || "").replace(/\D/g, "");
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? esc(x.nombre) : "Nuevo cliente"}</h2><button class="boton chico x" type="button">${ico("x")}Cerrar</button></div>
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? esc(x.nombre) : tr("Nuevo cliente", "New customer")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
     <div class="cuerpo">
-      ${id ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${x.correo ? `<a class="boton chico" href="mailto:${esc(x.correo)}">${ico("correo")}Correo</a>` : ""}</div><div class="gasto"><span>Total gastado</span><b>${pesos(ped.reduce((s, p) => s + (p.pagado ? +p.monto || 0 : 0), 0))}</b></div>` : ""}
-      <label class="campo"><span>Nombre</span><input class="entrada" name="nombre" value="${esc(x.nombre)}"></label>
-      <div class="dos"><label class="campo"><span>Correo</span><input class="entrada" name="correo" type="email" value="${esc(x.correo)}"></label><label class="campo"><span>WhatsApp</span><input class="entrada" name="whatsapp" inputmode="tel" placeholder="57 300 000 0000" value="${esc(x.whatsapp)}"></label></div>
-      <label class="campo"><span>Ciudad</span><input class="entrada" name="ciudad" value="${esc(x.ciudad)}"></label>
-      <label class="campo"><span>Notas</span><textarea class="entrada" name="notas">${esc(x.notas)}</textarea></label>
-      ${id ? `<span class="campo"><span>Pedidos (${ped.length})</span></span><div class="bloque">${ped.map(p => `<div class="fila click" style="grid-template-columns:1fr auto" data-pedido="${p.id}"><div class="nombre"><b style="font-size:16px">#${p.numero} · ${esc(detallePedido(p, CACHE_O))}</b><span>${fecha(p.creado)} · ${pesos(p.monto)}</span></div>${etq(p.estado)}</div>`).join("") || '<div class="vacio">Sin pedidos.</div>'}</div>
-      <button class="boton" type="button" data-nuevo-pedido style="margin-top:4px">${ico("mas")}Nuevo pedido para este cliente</button>` : ""}
+      ${id ? `<div class="contacto">${wa ? `<a class="boton chico" href="https://wa.me/${wa}" target="_blank" rel="noopener">${ico("wa")}WhatsApp</a>` : ""}${x.correo ? `<a class="boton chico" href="mailto:${esc(x.correo)}">${ico("correo")}${tr("Correo", "Email")}</a>` : ""}</div><div class="gasto"><span>${tr("Total gastado", "Total spent")}</span><b>${pesos(ped.reduce((s, p) => s + (p.pagado ? +p.monto || 0 : 0), 0))}</b></div>` : ""}
+      <label class="campo"><span>${tr("Nombre", "Name")}</span><input class="entrada" name="nombre" value="${esc(x.nombre)}"></label>
+      <div class="dos"><label class="campo"><span>${tr("Correo", "Email")}</span><input class="entrada" name="correo" type="email" value="${esc(x.correo)}"></label><label class="campo"><span>WhatsApp</span><input class="entrada" name="whatsapp" inputmode="tel" placeholder="57 300 000 0000" value="${esc(x.whatsapp)}"></label></div>
+      <label class="campo"><span>${tr("Ciudad", "City")}</span><input class="entrada" name="ciudad" value="${esc(x.ciudad)}"></label>
+      <label class="campo"><span>${tr("Notas", "Notes")}</span><textarea class="entrada" name="notas">${esc(x.notas)}</textarea></label>
+      ${id ? `<span class="campo"><span>${tr("Pedidos", "Orders")} (${ped.length})</span></span><div class="bloque">${ped.map(p => `<div class="fila click" style="grid-template-columns:1fr auto" data-pedido="${p.id}"><div class="nombre"><b style="font-size:16px">#${p.numero} · ${esc(detallePedido(p, CACHE_O))}</b><span>${fecha(p.creado)} · ${pesos(p.monto)}</span>${pagoTxt(p)}</div>${etq(p.estado)}</div>`).join("") || `<div class="vacio">${tr("Sin pedidos.", "No orders.")}</div>`}</div>
+      <button class="boton" type="button" data-nuevo-pedido style="margin-top:4px">${ico("mas")}${tr("Nuevo pedido para este cliente", "New order for this customer")}</button>` : ""}
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}Borrar</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}Guardar</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
     const fila = {id:id || null, nombre:val(ed, "nombre"), correo:val(ed, "correo").toLowerCase() || null, whatsapp:val(ed, "whatsapp"), ciudad:val(ed, "ciudad"), notas:val(ed, "notas")};
-    if (!fila.nombre){ avisar("Escribe el nombre."); return; }
-    const g = await db.guardar("clientes", fila); avisar("Cliente guardado");
+    if (!fila.nombre) return falta(ed, "nombre", id ? tr("No se guardó el cliente", "The customer was not saved") : tr("No se creó el cliente", "The customer was not created"), tr("Escribe el nombre.", "Enter the name."));
+    const g = await db.guardar("clientes", fila);
+    if (!id) avisar(tr("Cliente creado", "Customer created"), {detalle:fila.nombre}); else avisarCambios(fila.nombre, cambios(x, fila, [["nombre", tr("Nombre", "Name")], ["correo", tr("Correo", "Email")], ["whatsapp", "WhatsApp"], ["ciudad", tr("Ciudad", "City")], ["notas", tr("Notas", "Notes"), null]]));
     if (desdePedido){ editarPedido(desdePedido.pedido, g.id); return; }
     cerrarEditor(); refrescar();
   },
   ed => {
     ed.querySelectorAll("[data-pedido]").forEach(f => f.onclick = () => editarPedido(f.dataset.pedido));
     const n = ed.querySelector("[data-nuevo-pedido]"); if (n) n.onclick = () => editarPedido(null, id);
-    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm("¿Borrar este cliente? Sus pedidos se conservan, sin cliente. No se puede deshacer.")) return; await db.borrar("clientes", id); avisar("Cliente borrado"); cerrarEditor(); refrescar(); };
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Borrar a ${x.nombre}?`, `Delete ${x.nombre}?`), texto:tr("Sus pedidos se conservan, sin cliente. No se puede deshacer.", "Their orders are kept, without a customer. This cannot be undone."), boton:tr("Borrar", "Delete")})) return; try { await db.borrar("clientes", id); } catch(e){ return error(tr("No se pudo borrar el cliente", "Could not delete the customer"), e); } avisar(tr("Cliente borrado", "Customer deleted"), {detalle:x.nombre}); cerrarEditor(); refrescar(); };
   });
 }
 
@@ -856,98 +950,118 @@ let oFiltro = "todas";
 VISTAS.obras = async c => {
   const O = (await db.lista("obras")).sort((a, b) => (a.orden || 0) - (b.orden || 0)); CACHE_O = O;
   const L = O.filter(o => oFiltro === "todas" || (oFiltro === "disp" ? !o.agotada && o.visible !== false : oFiltro === "agot" ? o.agotada : o.visible === false));
-  c.innerHTML = cab("Ilustraciones", "Lo que cambies aquí se ve en la galería de la web al guardar.", `<button class="boton verde" type="button" id="nuevaO">${ico("mas")}Subir ilustración</button>`) + `
-    <div class="filtros"><div class="seg" role="group" aria-label="Mostrar">${[["todas", "Todas"], ["disp", "Disponibles"], ["agot", "Agotadas"], ["ocultas", "Ocultas"]].map(([k, n]) => `<button type="button" data-fo="${k}" aria-pressed="${oFiltro === k}">${n}</button>`).join("")}</div></div>
-    <div class="bento obras">${L.map(o => `<article class="carta obraC ${o.visible === false ? "apagada" : ""}" data-o="${esc(o.id)}"><button class="img" type="button" style="border:0;padding:0;${urlImg(imgDe(o))}" data-editar aria-label="Editar ${esc(o.nombre_es)}"></button>
-      <div class="sobreI">${o.agotada ? '<span class="banda">Agotada</span>' : ""}${o.visible === false ? '<span class="banda g">Oculta</span>' : ""}</div>
-      <div class="tx"><div class="l1"><b>${esc(o.nombre_es)}</b><span>${pesos(o.precio)}</span></div><p>${esc(o.descripcion_es)}</p>
-      <div class="estadoObra">Agotada<button class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="Marcar como agotada: ${esc(o.nombre_es)}" data-agotada></button></div>
-      <div class="estadoObra">Visible en la web<button class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="Mostrar en la web: ${esc(o.nombre_es)}" data-visible></button></div><div class="dosB"><button class="boton chico" type="button" data-editar>${ico("lapiz")}Editar</button><button class="boton chico" type="button" data-mover="-1" ${o === O[0] ? "disabled" : ""} aria-label="Adelantar en la galería: ${esc(o.nombre_es)}">${ico("izq")}Adelantar</button></div></div></article>`).join("") || '<div class="carta">No hay obras con ese filtro.</div>'}</div>`;
+  c.innerHTML = cab(tr("Galería", "Gallery"), tr("Lo que cambies aquí se ve en la galería de la web al guardar.", "What you change here shows in the site's gallery when you save."), `<button class="boton verde" type="button" id="nuevaO">${ico("mas")}${tr("Nueva obra", "New artwork")}</button>`) + `
+    <div class="filtros"><div class="seg" role="group" aria-label="${tr('Mostrar', 'Show')}">${[["todas", tr("Todas", "All")], ["disp", tr("Disponibles", "Available")], ["agot", tr("Agotadas", "Sold out")], ["ocultas", tr("Ocultas", "Hidden")]].map(([k, n]) => `<button type="button" data-fo="${k}" aria-pressed="${oFiltro === k}">${n}</button>`).join("")}</div></div>
+    <div class="bento obras">${L.map(o => `<article class="carta obraC ${o.visible === false ? "apagada" : ""}" data-o="${esc(o.id)}"><button class="img" type="button" style="border:0;padding:0;${urlImg(imgDe(o))}" data-editar aria-label="${tr("Editar", "Edit")} ${esc(o.nombre_es)}"></button>
+      <div class="sobreI">${o.agotada ? `<span class="banda">${tr("Agotada", "Sold out")}</span>` : ""}${o.visible === false ? `<span class="banda g">${tr("Oculta", "Hidden")}</span>` : ""}</div>
+      <div class="tx"><div class="l1"><b>${esc(txt(o, "nombre"))}</b><span>${pesos(o.precio)}</span></div><p>${esc(txt(o, "descripcion"))}</p>
+      <div class="estadoObra">${tr("Agotada", "Sold out")}<button class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="${tr("Marcar como agotada", "Mark as sold out")}: ${esc(o.nombre_es)}" data-agotada></button></div>
+      <div class="estadoObra">${tr("Visible en la web", "Visible on the site")}<button class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="${tr("Mostrar en la web", "Show on the site")}: ${esc(o.nombre_es)}" data-visible></button></div><div class="dosB"><button class="boton chico" type="button" data-editar>${ico("lapiz")}${tr("Editar", "Edit")}</button><button class="boton chico" type="button" data-mover="-1" ${o === O[0] ? "disabled" : ""} aria-label="${tr("Adelantar en la galería", "Move earlier in the gallery")}: ${esc(o.nombre_es)}">${ico("izq")}${tr("Adelantar", "Move up")}</button></div></div></article>`).join("") || `<div class="carta">${tr("No hay obras con ese filtro.", "No artworks match that filter.")}</div>`}</div>`;
   c.querySelectorAll("[data-fo]").forEach(b => b.onclick = () => { oFiltro = b.dataset.fo; ir("obras"); });
   c.querySelector("#nuevaO").onclick = () => editarObra(null);
   c.querySelectorAll("[data-o]").forEach(f => {
     const o = O.find(x => x.id === f.dataset.o);
     f.querySelectorAll("[data-editar]").forEach(b => b.onclick = () => editarObra(o.id));
-    f.querySelector("[data-agotada]").onclick = async () => { await db.guardar("obras", {...o, agotada:!o.agotada}); avisar(o.agotada ? o.nombre_es + " vuelve a estar disponible" : o.nombre_es + " quedó agotada"); refrescar(); };
-    f.querySelector("[data-visible]").onclick = async () => { await db.guardar("obras", {...o, visible:o.visible === false}); avisar(o.visible === false ? "Ahora se ve en la web" : "Oculta en la web"); refrescar(); };
-    f.querySelector("[data-mover]").onclick = async () => { const i = O.indexOf(o); if (i <= 0) return; const a = O[i - 1]; await db.guardar("obras", {...o, orden:a.orden}); await db.guardar("obras", {...a, orden:o.orden === a.orden ? (+o.orden || 0) + 1 : o.orden}); refrescar(); };
+    f.querySelector("[data-agotada]").onclick = async () => { if (!o.agotada && !await confirmarAgotada(o)) return; try { await db.guardar("obras", {...o, agotada:!o.agotada}); } catch(e){ return error(tr("No se pudo guardar", "Could not save"), e); } avisar(o.agotada ? tr("De nuevo disponible", "Available again") : tr("Marcada como agotada", "Marked as sold out"), {detalle:txt(o, "nombre")}); refrescar(); };
+    f.querySelector("[data-visible]").onclick = async () => { try { await db.guardar("obras", {...o, visible:o.visible === false}); } catch(e){ return error(tr("No se pudo guardar", "Could not save"), e); } avisar(o.visible === false ? tr("Ahora se ve en la web", "Now visible on the site") : tr("Oculta en la web", "Hidden on the site"), {detalle:txt(o, "nombre")}); refrescar(); };
+    f.querySelector("[data-mover]").onclick = async () => { const i = O.indexOf(o); if (i <= 0) return; const a = O[i - 1]; await db.guardar("obras", {...o, orden:a.orden}); await db.guardar("obras", {...a, orden:o.orden === a.orden ? (+o.orden || 0) + 1 : o.orden}); avisar(tr("Orden de la galería actualizado", "Gallery order updated"), {detalle:txt(o, "nombre")}); refrescar(); };
   });
 };
+const confirmarAgotada = o => confirmar({titulo:tr(`¿Marcar "${o.nombre_es}" como agotada?`, `Mark "${txt(o, "nombre")}" as sold out?`), texto:tr("En la web ya no se podrá comprar. Puedes volver a ponerla disponible cuando quieras.", "It can no longer be bought on the site. You can make it available again anytime."), boton:tr("Marcar agotada", "Mark sold out"), icono:"agotada"});
 const imgDe = o => o.imagen_url || "../img/" + o.id + ".jpg";   // las obras de siempre usan la imagen que ya está en la web
 async function editarObra(id){
-  const O = await db.lista("obras"), o = O.find(x => x.id === id) || {visible:true, agotada:false, precio:0}; let lang = "es", img = id ? imgDe(o) : "";
-  abrirEditor(`<div class="top"><h2 id="edT">${id ? "Editar · " + esc(o.nombre_es) : "Nueva ilustración"}</h2><button class="boton chico x" type="button">${ico("x")}Cerrar</button></div>
+  const O = await db.lista("obras"), o = O.find(x => x.id === id) || {visible:true, agotada:false}; let img = id ? imgDe(o) : "";
+  abrirEditor(`<div class="top"><h2 id="edT">${id ? tr("Editar · ", "Edit · ") + esc(o.nombre_es) : tr("Nueva obra", "New artwork")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
     <div class="cuerpo">
       <div class="foto"><div class="img" id="eImg" style="${img ? urlImg(img) : ""}"></div>
-        <div class="lado"><label class="boton chico">${ico("subir")}Cambiar imagen<input type="file" accept="image/*" id="eArch" class="oculto"></label><span>JPG o PNG. Se optimiza sola al subirla.</span></div></div>
-      <div class="idioma seg"><button type="button" data-l="es" aria-pressed="true">Español</button><button type="button" data-l="en" aria-pressed="false">English</button></div>
-      ${["es", "en"].map(l => `<div data-lang="${l}" ${l === "en" ? "hidden" : ""}>
-        <label class="campo"><span>Nombre</span><input class="entrada" name="nombre_${l}" value="${esc(o["nombre_" + l])}"></label>
-        <label class="campo"><span>Descripción (máx. 3 líneas en la ficha)</span><textarea class="entrada" name="descripcion_${l}" maxlength="200">${esc(o["descripcion_" + l])}</textarea></label></div>`).join("")}
-      <label class="campo"><span>Precio desde (COP)</span><input class="entrada" name="precio" inputmode="numeric" value="${o.precio ?? ""}"></label>
-      <div class="dos"><div class="campo"><span>Agotada</span><button type="button" class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="Agotada" id="eAgo"></button></div>
-        <div class="campo"><span>Visible en la web</span><button type="button" class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="Visible en la web" id="eVis"></button></div></div>
+        <div class="lado"><label class="boton chico">${ico("subir")}${id ? tr("Cambiar imagen", "Change image") : tr("Subir imagen", "Upload image")}<input type="file" accept="image/*" id="eArch" class="oculto"></label><span>${tr("JPG o PNG. Se optimiza sola al subirla.", "JPG or PNG. It is optimized on upload.")}</span></div></div>
+      <label class="campo"><span>${tr("Nombre", "Name")}</span><input class="entrada" name="nombre_es" value="${esc(o.nombre_es)}"></label>
+      <label class="campo"><span>${tr("Descripción (máx. 3 líneas en la ficha)", "Description (max. 3 lines on the card)")}</span><textarea class="entrada" name="descripcion_es" maxlength="200">${esc(o.descripcion_es)}</textarea></label>
+      <label class="campo"><span>${tr("Precio desde (COP)", "Price from (COP)")}</span><input class="entrada" name="precio" inputmode="numeric" value="${o.precio ?? ""}"></label>
+      <div class="dos"><div class="campo"><span>${tr("Agotada", "Sold out")}</span><button type="button" class="sw agot" role="switch" aria-checked="${!!o.agotada}" aria-label="${tr('Agotada', 'Sold out')}" id="eAgo"></button></div>
+        <div class="campo"><span>${tr("Visible en la web", "Visible on the site")}</span><button type="button" class="sw" role="switch" aria-checked="${o.visible !== false}" aria-label="${tr('Visible en la web', 'Visible on the site')}" id="eVis"></button></div></div>
     </div>
-    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}Quitar</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}Guardar</button></div>`,
+    <div class="botones">${id ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Quitar", "Remove")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${id ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
-    const nes = val(ed, "nombre_es"); if (!nes){ avisar("Escribe el nombre en español."); return; } if (!img){ avisar("Sube la imagen."); return; }
-    const nid = id || nes.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Date.now().toString(36).slice(-4);
-    await db.guardar("obras", {...o, id:nid, orden:o.orden ?? (O.reduce((m, x) => Math.max(m, +x.orden || 0), 0) + 1), nombre_es:nes, nombre_en:val(ed, "nombre_en"), descripcion_es:val(ed, "descripcion_es"), descripcion_en:val(ed, "descripcion_en"),
-      precio:num(ed, "precio") || 0, agotada:ed.querySelector("#eAgo").getAttribute("aria-checked") === "true", imagen_url:img === imgDe({id:o.id}) && !o.imagen_url ? null : img, visible:ed.querySelector("#eVis").getAttribute("aria-checked") === "true"});
-    avisar("Ilustración guardada"); cerrarEditor(); refrescar();
+    const nes = val(ed, "nombre_es"), no = id ? tr("No se guardó la obra", "The artwork was not saved") : tr("No se añadió la obra", "The artwork was not added");
+    if (!nes) return falta(ed, "nombre_es", no, tr("Escribe el nombre.", "Enter the name.")); if (!img) return falta(ed, "", no, tr("Sube la imagen.", "Upload the image."));
+    const agotada = ed.querySelector("#eAgo").getAttribute("aria-checked") === "true"; if (agotada && !o.agotada && !await confirmarAgotada({nombre_es:nes})) return;
+    const nid = id || nes.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Date.now().toString(36).slice(-4);
+    const fila = {...o, id:nid, orden:o.orden ?? (O.reduce((m, x) => Math.max(m, +x.orden || 0), 0) + 1), nombre_es:nes, descripcion_es:val(ed, "descripcion_es"),
+      precio:num(ed, "precio") || 0, agotada, imagen_url:img === imgDe({id:o.id}) && !o.imagen_url ? null : img, visible:ed.querySelector("#eVis").getAttribute("aria-checked") === "true"};
+    const ing = await conIngles(o, fila, CAMPOS_TR.obras), siNo = v => v ? tr("sí", "yes") : "no"; await db.guardar("obras", fila);
+    if (!id) avisar(tr("Obra añadida a la galería", "Artwork added to the gallery"), {detalle:[nes, pesos(fila.precio), txtIngles(ing)]});
+    else avisarCambios(nes, cambios({...o, agotada:!!o.agotada, visible:o.visible !== false}, fila, [["nombre_es", tr("Título", "Title")], ["descripcion_es", tr("Descripción", "Description"), null], ["precio", tr("Precio", "Price"), pesos], ["imagen_url", tr("Imagen", "Image"), null], ["agotada", tr("Agotada", "Sold out"), siNo], ["visible", tr("Visible en la web", "Visible on the site"), siNo]]), txtIngles(ing));
+    cerrarEditor(); refrescar();
   },
   ed => {
-    ed.querySelector("#eArch").onchange = async e => { const f = e.target.files[0]; if (!f) return; avisar("Subiendo imagen…");
-      try { img = await db.subirImagen(f, id || "obra"); ed.querySelector("#eImg").style.backgroundImage = `url('${img}')`; avisar("Imagen lista: falta guardar"); } catch(er){ avisar("No se pudo subir la imagen: " + er.message); } };
-    ed.querySelectorAll("[data-l]").forEach(b => b.onclick = () => { lang = b.dataset.l; ed.querySelectorAll("[data-l]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); ed.querySelectorAll("[data-lang]").forEach(d => { d.hidden = d.dataset.lang !== lang; }); });
+    ed.querySelector("#eArch").onchange = async e => { const f = e.target.files[0]; if (!f) return; const fin = avisar(tr("Subiendo imagen…", "Uploading image…"), {tipo:"info"});
+      try { img = await db.subirImagen(f, id || "obra"); ed.querySelector("#eImg").style.backgroundImage = `url('${img}')`; fin(); avisar(tr("Imagen lista", "Image ready"), {tipo:"info", detalle:tr("Falta guardar.", "Remember to save.")}); } catch(er){ fin(); error(tr("No se pudo subir la imagen", "Could not upload the image"), er); } };
     ["#eVis", "#eAgo"].forEach(k => { const v = ed.querySelector(k); v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true")); });
-    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm(`¿Quitar "${o.nombre_es}" de la galería para siempre? Si solo quieres esconderla, usa "Visible en la web".`)) return; await db.borrar("obras", id); avisar("Ilustración quitada"); cerrarEditor(); refrescar(); };
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Quitar "${o.nombre_es}" de la galería?`, `Remove "${txt(o, "nombre")}" from the gallery?`), texto:tr("No se puede deshacer. Si solo quieres esconderla, apaga \"Visible en la web\".", "This cannot be undone. To just hide it, turn off \"Visible on the site\"."), boton:tr("Quitar", "Remove")})) return; try { await db.borrar("obras", id); } catch(e){ return error(tr("No se pudo quitar la obra", "Could not remove the artwork"), e); } avisar(tr("Obra quitada de la galería", "Artwork removed from the gallery"), {detalle:txt(o, "nombre")}); cerrarEditor(); refrescar(); };
   });
 }
 
 /* COMISIONES (tipos) */
-const EN_WEB = 3;   // la hoja de comisiones de la web está compuesta para tres tipos
+const BASE = 3;   // las tres comisiones de siempre no se borran; las demás se agregan a la hoja de la web, que se desliza de lado
+let cTab = "pedidos";
 VISTAS.comisiones = async c => {
-  const T = (await db.lista("comision_tipos")).sort((a, b) => a.n - b.n);
-  c.innerHTML = cab("Comisiones", "Los tipos de encargo y sus precios.", `<button class="boton verde" type="button" id="nuevaT">${ico("mas")}Nueva comisión</button>`) + `<div class="bento tipos">${T.map(t => `<article class="carta tipoC"><div class="n"><span>N° ${String(t.n).padStart(2, "0")}${t.n > EN_WEB ? " · Aún no sale en la web" : t.destacado ? " · El más pedido" : ""}</span><button class="boton chico" type="button" data-t="${t.n}" aria-label="Editar ${esc(t.nombre_es)}">${ico("lapiz")}Editar</button></div><h3>${esc(t.nombre_es)}</h3><p>${esc(t.descripcion_es)}</p><ul>${[t.punto1_es, t.punto2_es].filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("")}</ul><div class="p"><small>Desde</small>${pesos(t.precio)}</div></article>`).join("")}</div>`;
-  c.querySelectorAll("[data-t]").forEach(b => b.onclick = () => editarTipo(+b.dataset.t));
-  c.querySelector("#nuevaT").onclick = () => editarTipo(null);
+  const aj = (await db.lista("ajustes"))[0] || {id:1, comisiones_abiertas:true}, ab = aj.comisiones_abiertas !== false, ped = cTab === "pedidos";
+  c.innerHTML = cab(tr("Comisiones", "Commissions"), ped ? tr("Arrastra cada pedido para cambiar su estado.", "Drag each order to change its status.") : tr("Los tipos de encargo y sus precios.", "Commission types and their prices."), `<div class="accC"><div class="abrirC"><span>${ab ? tr("Abiertas", "Open") : tr("Cerradas", "Closed")}</span><button class="sw" type="button" role="switch" aria-checked="${ab}" aria-label="${tr("Comisiones abiertas", "Commissions open")}" id="abrirC"></button></div><button class="boton verde" type="button" id="nuevoC2">${ico("mas")}${ped ? tr("Nuevo pedido", "New order") : tr("Nueva comisión", "New commission")}</button></div>`) + `
+    <div class="filtros tabs"><div class="seg" role="group" aria-label="${tr("Sección", "Section")}"><button type="button" data-tab="pedidos" aria-pressed="${ped}">${ico("pedidos")}${tr("Pedidos", "Orders")}</button><button type="button" data-tab="tipos" aria-pressed="${!ped}">${ico("comisiones")}${tr("Tipos y precios", "Types and prices")}</button></div></div><div id="sub"></div>`;
+  c.querySelectorAll("[data-tab]").forEach(b => b.onclick = async () => { cTab = b.dataset.tab; await VISTAS.comisiones(c); c.querySelector(`[data-tab="${cTab}"]`).focus({preventScroll:true}); });
+  c.querySelector("#nuevoC2").onclick = () => ped ? editarPedido(null) : editarTipo(null);
+  c.querySelector("#abrirC").onclick = async () => {
+    if (ab && !await confirmar({titulo:tr("¿Cerrar las comisiones?", "Close commissions?"), texto:tr("La web deja de recibir encargos nuevos hasta que las abras. Los pedidos en curso no cambian.", "The site stops taking new commissions until you open them. Current orders don't change."), boton:tr("Cerrar", "Close"), icono:"candado"})) return;
+    try { await db.guardar("ajustes", {...aj, comisiones_abiertas:!ab}); } catch(e){ return error(tr("No se pudo guardar", "Could not save"), e); }
+    avisar(ab ? tr("Comisiones cerradas", "Commissions closed") : tr("Comisiones abiertas", "Commissions open"), {detalle:ab ? tr("La web no recibe encargos nuevos.", "The site takes no new commissions.") : tr("La web vuelve a recibir encargos.", "The site takes commissions again.")}); refrescar();
+  };
+  await (ped ? verPedidos : verTipos)(c.querySelector("#sub"));
 };
+async function verTipos(c){
+  const T = (await db.lista("comision_tipos")).sort((a, b) => a.n - b.n);
+  c.innerHTML = `<div class="bento tipos">${T.map((t, i) => `<article class="carta tipoC"><div class="n"><span>N° ${String(i + 1).padStart(2, "0")}${t.destacado ? tr(" · El más pedido", " · Most requested") : ""}</span><button class="boton chico" type="button" data-t="${t.n}" aria-label="${tr("Editar", "Edit")} ${esc(txt(t, "nombre"))}">${ico("lapiz")}${tr("Editar", "Edit")}</button></div><h3>${esc(txt(t, "nombre"))}</h3><p>${esc(txt(t, "descripcion"))}</p><ul>${[txt(t, "punto1"), txt(t, "punto2")].filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("")}</ul><div class="p"><small>${tr("Desde", "From")}</small>${pesos(t.precio)}</div></article>`).join("")}</div>`;
+  c.querySelectorAll("[data-t]").forEach(b => b.onclick = () => editarTipo(+b.dataset.t));
+}
 async function editarTipo(n){
-  const T = await db.lista("comision_tipos"), t = T.find(x => x.n === n) || {n:T.reduce((m, x) => Math.max(m, x.n), EN_WEB) + 1, destacado:false}, web = t.n <= EN_WEB;
-  abrirEditor(`<div class="top"><h2 id="edT">${n ? esc(t.nombre_es) : "Nueva comisión"}</h2><button class="boton chico x" type="button">${ico("x")}Cerrar</button></div>
+  const T = await db.lista("comision_tipos"), t = T.find(x => x.n === n) || {n:T.reduce((m, x) => Math.max(m, x.n), BASE) + 1, destacado:false};
+  abrirEditor(`<div class="top"><h2 id="edT">${n ? esc(t.nombre_es) : tr("Nueva comisión", "New commission")}</h2><button class="boton chico x" type="button">${ico("x")}${tr("Cerrar", "Close")}</button></div>
     <div class="cuerpo">
-      <label class="campo"><span>Nombre</span><input class="entrada" name="nombre_es" value="${esc(t.nombre_es)}"></label>
-      <label class="campo"><span>Descripción</span><textarea class="entrada" name="descripcion_es" maxlength="180">${esc(t.descripcion_es)}</textarea></label>
-      <label class="campo"><span>Incluye (1)</span><input class="entrada" name="punto1_es" value="${esc(t.punto1_es)}"></label>
-      <label class="campo"><span>Incluye (2)</span><input class="entrada" name="punto2_es" value="${esc(t.punto2_es)}"></label>
-      <label class="campo"><span>Precio desde (COP)</span><input class="entrada" name="precio" inputmode="numeric" value="${t.precio ?? ""}"></label>
-      ${web ? `<div class="campo"><span>Marcar como "El más pedido"</span><button type="button" class="sw" role="switch" aria-checked="${!!t.destacado}" aria-label="Marcar como El más pedido" id="eDest"></button></div>` : '<p class="peq">Se puede usar en los pedidos del panel. La hoja de la web sigue mostrando los tres primeros tipos.</p>'}
+      <label class="campo"><span>${tr("Nombre", "Name")}</span><input class="entrada" name="nombre_es" value="${esc(t.nombre_es)}"></label>
+      <label class="campo"><span>${tr("Descripción", "Description")}</span><textarea class="entrada" name="descripcion_es" maxlength="180">${esc(t.descripcion_es)}</textarea></label>
+      <label class="campo"><span>${tr("Incluye (1)", "Includes (1)")}</span><input class="entrada" name="punto1_es" value="${esc(t.punto1_es)}"></label>
+      <label class="campo"><span>${tr("Incluye (2)", "Includes (2)")}</span><input class="entrada" name="punto2_es" value="${esc(t.punto2_es)}"></label>
+      <label class="campo"><span>${tr("Precio desde (COP)", "Price from (COP)")}</span><input class="entrada" name="precio" inputmode="numeric" value="${t.precio ?? ""}"></label>
+      <div class="campo"><span>${tr("Marcar como \"El más pedido\"", "Mark as \"Most requested\"")}</span><button type="button" class="sw" role="switch" aria-checked="${!!t.destacado}" aria-label="${tr('Marcar como El más pedido', 'Mark as Most requested')}" id="eDest"></button></div>
     </div>
-    <div class="botones">${n && !web ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}Borrar</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}Guardar</button></div>`,
+    <div class="botones">${n > BASE ? `<button class="boton rojo" type="button" data-borrar>${ico("basura")}${tr("Borrar", "Delete")}</button>` : ""}<button class="boton verde" type="button" data-guardar>${ico("check")}${n ? tr("Guardar", "Save") : tr("Crear", "Create")}</button></div>`,
   async ed => {
-    const de = ed.querySelector("#eDest"), dest = !!de && de.getAttribute("aria-checked") === "true", fila = {...t, precio:num(ed, "precio") || 0, destacado:dest};
-    ["nombre", "descripcion", "punto1", "punto2"].forEach(k => { fila[k + "_es"] = val(ed, k + "_es"); });   // el texto en inglés queda como estaba
-    if (!fila.nombre_es){ avisar("Escribe el nombre."); return; }
+    const dest = ed.querySelector("#eDest").getAttribute("aria-checked") === "true", fila = {...t, precio:num(ed, "precio") || 0, destacado:dest};
+    CAMPOS_TR.comision_tipos.forEach(k => { fila[k + "_es"] = val(ed, k + "_es"); });
+    if (!fila.nombre_es) return falta(ed, "nombre_es", n ? tr("No se guardó la comisión", "The commission was not saved") : tr("No se creó la comisión", "The commission was not created"), tr("Escribe el nombre.", "Enter the name."));
+    const ing = await conIngles(t, fila, CAMPOS_TR.comision_tipos);
     if (dest) for (const o of T) if (o.n !== t.n && o.destacado) await db.guardar("comision_tipos", {...o, destacado:false});
-    await db.guardar("comision_tipos", fila); avisar("Comisión guardada"); cerrarEditor(); refrescar();
+    await db.guardar("comision_tipos", fila);
+    if (!n) avisar(tr("Comisión creada", "Commission created"), {detalle:[fila.nombre_es, pesos(fila.precio), txtIngles(ing)]});
+    else avisarCambios(fila.nombre_es, cambios(t, fila, [["nombre_es", tr("Título", "Title")], ["descripcion_es", tr("Descripción", "Description"), null], ["precio", tr("Precio", "Price"), pesos], ["punto1_es", tr("Incluye (1)", "Includes (1)"), null], ["punto2_es", tr("Incluye (2)", "Includes (2)"), null], ["destacado", tr("El más pedido", "Most requested"), v => v ? tr("sí", "yes") : "no"]]), txtIngles(ing));
+    cerrarEditor(); refrescar();
   },
   ed => {
-    const v = ed.querySelector("#eDest"); if (v) v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true"));
-    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!confirm(`¿Borrar "${t.nombre_es}"? Los pedidos que la usan se conservan, sin tipo. No se puede deshacer.`)) return; await db.borrar("comision_tipos", n); avisar("Comisión borrada"); cerrarEditor(); refrescar(); };
+    const v = ed.querySelector("#eDest"); v.onclick = () => v.setAttribute("aria-checked", String(v.getAttribute("aria-checked") !== "true"));
+    const b = ed.querySelector("[data-borrar]"); if (b) b.onclick = async () => { if (!await confirmar({titulo:tr(`¿Borrar "${t.nombre_es}"?`, `Delete "${txt(t, "nombre")}"?`), texto:tr("Deja de salir en la web. Los pedidos que la usan se conservan, sin tipo. No se puede deshacer.", "It stops showing on the site. Orders using it are kept, without a type. This cannot be undone."), boton:tr("Borrar", "Delete")})) return; try { await db.borrar("comision_tipos", n); } catch(e){ return error(tr("No se pudo borrar la comisión", "Could not delete the commission"), e); } avisar(tr("Comisión borrada", "Commission deleted"), {detalle:txt(t, "nombre")}); cerrarEditor(); refrescar(); };
   });
 }
 
 /* AJUSTES */
 VISTAS.ajustes = async c => {
-  c.innerHTML = cab("Ajustes", "Conexión con la web y respaldo.") + `
+  c.innerHTML = cab(tr("Ajustes", "Settings"), tr("Conexión con la web y respaldo.", "Site connection and backup.")) + `
     <div class="bento ajustes">
-      <section class="carta a1"><span class="ic">${ico("nube")}</span><h2>Conexión</h2><p>${DEMO ? "<b>Modo demostración.</b> No hay base de datos conectada: todo se guarda solo en este navegador. Para conectarla, hay que crear el proyecto en Supabase (la guía está en la carpeta del proyecto) y poner su dirección y su clave pública en <i>nube.js</i>." : "<b>Conectado a la base de datos.</b> Los cambios se ven en la web al guardar."}</p></section>
-      <section class="carta"><span class="ic">${ico("ojo")}</span><h2>Ver la web</h2><p class="peq">${DEMO ? "Se abre con los cambios de esta demostración." : "Se abre en otra pestaña."}</p><a class="boton" href="../${DEMO ? "?vista=panel" : ""}" target="_blank" rel="noopener">${ico("sale")}Abrir la web</a></section>
-      <section class="carta"><span class="ic">${ico("bajar")}</span><h2>Respaldo</h2><p class="peq">Un archivo con todos los pedidos, clientes, obras y comisiones.</p><button class="boton" type="button" id="aRes">${ico("bajar")}Descargar respaldo</button></section>
-      ${DEMO ? `<section class="carta" style="grid-column:1/-1;min-height:0"><h2>Datos de ejemplo</h2><p class="peq">Borra los cambios de la demostración y vuelve al inicio.</p><button class="boton rojo" type="button" id="aRst">${ico("vuelve")}Volver a los datos de ejemplo</button></section>` : ""}</div>`;
+      <section class="carta a1"><span class="ic">${ico("nube")}</span><h2>${tr("Conexión", "Connection")}</h2><p>${DEMO ? tr("<b>Modo demostración.</b> No hay base de datos conectada: todo se guarda solo en este navegador. Para conectarla, hay que crear el proyecto en Supabase (la guía está en la carpeta del proyecto) y poner su dirección y su clave pública en <i>nube.js</i>.", "<b>Demo mode.</b> No database is connected: everything is saved only in this browser. To connect it, create the Supabase project (the guide is in the project folder) and put its URL and public key in <i>nube.js</i>.") : tr("<b>Conectado a la base de datos.</b> Los cambios se ven en la web al guardar.", "<b>Connected to the database.</b> Changes show on the site when you save.")}</p></section>
+      <section class="carta"><span class="ic">${ico("ojo")}</span><h2>${tr("Ver la web", "View the site")}</h2><p class="peq">${DEMO ? tr("Se abre con los cambios de esta demostración.", "Opens with this demo's changes.") : tr("Se abre en otra pestaña.", "Opens in a new tab.")}</p><a class="boton" href="../${DEMO ? "?vista=panel" : ""}" target="_blank" rel="noopener">${ico("sale")}${tr("Abrir la web", "Open the site")}</a></section>
+      <section class="carta"><span class="ic">${ico("bajar")}</span><h2>${tr("Respaldo", "Backup")}</h2><p class="peq">${tr("Un archivo con todos los pedidos, clientes, obras y comisiones.", "One file with every order, customer, artwork and commission.")}</p><button class="boton" type="button" id="aRes">${ico("bajar")}${tr("Descargar respaldo", "Download backup")}</button></section>
+      ${DEMO ? `<section class="carta" style="grid-column:1/-1;min-height:0"><h2>${tr("Datos de ejemplo", "Sample data")}</h2><p class="peq">${tr("Borra los cambios de la demostración y vuelve al inicio.", "Clears the demo's changes and starts over.")}</p><button class="boton rojo" type="button" id="aRst">${ico("vuelve")}${tr("Volver a los datos de ejemplo", "Restore sample data")}</button></section>` : ""}</div>`;
   c.querySelector("#aRes").onclick = async () => { const d = {}; for (const t of Object.keys(TABLAS)) d[t] = await db.lista(t); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], {type:"application/json"})); a.download = `respaldo-agrio-${new Date().toISOString().slice(0, 10)}.json`; a.click(); };
-  const r = c.querySelector("#aRst"); if (r) r.onclick = () => { if (!confirm("Se borran los cambios de la demostración y vuelven los datos de ejemplo.")) return; localStorage.removeItem(LS); ir("ajustes"); avisar("Listo"); };
+  const r = c.querySelector("#aRst"); if (r) r.onclick = async () => { if (!await confirmar({titulo:tr("¿Volver a los datos de ejemplo?", "Restore sample data?"), texto:tr("Se borran los cambios de la demostración.", "The demo's changes are cleared."), boton:tr("Volver", "Restore"), icono:"vuelve"})) return; localStorage.removeItem(LS); ir("ajustes"); avisar(tr("Datos de ejemplo restaurados", "Sample data restored")); };
 };
 
 /* ---------- arranque ---------- */
